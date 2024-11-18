@@ -52,6 +52,7 @@ const MapTypeId = {
   TERRAIN: 'terrain'
 };
 
+// Map styles
 export type MapConfig = {
 id: string;
 label: string;
