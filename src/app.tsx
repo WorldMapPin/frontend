@@ -203,11 +203,17 @@ const App = () => {
 
   }
 
+  var [openWinterChallengeOnceperLink, SetOpenWinterChallengeOnceperLink] = useState(true);
   const [showWinterchallangeTab, setShowWinterchallangeTab] = useState(false);
 
   function OpenWinterChallenge() {
-    setLeaderboardOpen(true);
-    setShowWinterchallangeTab(true)
+
+    if(openWinterChallengeOnceperLink){
+      setLeaderboardOpen(true);
+      setShowWinterchallangeTab(true);
+
+      SetOpenWinterChallengeOnceperLink(false);
+    }
 
     return null
   }
