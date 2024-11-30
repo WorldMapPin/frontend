@@ -1,20 +1,32 @@
 <!doctype html>
-<title>FrontEnd Site</title>
-<style>
-  body { text-align: center; padding: 150px; }
-  h1 { font-size: 50px; }
-  body { font: 20px Helvetica, sans-serif; color: #333; }
-  article { display: block; text-align: left; width: 650px; margin: 0 auto; }
-  a { color: #dc8100; text-decoration: none; }
-  a:hover { color: #333; text-decoration: none; }
-</style>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <title>WorldMapPin</title>
 
-<article>
-    <h1>We&rsquo;ll be back soon!</h1>
-    <div>
-        <p>This is the frontend page</p>
-    </div>
-    <div>
-	<p>Copyright (c) 2024 Worldmappin</p>
-    </div>
-</article>
+    <style>
+      body {
+        font-size: 16px;
+        margin: 0;
+        font-family: sans-serif;
+      }
+      #app {
+        width: 100vw;
+        height: 100vh;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module">
+      import '@vis.gl/react-google-maps/examples.css';
+      import '@vis.gl/react-google-maps/examples.js';
+      import {renderToDom} from './src/app';
+
+      renderToDom(document.querySelector('#app'));
+    </script>
+  </body>
+</html>

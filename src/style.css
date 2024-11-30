@@ -1,0 +1,546 @@
+.custom-marker-clustering-map {
+  -webkit-user-select: none; /* Safari */ 
+  -moz-user-select: none; /* Firefox */ 
+  -ms-user-select: none; /* Internet Explorer/Edge */ 
+  user-select: none; /* Non-prefixed version, currently supported by Chrome, Opera and Edge */ 
+}
+
+@keyframes appear {
+  from {
+    opacity: 0.5;
+    scale: 0.8;
+  }
+  80% {
+    scale: 1.05;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+.custom-marker-clustering-map {
+  position: fixed;
+  bottom: 0;
+  width: 100vw;
+  height: calc(100vh - 60px);
+}
+
+.custom-marker-clustering-map .marker {
+  /* Remove custom styles */
+  box-sizing: initial; 
+}
+
+.custom-marker-clustering-map .marker.cluster {
+  width: 3rem; /* Google Maps default cluster size */
+  height: 3rem; /* Google Maps default cluster size */
+  background: #FFB74D;
+  opacity: 0.8;
+  display: flex; 
+  align-items: center;
+  justify-content: center;
+  color: black;
+  font-size: 14px;
+  font-weight: bold; /* Text weight */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Subtle text shadow */
+  line-height: 40px; /* Center the text vertically */
+  text-align: center;
+  overflow: hidden; /* Hide any overflow content */
+
+   /* Gradient background for a modern look */
+  border-radius: 50%; /* Rounded corners for a circular shape */
+  
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3); /* Shadow for 3D effect */
+  transition: transform 0.2s, box-shadow 0.2s; /* Smooth transition for hover effect */
+}
+
+.custom-marker-clustering-map .marker.cluster:hover {
+  transform: scale(1.1); /* Slightly enlarge on hover */
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.5); /* Increase shadow on hover */
+}
+
+
+/**Syling for different cluster size/
+/* Define colors for different cluster levels */
+.custom-marker-clustering-map .marker.cluster.level-1 {
+  background-color: #4CAF50; /* Green for level 1 */
+}
+
+.custom-marker-clustering-map .marker.cluster.level-2 {
+  background-color: #8BC34A; /* Light Green for level 2 */
+}
+
+.custom-marker-clustering-map .marker.cluster.level-3 {
+  background-color: #FFC107; /* Amber for level 3 */
+}
+
+.custom-marker-clustering-map .marker.cluster.level-4 {
+  background-color: #FF9800; /* Orange for level 4 */
+}
+
+.custom-marker-clustering-map .marker.cluster.level-5 {
+  background-color: #F44336; /* Red for level 5 */
+}
+/*End Styling for cluster size*/
+
+
+
+.custom-marker-clustering-map .marker.cluster span {
+  /*background-color: transparent; /* Ensure transparent background for text 
+  color: white; /* White color for text 
+  width: 10%; /* Span takes full width of the cluster 
+  text-align: center; /* Center the text horizontally 
+  width: 100%;
+  text-align: center;*/
+ 
+}
+
+
+
+/*Bottons styling*/
+.code-mode-div {
+  position: fixed;
+  bottom: 70px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 5px;
+  box-sizing: border-box;
+  padding: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  input {
+      display: block;
+      /*border: none;*/
+      background-image: none;
+      background-color: rgba(255, 255, 255, 0.95);
+      -webkit-box-shadow: none;
+      -moz-box-shadow: none;
+      box-shadow: none;
+      z-index: 1;
+      width: 100%;
+      text-align: center;
+      /*TODO: load in this font*/
+      font-family: "Quicksand", sans-serif;
+      font-size: 0.9rem;
+      opacity: 0.9;
+      height: 40px;
+      box-sizing: border-box;
+      border-radius: 5px;
+      pointer-events: all;
+      margin-bottom: 15px;
+  }
+
+  .info-text {
+      text-align: center;
+      font-size: 0.8rem;
+      line-height: 1.5;
+      margin-bottom: 15px;
+      font-weight: bold;
+  }
+
+  .code-to-copy {
+      box-sizing: border-box;
+      padding: 15px;
+      text-align: center;
+      font-size: 0.8rem;
+      line-height: 1.5;
+      background-color: aliceblue;
+      width: 100%;
+  }
+
+  .code-to-copy:hover {
+      background-color: #fffbcc;
+      cursor: pointer;
+  }
+}
+
+
+
+
+
+
+/*Loading div*/
+
+.loader-container {
+
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  width: 100%; /* Ensure it occupies full width if needed */
+  height: 100%;
+
+  .loader {
+      max-width: 80px;
+      max-height: 80px;
+      animation: spin 2s linear infinite;
+      
+      img {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+      }
+  }
+
+  p {
+      font-weight: bold;
+  }
+
+}
+
+@keyframes spin {
+  0% {
+      transform: rotate(0deg);
+  }
+
+  100% {
+      transform: rotate(360deg);
+  }
+}
+
+/*Loading div end*/
+
+.logo-with-text {
+  position: fixed;
+  bottom: 2px;
+  z-index: 1;
+  width: 175px;
+  left: 50%;
+  transform: translateX(-50%);
+  cursor: pointer;
+}
+
+.logo-with-text img {
+  width: 100%;
+  transition: transform 0.3s ease;
+}
+
+.logo-with-text img.wiggle {
+  animation: wiggle 0.5s ease-in-out; /* Runs wiggle animation once */
+}
+
+.logo-with-text:hover img {
+  transform: scale(1.1);
+}
+
+@keyframes wiggle {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(3deg);
+  }
+  50% {
+    transform: rotate(-3deg);
+  }
+  75% {
+    transform: rotate(3deg);
+  }
+}
+
+
+
+
+/* Styling for the filter button component */
+
+.filter-container {
+background-color: transparent;
+flex-direction: column;
+
+.filter-sec {
+    position: fixed;
+    z-index: 1;
+    top: 150px;
+    transform: translateX(-50%);    
+    left: 50%;
+    background-image: none;
+    background-color: white;
+    padding: 15px;
+    border-radius: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    width: 75%; /* Increase the width of the container */
+    /* justify-content: space-between; */
+    justify-content: space-around;
+
+    .date-range-dropdown {
+        select {
+            border: unset;
+            border: 1px solid;
+            display: block;
+            background-image: none;
+            background-color: rgba(255, 255, 255, 0.95);
+            -webkit-box-shadow: none;
+            -moz-box-shadow: none;
+            box-shadow: none;
+            z-index: 1;
+            padding: 5px;
+            font-family: "Quicksand", sans-serif;
+            font-size: 0.9rem;
+            opacity: 0.9;
+            height: 100%;
+            box-sizing: border-box;
+            border-radius: 5px;
+            pointer-events: all;
+        }
+    }
+
+    .close-btn {
+      position: absolute; /* Position it absolutely within the container */
+        top: 10px; /* Distance from the top of the container */
+        right: 10px; /* Distance from the right side of the container */
+        background-color: transparent;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+      
+      p {
+        margin-top: auto;
+        display: inline-flex;
+        align-content: center;
+        justify-content: center;
+        font-family: "Quicksand", sans-serif;
+        box-sizing: border-box;
+        padding: 5px 10px 5px 10px;
+        color: white;
+        font-size: 0.75em;
+        font-weight: bold;
+        background-color: rgba(11, 11, 11, 0.75);
+        border-radius: 5px;
+        border: unset;
+    }
+
+    p:hover {
+        background-color: rgba(11, 11, 11, 1);
+        cursor: pointer;
+    }
+
+    }
+
+    
+
+    .filter-group {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+
+        label {
+            font-size: 0.75rem;
+            margin-bottom: 5px;
+        }
+    
+            input {
+            border: unset;
+            border: 1px solid;
+            display: block;
+            background-image: none;
+            background-color: rgba(255, 255, 255, 0.95);
+            -webkit-box-shadow: none;
+            -moz-box-shadow: none;
+            box-shadow: none;
+            z-index: 1;
+            padding: 5px;
+            font-family: "Quicksand", sans-serif;
+            font-size: 0.9rem;
+            opacity: 0.9;
+            height: 100%;
+            box-sizing: border-box;
+            border-radius: 5px;
+            pointer-events: all;
+        }        
+
+    }      
+
+    .btns-container {
+        display: flex;
+        gap: 1em;
+        align-items: left;
+        width: 100%;
+        margin-left: 5%;
+
+    }
+
+    .btns-container p {
+        margin-top: auto;
+        display: inline-flex;
+        align-content: center;
+        justify-content: center;
+        font-family: "Quicksand", sans-serif;
+        box-sizing: border-box;
+        padding: 5px 10px 5px 10px;
+        color: white;
+        font-size: 0.75em;
+        font-weight: bold;
+        background-color: rgba(11, 11, 11, 0.75);
+        border-radius: 5px;
+        border: unset;
+    }
+
+    p:hover {
+        background-color: rgba(11, 11, 11, 1);
+        cursor: pointer;
+    }
+}
+  .curated-switch {
+      display: flex;
+      /* flex-direction: row; */
+      /* align-items: center; */
+      justify-content: flex-start;
+      /* gap: 0.2rem; */
+  }
+
+  .switch {
+    position: relative;
+    display: inline-block;
+    min-width: 40px;
+    width: 40px;
+    height: 20px;
+    vertical-align: middle;
+    margin-bottom: 0px;
+}
+
+.switch input {
+    display: none;
+    /* Hide the default checkbox */
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    /* Gray color by default */
+    transition: 0.4s;
+    /* Smooth transition for the slide effect */
+    border-radius: 34px;
+    /* Rounded corners */
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 15px;
+    width: 15px;
+    left: 2px;
+    bottom: 3px;
+    background-color: white;
+    /* White circle by default */
+    transition: 0.4s;
+    /* Smooth transition for the slide effect */
+    border-radius: 50%;
+    /* Rounded circle */
+}
+
+input:checked+.slider {
+    background-color: rgba(11, 11, 11, 0.75);
+    /* Blue color when activated */
+}
+
+input:checked+.slider:before {
+    transform: translateX(20px);
+    /* Move circle to the right */
+}
+
+  .filter-close {
+    position: fixed;
+    z-index: 1;
+    top: 150px;
+    transform: translateX(-50%);
+    width: 43%;
+    left: 50%;
+    background-image: none;
+    background-color: transparent;
+    padding: 15px;
+    border-radius: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
+    width: 80%; /* Increase the width of the container */
+    /* justify-content: space-between; */
+    justify-content: space-around;      
+
+    .close-btn {
+      position: absolute; /* Position it absolutely within the container */
+        top: 5px; /* Distance from the top of the container */
+        right: 15px; /* Distance from the right side of the container */
+        background-color: transparent;
+        border: none;
+        font-size: 1rem;
+        cursor: pointer;
+      
+      p {
+        margin-top: auto;
+        display: inline-flex;
+        align-content: center;
+        justify-content: center;
+        font-family: "Quicksand", sans-serif;
+        box-sizing: border-box;
+        padding: 5px 10px 5px 10px;
+        color: white;
+        font-size: 0.75em;
+        font-weight: bold;
+        background-color: rgba(11, 11, 11, 0.75);
+        border-radius: 5px;
+        border: unset;
+    }
+
+    p:hover {
+        background-color: rgba(11, 11, 11, 1);
+        cursor: pointer;
+    }
+
+    }     
+
+}
+}
+
+/*Filter End*/
+@media screen and (min-width: 800px) {
+  .LocationPicker {
+    width: 45%;
+  }
+
+  /* .button-container {
+    width: 100%;
+    left: 27.5%;
+  } */
+
+  .filter-container .filter-sec,  .filter-container .filter-close{
+      width: 43%; /* Adjust width for larger screens */
+
+      .filter-group {
+        width: 40%;
+      }
+  }
+
+  .code-mode-div {
+    width: 45%;
+  }
+
+  
+}
+
+@media screen and (max-width: 1100px) {
+  .custom-marker-clustering-map {    
+    height: 100vh;
+  }
+
+  
+}

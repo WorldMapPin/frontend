@@ -1,0 +1,295 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000; /* Ensure the overlay is above other content */
+}
+
+.modal {
+  position: relative;
+  background-color: white;
+  padding: 2px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 900px;
+  max-width: 65%; /* Ensures it doesn't exceed the viewport width */
+  max-height: 70%; /* Limit modal height to avoid overflow */
+  overflow-y: auto; /* Enable scrolling if content overflows */
+  }
+
+.modal .close-button-stats {
+  position: absolute;
+  top: 1%; /* Aligns to the top */
+  right: 1%; /* Aligns to the right */
+  padding: 10px; /* Adds some padding for better click area */
+  background: none;
+  border: none;
+  font-size: 12px;
+  cursor: pointer;
+  color: #333;
+  z-index: 1010; /* Ensures the button is clickable above other content */
+  
+  margin-top: auto;
+  display: inline-flex;
+  align-content: center;
+  justify-content: center;
+  font-family: "Quicksand", sans-serif;
+  box-sizing: border-box;
+  padding: 5px 10px 6px 9px;
+  color: white;
+  font-weight: bold;
+  background-color: rgba(11, 11, 11, 0.75);
+  border-radius: 5px;
+  border: unset;
+}
+
+.modal .close-button-stats:hover {
+  color: #ed6d28;
+  background-color: rgba(11, 11, 11, 1);
+  cursor: pointer;
+}
+
+.team-stats-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.left-section-team {
+  flex: 1;
+  overflow: hidden; /* Prevent sections from overflowing */
+  flex-direction: column;
+  display: flex; /* Set the container as a flexbox */  
+  align-items: center; /* Center the items vertically */  
+  display: flex;
+  max-height: 60vh;  
+}
+
+.left-section-team .left-left h3 {
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.overflowleft {
+  overflow-y: auto;
+  
+  flex-direction: column;
+  display: flex; /* Set the container as a flexbox */  
+  align-items: center; /* Center the items vertically */  
+  display: flex;
+}
+
+.stats-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  top: 0;
+  width: 100%;
+  max-width: 350px;
+  border-bottom: 1px dotted #ccc;
+}
+
+.total-pins-display {
+  margin-right: 100px;
+  margin-left: 100px;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  margin-bottom: 30px;
+  border: 3px solid;
+  border-radius: 10%;
+  animation: color-change 6s infinite;
+  border-radius: 25%;  
+  padding: 8px 12px;
+  border-radius: 12px;
+  white-space: nowrap;
+  text-overflow: ellipsis; 
+  z-index: 1;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes color-change {
+  0%, 100% { 
+    border-color: red;
+    border-style: solid;
+  }
+  25% { 
+    border-color: yellow;
+    border-style: solid;
+  }
+  50% { 
+    border-color: rgb(6, 211, 6);
+    border-style: solid;
+  }
+  75% { 
+    border-color: rgb(24, 180, 252);
+    border-style: solid;
+  }
+}
+
+li {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.total-pins-display span {
+  font-weight: bold;
+  color: #000000;
+  margin-right: 10px;
+}
+
+.stats-list ul {
+  padding: 8px;  
+  font-size: 16px;  
+  left: 0;
+}
+
+.stats-list ul:last-child {
+  border-bottom: none;  
+}
+
+/* Add a vertical line (border) between sections */
+.middle {
+  border-right: 1px solid #ddd; /* Thin line separating the sections */
+  width: 2px; /* Set width to make the line visible */
+  flex-shrink: 0; /* Prevent shrinking */
+  height: auto; /* Set height to auto */
+  align-self: stretch; /* Stretch to fill the available space */
+}
+
+
+.right-section {
+  flex: 1;
+  overflow: hidden; /* Prevent sections from overflowing */
+}
+
+.right-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-height: 65vh;
+  overflow-y: auto;
+}
+
+.team-members {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Two columns layout */
+  gap: 10px; /* Space between team members */
+  max-height: 100%; /* Limit height to keep the modal manageable */
+  margin-right: -10px;
+  overflow-y: auto; /* Enable scrolling if too many team members */
+}
+
+.team-member {
+  display: flex;
+  flex-direction: column; /* Stack profile pic and username vertically */
+  align-items: center; /* Center align the items */
+  border-radius: 15px;
+  transition: background-color 0.2s;
+  text-align: center; /* Center align the username text */
+  width: 120px; /* Larger size for better visibility */
+  height: 130px;
+  gap: 3px;
+  box-sizing: border-box; /* Ensures padding doesn't affect overall size */
+}
+
+/* Styling the scrollbar */
+::-webkit-scrollbar {  
+  width: 6px; /* Adjust the width to make it thinner */
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Light grey background for the track */
+  border-radius: 10px; /* Rounds the corners */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888; /* Darker thumb color */
+  border-radius: 10px; /* Rounds the corners */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Changes color on hover */
+}
+
+.username-link {
+  text-decoration: none;
+  color: inherit; /* Keeps the text color consistent with the design */
+  display: block; /* Ensures the entire block is clickable */
+}
+
+.profile_description {
+  margin: 0px 0 0 0;
+  padding: 5px;
+  font-size: 10px;
+  color: #707070;
+  line-height: 1.4;
+  border-top: 1px solid #dddddd;
+  padding-top: 8px;
+  max-height: 40px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
+  text-decoration: none;
+}
+
+.team-member:hover {
+  background-color: #f0f0f0;
+}
+
+.profile-pic {
+  margin-top: 7%;
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #ed6d28;
+}
+
+@media screen and (max-width: 750px) {
+
+  .modal {    
+    min-width: 95%; /* 800px Increased minimum width to make the modal bigger */    
+    max-height: 70%; /* Limit modal height to avoid overflow */
+    top: 50px;
+  }
+  
+  .team-stats-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 20px;
+  }
+
+  .stats-list {
+    width: 100%;
+  }
+
+  .left-section-team {    
+    max-height: none;
+  }
+
+  .right-section {
+    max-height: none;
+  }
+
+  .middle {
+    border-bottom: 1px solid #ddd; /* Thin line separating the sections */
+    width: 100%; /* Set width to fill the available space horizontally */
+    height: 2px; /* Set height to make the line thin and horizontal */
+    flex-shrink: 0; /* Prevent shrinking */
+    align-self: stretch; /* Ensure it aligns properly in the layout */
+  }
+
+}

@@ -1,0 +1,435 @@
+/* CSS for User information */
+.user-profile-display {
+  display: flex;
+}
+
+.user-profile-display.minimized {
+  width: 70px;
+  max-width: 70px;
+  padding: 5px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.profile-content {
+  display: flex;
+  flex-direction: row;
+  align-items: top;
+  gap: 20px;
+  padding-left: 1%;
+}
+
+.profile-picture {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  margin-top: 10%;
+  object-fit: cover;
+  border: 2px solid #007bff;
+  margin-bottom: 5px;
+  position: relative;
+}
+
+.username-link {
+  font-size: 12px;
+  color: #007bff;
+  text-decoration: none;
+  cursor: pointer;
+  margin-bottom: 5px;
+  text-align: center;
+}
+
+.username-link:hover {
+  text-decoration: underline;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  top: 0;
+}
+
+.profile-column {
+  flex: 1; /* Adjust based on preference */  
+}
+
+.details-column {
+  flex: 3; /* Adjust based on preference */
+  
+}
+
+.details-column p {
+  float: left;
+  clear: both;
+}
+
+.username {
+  font-weight: bold;
+  margin-bottom: 0px;
+  font-size: 18px;
+  color: #333;
+}
+
+.about {
+  margin-top: 10px;
+  font-size: 13px;
+  color: #555;
+  line-height: 1.4;
+}
+
+.location {
+  margin-top: 0px;
+  font-size: 12px;
+  color: #777;
+}
+
+.website {
+  margin: 0;
+  font-size: 12px;
+  color: #007bff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.website:hover {
+  text-decoration: underline;
+}
+
+.pin-count {
+  right: 0;
+  font-size: 24px;
+  color: #333;
+  font-weight: bold;
+  align-self: flex-end;
+  border: 3px solid #404c54; /* Initial border color */
+  padding: 10px;
+  border-radius: 25%;
+  border: 3px solid #404c54; /* Initial border color */
+  padding: 8px 12px; /* Adjust padding for a balanced look */
+  border-radius: 12px; /* Rounded corners */  
+  max-width: 100%; /* MAKE THIS WORK WITH ANY TEXT */
+  white-space: nowrap;
+  overflow: hidden; /* Hides overflow neatly */
+  text-overflow: ellipsis;
+  transition: 0.3s; /* Smooth hover effects */
+  animation: spinColors 3s linear infinite; /* Retain spinning border animation */
+  z-index: 1; /* Keeps the count visible above background effects */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Adds a subtle shadow */
+  display: inline-block;
+  text-align: left;
+  margin: 0;
+}
+
+@keyframes spinColors {
+  0% {
+    border-color: #404c54; /* Dark-Grey */
+  }
+  33% {
+    border-color: #ed6d28; /* Light Orange */
+  }
+  66% {
+    border-color: #d73d15; /* Dark Orange */
+  }
+  100% {
+    border-color: #404c54; /* Dark-Grey */
+  }
+}
+
+
+.pin-count-Minimized {
+  margin: 0;
+  font-size: 10px;
+  color: #333;
+  font-weight: bold;
+  align-self: flex-end;
+}
+
+.rank {
+  position: relative;
+  font-size: 13px;
+  color: #000000;
+  font-weight: bold;
+  /* background: linear-gradient(145deg, rgba(237, 109, 40, 0.8) 30%, rgba(215, 61, 21, 0.8) 80%); */
+  padding: 8px 16px;
+  border-radius: 5px;
+  /* display: inline-block; */
+  text-align: center;
+  cursor: pointer;
+  overflow: hidden;
+  top: -9px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.rank::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  right: -1px;
+  bottom: -1px;
+  border-radius: 6px;
+  background: radial-gradient(circle, rgba(255, 206, 179, 0.123) 60%, rgb(255, 255, 255) 70%, transparent 80%);
+  background-size: 500% 10%;
+  animation: shimmer-radial 6s ease-in-out infinite;
+}
+
+@keyframes shimmer-radial {
+  0% {
+    background-position: 150% 150%;
+  }
+  100% {
+    background-position: 50% 50%;
+  }
+  
+}
+
+.rank:hover {
+  box-shadow: 0px 4px 8px rgba(199, 72, 4, 0.4);
+}
+
+.toggle-button {
+  background: none;
+  border: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 10;
+  padding: 0;
+  outline: none;
+  opacity: 0; /* Make the button invisible */
+}
+
+.toggle-button2 {
+  background: none;
+  border: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 10;
+  padding: 0;
+  outline: none;
+}
+
+/* The side tab for larger screens */
+.user-side-tab {
+  margin-top: 60px;
+  height: 100%; /* Full height */
+  width: 0; /* Start with no width - hidden */
+  position: fixed; /* Fixed position */
+  top: 0;
+  left: 0; /* Slide in from the left */
+  background-color: rgba(255, 255, 255, 0.86);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  /*overflow-x: hidden;  Disable horizontal scroll */
+  padding-top: 60px; /* Place content 60px from the top */
+  transition: width 0.5s; /* Animation for width */
+  color: rgb(0, 0, 0); /* Text color */
+  z-index: 0; /* Ensure it's on top of other content */
+}
+
+/* Content inside the tab */
+.user-side-tab .content {
+  margin-left: 5px;
+  margin-right: 0px;
+  max-height: calc(100% - 50px);
+  overflow-y: auto; /* Enables scrolling */
+}
+
+/* Close button */
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 36px;
+  text-decoration: none;
+  color: rgb(0, 0, 0);
+}
+
+/* Button to open the tab */
+button {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1001; /* Ensure button is on top of other content */
+}
+
+/* When the tab is open on larger screens */
+.user-side-tab.open {
+  width: 800px;
+}
+
+@media screen and (max-width: 1100px) {
+  /* Adjust styles for smaller screens */
+  .user-side-tab {
+    width: 95%; /* 95% of screen width */
+    height: 0; /* Start with no height - hidden */
+    bottom: 0; /* Slide in from the bottom */
+    left: 50%; /* Start positioning from the center */
+    transform: translateX(-50%); /* Center the tab horizontally */
+    top: auto; /* Override the top position */
+    transition: height 0.5s; /* Animation for height */
+    visibility: hidden;
+  }
+
+  /* When the tab is open on smaller screens */
+  .user-side-tab.open {
+    height: 75%; /* Expand to 50% of the screen height */
+    width: 95%; /* Keep 95% width */
+    padding-top: 25px;
+    visibility: visible;
+    z-index: 0;
+  }
+
+  .user-side-tab .content {
+    margin-left: 5px;
+  }
+
+  .resize-bar {
+    width: 100%; /* Full width of the tab */
+    height: 10px; /* Height of the drag bar */
+    background-color: black; /* Color of the bar */
+    cursor: ns-resize; /* Cursor changes to indicate resize */
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  .pin-count {
+    margin-left: 0px;
+    margin-right: 100%;
+    font-size: 15px;
+    margin-top: 5px;
+    margin-bottom: 8px;
+  }
+
+  .profile-picture {
+    width: 100px;
+    height: 100px;
+  }
+
+  .about {
+    font-size: 11px;
+  }
+
+  .location {
+    margin-top: -3px;
+    margin-bottom: 2px;
+  }
+
+  .user-website {
+    margin: 0;
+    margin-top: 3px;
+    margin-bottom: 5px;
+  }
+  
+  .close-btn {
+    top: 0px;
+  }
+}
+
+/* CSS to disable scrolling */
+.no-scroll {
+  overflow: hidden;
+  touch-action: none; /* Prevent touch scrolling on mobile devices */
+}
+
+.circle-container {  
+  margin-top: 60px;
+  position: fixed;
+  top:-75px;
+  left: -75px;
+  display: block;
+}
+
+.circle-container-hide {  
+  margin-top: 60px;
+  position: fixed;
+  top:-75px;
+  left: -75px;
+  display: none;
+}
+
+.circle {
+  background: rgba(255, 255, 255, 0.9);
+  height: 200px;
+  width: 200px;
+  border-radius: 50%;
+  position: relative;
+  transition: transform 0.5s linear;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.circle2 {   
+  height: 195px;
+  width: 195px; 
+  border: 2px solid #ddd;
+  border-radius: 50%;
+}
+
+/* Minimized profile picture styling */
+.minimized-profile {
+  margin-top: 60px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  position: fixed;
+  top: 5px;
+  left: 5px;
+  padding: 5px 5px;
+  flex-direction: column;
+  /* z-index: 1100; */
+}
+
+.minimized-profile:hover {
+  transform: translateY(0px) scale(1.05); /* Lifts and scales the entire profile on hover */
+}
+
+.column-link-n-pin {
+  flex-direction: column;
+}
+
+.column-link-n-pin .pin-count-Minimized{
+  margin-top: 3px;
+}
+
+.minimized-profile-picture {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #007bff;
+}
+
+.minimized-profile-picture:hover {
+  transform: rotate(5deg) scale(1.1); /* Slight rotation and scale effect on hover */
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.5); /* Adds a glow effect around the profile picture */
+}
+
+
+@media screen and (max-width: 1100px) {
+
+  .minimized-profile {
+    margin-top: 0;
+  }
+
+  .circle-container {  
+    margin-top: 0;
+  }
+
+  .user-side-tab {
+    margin-top: 0;
+  }
+}
