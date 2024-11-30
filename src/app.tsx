@@ -203,7 +203,7 @@ const App = () => {
 
   }
 
-  var [openWinterChallengeOnceperLink, SetOpenWinterChallengeOnceperLink] = useState(true);
+  const [openWinterChallengeOnceperLink, SetOpenWinterChallengeOnceperLink] = useState(true);
   const [showWinterchallangeTab, setShowWinterchallangeTab] = useState(false);
 
   function OpenWinterChallenge() {
@@ -499,7 +499,7 @@ const App = () => {
           <Route path="t/:tag" element={null} />                  
           <Route path="/:username" element={<YourComponent />} />
           <Route path="p/:permlink" element={<PermLink />} />
-          <Route path="/leaderboard" element={<OpenWinterChallenge />} />
+          <Route path="/winter-challenge" element={<OpenWinterChallenge />} />
           <Route path="*" element={null} /> {/*TODO Add PAGE NOT FOUND*/}
         </Routes>
       </BrowserRouter>
