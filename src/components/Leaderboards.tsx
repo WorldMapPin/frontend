@@ -31,8 +31,8 @@ const Leaderboards = ({
     setGeojson,
     newSearchParams,
     setLocation,
-    setMyLocationZoom
-
+    setMyLocationZoom,
+    showWinterchallangeTab
 }) => {
     const [onlyLoadDataOnce, setOnlyLoadDataOnce] = useState(true);
     const [sortedTDsAndHonerable, setSortedTDsAndHonerable] = useState<[number , string, number, number ][]>([]);
@@ -345,6 +345,10 @@ const Leaderboards = ({
                 //loadRankingData();
                 //setOnlyLoadDataOnce(false);
                 onlyLoadonce = false;
+
+                if(showWinterchallangeTab){
+                    setWinterChallenge(true);
+                }
           }
         }
 
@@ -576,7 +580,7 @@ const Leaderboards = ({
                 <div className="leaderboard-header" style={{backgroundColor: 'rgba(165, 203, 225, 0.8)'}}>
                     <div className="placement-header">Placement</div>
                     <div className="username-header">Username</div>
-                    <div className="Number-of-Curated-Posts-header">Number of Curated Posts</div>
+                    <div className="Number-of-Curated-Posts-header">Number of Tickets</div>
                 </div>
             )}
 
