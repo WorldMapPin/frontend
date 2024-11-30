@@ -52,6 +52,7 @@ const MapTypeId = {
   TERRAIN: 'terrain'
 };
 
+// Map styles
 export type MapConfig = {
 id: string;
 label: string;
@@ -200,6 +201,21 @@ const App = () => {
     return null
 
 
+  }
+
+  const [openWinterChallengeOnceperLink, SetOpenWinterChallengeOnceperLink] = useState(true);
+  const [showWinterchallangeTab, setShowWinterchallangeTab] = useState(false);
+
+  function OpenWinterChallenge() {
+
+    if(openWinterChallengeOnceperLink){
+      setLeaderboardOpen(true);
+      setShowWinterchallangeTab(true);
+
+      SetOpenWinterChallengeOnceperLink(false);
+    }
+
+    return null
   }
 
   const [showfiltersettings, setShowfiltersettings] = useState(false);
@@ -483,6 +499,7 @@ const App = () => {
           <Route path="t/:tag" element={null} />                  
           <Route path="/:username" element={<YourComponent />} />
           <Route path="p/:permlink" element={<PermLink />} />
+          <Route path="/winter-challenge" element={<OpenWinterChallenge />} />
           <Route path="*" element={null} /> {/*TODO Add PAGE NOT FOUND*/}
         </Routes>
       </BrowserRouter>
@@ -712,6 +729,7 @@ const App = () => {
             newSearchParams={newSearchParams}
             setLocation={setLocation}
             setMyLocationZoom={setMyLocationZoom}
+            showWinterchallangeTab={showWinterchallangeTab}
           />
         )}
         
