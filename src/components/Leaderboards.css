@@ -97,6 +97,67 @@
   margin: 10px auto; /* Centers the image with top and bottom margin */
 }
 
+.message {
+	width: 100%;
+	margin-top: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000;
+    background: #f0f0f0; 
+    font-size: 20px;
+	animation: fadeInOut 1.5s infinite;
+}
+
+@keyframes fadeInOut {
+    0%, 100% { opacity: 1; background: #f0f0f0;  }
+    50% { opacity: 0; background: #ffc889; }
+}
+
+.leaderboard-header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 10px 0;
+    background-color: #f4f4f4;
+	margin-top: 5px;
+    border-top: 2px solid #000000;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.placement-header {
+	margin-left: 5px;
+    text-align: center;
+    color: #202020;
+	font-size: 12px;
+}
+.username-header	{
+	margin-left: -10px;
+	margin-right: 55px;
+    text-align: center;
+    color: #202020;
+	font-size: 12px;
+}
+.Number-of-Curated-Posts-header {
+	margin-left: 15px;
+    text-align: center;
+    color: #202020;
+	font-size: 12px;
+}
+
+.placement-header {
+    flex: 1;
+}
+
+.username-header {
+    flex: 2;
+}
+
+.Number-of-Curated-Posts-header {
+    flex: 2;
+}
+
+
 .tabs {
   display: flex;
   flex-direction: row;
@@ -249,12 +310,12 @@ Leaderboard
 }
 
 .leaderboard-summary:last-child {
-  margin-bottom: 170px;  /* More space for the last post only */
+  margin-bottom: 220px;  /* More space for the last post only */
 }
 
 .next-users {
   text-align: center; /* Center-align the button */  
-  margin-bottom: 150px; /* Spacing above and below the button */
+  margin-bottom: 200px; /* Spacing above and below the button */
 }
 
 .next-users p {
@@ -263,7 +324,7 @@ Leaderboard
   border: none;
   padding: 10px;
   margin: 0px;
-  /* margin-right: 7px; */
+  margin-right: 6px;
   border-radius: 5px;
   font-size: 14px;
   cursor: pointer;
@@ -293,10 +354,14 @@ Leaderboard
 
 /* Content inside the tab */
 .leaderboard-side-tab .content {
-  margin-left: 5px;
   margin-right: 0px;
   max-height: calc(100% - 50px);
   overflow-y: auto; /* Enables scrolling */
+}
+
+.leaderboard-side-tab .winter-content{
+	max-height: calc(100% - 50px);
+	overflow-y: auto; /* Enables scrolling */
 }
 
 .leaderboard-side-tab.open {
@@ -418,14 +483,15 @@ Leaderboard
 }
 
 .leaderboard-summary small {
-  font-size: 1.5em;
-  color: #000000;
-  width: 60px;
-  display: inline-block;
-  overflow: hidden;
-  white-space: nowrap;
-  flex-shrink: 0;
-  flex-grow: 0;
+	font-size: 18px;
+	font-weight: bold;
+	color: #000000;
+	width: 60px;
+	display: inline-block;
+	overflow: hidden;
+	white-space: nowrap;
+	flex-shrink: 0;
+	flex-grow: 0;
 }
 
 .leaderboard-profile-content {
@@ -434,6 +500,11 @@ Leaderboard
 	flex-direction: row; /* Change to row */
 	align-items: center; /* Align items in the center */
 	width: 100%;
+}
+
+.leaderboard-summary h4 {
+	font-size: 17px;
+	margin: 0;
 }
 
 .leaderboard-summary h3{
@@ -447,7 +518,7 @@ Leaderboard
 }
 
 .leaderboard-username-link {
-  /* font-size: 12px; */
+  font-size: 17px;
   color: #000000;
   text-decoration: none;
   display: block;
@@ -543,6 +614,27 @@ Leaderboard
 
 @media screen and (max-width: 1100px) {
 	/* Adjust styles for smaller screens */
+	.leaderboard-input {
+		width: 100%;
+	}
+
+	.placement-header {
+		position: fixed;
+		margin-left: 20px;
+	}
+
+	.username-header {
+		position: fixed;
+		margin-left: 140px;
+	}
+
+	.Number-of-Curated-Posts-header {
+		display: flex;
+		flex-grow: 1; /* Allows this element to take up any extra space */
+    	justify-content: flex-end; /* Aligns the text to the right */
+		margin-right: 5px;
+	}
+
 	.leaderboard-side-tab {
 		width: 95%; 
 		height: 0; /* Start with no height - hidden */
@@ -631,13 +723,14 @@ Leaderboard
 	.leaderboard-summary h4 {
 		position: relative;
 		right: 5px;
+		margin: 0;
 	}
 
 	.leaderboard-profile-picture {
 		width: 30px;
 		height: 30px;
 		margin-bottom: -5px;
-		margin-right: 40px;
+		margin-right: 20px;
 	}
 
 	.leaderboard-username-link {
@@ -650,15 +743,15 @@ Leaderboard
 		text-align: center;
 		position: relative;
 		
-		padding-right: 30px;
+		padding-right: 0px;
 	}
 
 	.next-users {		
-		margin-bottom: 100px; /* Spacing above and below the button */
+		margin-bottom: 140px; /* Spacing above and below the button */
 	}
 
 	.leaderboard-summary:last-child {
-		margin-bottom: 120px;  /* More space for the last post only */
+		margin-bottom: 150px;  /* More space for the last post only */
 	}
   }
 

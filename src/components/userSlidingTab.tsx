@@ -164,7 +164,7 @@ function SlidingUserTab({ userInfowindowData, username, pinCount, toggleMenuApp,
             <div className='profile-column'>
               <img src={profilePic} alt={`${username}'s profile`} className="profile-picture" />
               <a href={`https://peakd.com/@${username}`} target="_blank" rel="noopener noreferrer" className="username-link">@{username}</a>
-              {rank !== 0 && (<p className="rank">Rank: {rank || 0}</p>)}
+              {rank !== 0 && (<p className="rank">Curation Rank: {rank || 0}</p>)}
             </div>
           </div>
             {!isMinimized && (

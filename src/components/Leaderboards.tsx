@@ -35,7 +35,7 @@ const Leaderboards = ({
 
 }) => {
     const [onlyLoadDataOnce, setOnlyLoadDataOnce] = useState(true);
-    const [sortedTDsAndHonerable, setSortedTDsAndHonerable] = useState<[number , string, number ][]>([]);
+    const [sortedTDsAndHonerable, setSortedTDsAndHonerable] = useState<[number , string, number, number ][]>([]);
     const [sortedWinterChallenge, setSortedWinterChallenge] = useState<[number , string, number ][]>([]);
 
     const [slice, setSlice] = useState(20);
@@ -48,6 +48,11 @@ const Leaderboards = ({
     const [loading, setloading] = useState(false);
     const [loader, setLoader] = useState(0);
 
+    const params = useParams();
+
+    const [searchParams, setSearchParams] = useState(
+        params?.username ? { author: params.username } : (params?.permlink ? { permlink: params.permlink } : (params?.tag ? { tags: [params?.tag] } : { curated_only: false }))
+    );
 
     function chunkArray(array, size) {
         const chunks = [];
@@ -55,6 +60,26 @@ const Leaderboards = ({
           chunks.push(array.slice(i, i + size));
         }
         return chunks;
+    }
+
+    // New function to get the number of posts by a user
+    async function getUserPostCount(username) {
+        // Update searchParams to include the username
+        const newParams = { ...searchParams, author: username };
+
+        // Set the new search parameters
+        // setSearchParams(newParams);
+
+        try {
+            // Making an API call with the updated parameters
+            const response = await axios.post('https://worldmappin.com/api/marker/0/150000/', newParams);
+            
+            // Return the number of posts
+            return response.data.length;
+        } catch (error) {
+            console.error('Error fetching posts:', error);
+            return 0; // Return 0 in case of an error
+        }
     }
 
     const fetchUsername = async (usernameArray) => {
@@ -110,12 +135,47 @@ const Leaderboards = ({
         setloading(false);
     };
 
-    // Function to load ranking data from the API
+    // Function to load ranking data from the API // Okay THIS IS WAY TOO SLOW !!!!!
+    // async function loadRankingData() {
+    //     if(sortedTDsAndHonerable_afterFirstLoad.length === 0){
+    //         try {
+    //             const response = await axios.get('https://worldmappin.com/api/ranking');
+    //             console.log(response.data);
+    
+    //             // Batch processing function
+    //             async function processBatch(data, batchSize) {
+    //                 const batchResults = [];
+    //                 for (let i = 0; i < data.length; i += batchSize) {
+    //                     const batch = data.slice(i, i + batchSize);
+    //                     const results = await Promise.all(batch.map(async item => {
+    //                         const postCount = await getUserPostCount(item.author);
+    //                         return [item.rank, item.author, item.tds, postCount];
+    //                     }));
+    //                     batchResults.push(...results);
+    //                     console.log(results);
+    //                     break;
+    //                 }
+    //                 return batchResults;
+    //             }
+    
+    //             // Process data in batches
+    //             const formattedData = await processBatch(response.data, 100); // Adjust batch size as needed
+    
+    //             setSortedTDsAndHonerable(formattedData);
+    //             sortedTDsAndHonerable_afterFirstLoad = formattedData;
+    //         } catch (err) {
+    //             console.error('Error fetching ranking data:', err);
+    //         }
+    //     } else {
+    //         setSortedTDsAndHonerable(sortedTDsAndHonerable_afterFirstLoad);
+    //     }            
+    // }
+
     async function loadRankingData() {
         if(sortedTDsAndHonerable_afterFirstLoad.length === 0){
             try {
                 const response = await axios.get('https://worldmappin.com/api/ranking');
-                console.log(response.data)
+                // console.log(response.data)
                 const formattedData = response.data.map(item => [item.rank, item.author, item.tds]);
                 setSortedTDsAndHonerable(formattedData);
                 sortedTDsAndHonerable_afterFirstLoad = formattedData;
@@ -143,13 +203,7 @@ const Leaderboards = ({
             fetchUsername(sortedTDsAndHonerable_afterFirstLoad.slice(0, 20));
             onlyLoad10UsersOnce = false;
         }
-    }
-
-    const params = useParams();
-
-    const [searchParams, setSearchParams] = useState(
-        params?.username ? { author: params.username } : (params?.permlink ? { permlink: params.permlink } : (params?.tag ? { tags: [params?.tag] } : { curated_only: false }))
-    );
+    }    
 
     const handleFilter = ( username, filterData) => {
         const pos = {
@@ -157,7 +211,7 @@ const Leaderboards = ({
             lng: 20,
         };
 
-        setMyLocationZoom(3);
+        setMyLocationZoom(1);
         setLocation({ location: pos })
         // setFetchingMarkers(true)
         // const oneMonthAgo = getOneMonthAgo();
@@ -181,21 +235,21 @@ const Leaderboards = ({
         });
         // setLowEndDevice(false);
         // setShowfiltersettings(false);
-    };
+    };    
 
     async function loadWinterChallengeData() {
         if (sortedWinterChallenge_afterFirstLoad.length === 0) {
             try {
-                const response = await axios.get('https://winter-challenge-d0a071006360.herokuapp.com/api/data');
-                console.log(response.data);
-                // Assuming the data structure is as described above
+                const response = await axios.get('https://worldmappin.com/api/rankingWinter');
+                // console.log(response.data);
+                
                 const formattedData = response.data.map((item, index) => {
                     return {
-                        rank: index, // If rank is needed or it can be another logic
-                        username: item[0],
-                        tickets: item[1] // This represents the ticket number
+                        rank: index + 1,
+                        username: item.author,
+                        tickets: item.tickets
                     };
-                }).slice(1); // Skip the header row
+                });   
 
                 // Here the usernames need to sorted
                 setSortedWinterChallenge(formattedData);
@@ -312,7 +366,6 @@ const Leaderboards = ({
     const activbuttonClick = () => {
         setWinterChallenge(false);
         setUserProfiles(userProfiles_afterfirstload);
-        console.log(winterChallenge)
     };
 
     const winterbuttonClick = () => {
@@ -327,10 +380,7 @@ const Leaderboards = ({
     }, []);
 
     function logInput() {
-        // setSlice(100);
-        var input = document.getElementById('inputField').value // Convert input to lowercase
-
-        console.log(sortedTDsAndHonerable)
+        var input = document.getElementById('inputField').value.toLowerCase() // Convert input to lowercase
 
         // Check if input is empty
         if (!input) {
@@ -338,41 +388,60 @@ const Leaderboards = ({
             return;
         }
 
-        // Find the index of the username in the sortedTDsAndHonerable array
-        const index = sortedTDsAndHonerable.findIndex(entry => entry[1].toLowerCase() === input);
+        if (winterChallenge) {
+            // Find the index of the username in the sortedWinterChallenge array
+            const index2 = sortedWinterChallenge.findIndex(entry => { return entry.username === input; });
 
-        if (index === -1) {
-            console.log('Username not found.');
-            return; // If username is not found, exit the function
+            if (index2 === -1) {
+                console.log('Username not found.');
+                return; // If username is not found, exit the function
+            }
+
+            if (index2 > 0) {
+                const usernameAbove = sortedWinterChallenge[index2-1].username;
+                scrollToUser(usernameAbove, input)
+            } else {
+                scrollToUser(input, input)
+            }
         }
+        else {
+            // Find the index of the username in the sortedTDsAndHonerable array
+            console.log(input)
+            const index = sortedTDsAndHonerable.findIndex(entry => entry[1].toLowerCase() === input);
 
-        // Determine the number of entries to show above and below the found username
-        const numEntriesToShow = 50; // Adjust this value as needed
-        const startIndex = Math.max(index - numEntriesToShow, 0); // Prevent going below the start of the array
-        const endIndex = Math.min(index + numEntriesToShow, sortedTDsAndHonerable.length - 1); // Prevent going past the end of the array
+            if (index === -1) {
+                console.log('Username not found.');
+                return; // If username is not found, exit the function
+            }        
 
-        // Slice the array to get the relevant entries
-        const relevantEntries = sortedTDsAndHonerable.slice(startIndex, endIndex + 1);
-        // Assuming fetchUsername does something with the sliced data
-        fetchUsername(relevantEntries);
-        setSlice(100);
-        
-        if (index > 0) {
-            const usernameAbove = sortedTDsAndHonerable[index - 1][1];
-            scrollToUser(usernameAbove, input)
-        } else {
-            scrollToUser(input, input)
+            var startIndex;
+            var endIndex;
+
+            // if index is above 500 then only fetch 100 usernames so 50 above and 50 below the username
+            if (index > 500) {
+                const numEntriesToShow = 50; // Adjust this value as needed
+                startIndex = Math.max(index - numEntriesToShow, 0);
+                endIndex = Math.min(index + numEntriesToShow, sortedTDsAndHonerable.length - 1);
+            } else {
+                const numEntriesToShow = 50; // Adjust this value as needed
+                startIndex = 0; // Math.max(index - numEntriesToShow, 0);
+                endIndex = Math.min(index + numEntriesToShow, sortedTDsAndHonerable.length - 1);
+            }
+
+            // Slice the array to get the relevant entries
+            const relevantEntries = sortedTDsAndHonerable.slice(startIndex, endIndex + 1);
+            
+            fetchUsername(relevantEntries);
+            setSlice(100);
+            
+            if (index > 0) {
+                const usernameAbove = sortedTDsAndHonerable[index-1][1];
+                scrollToUser(usernameAbove, input)
+            } else {
+                scrollToUser(input, input)
+            }
         }
     }
-
-    // function scrollToUser(username) {
-    //     const userElement = document.getElementById(`user-${username}`);
-    //     if (userElement) {
-    //         userElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    //     } else {
-    //         console.log('User element not found.');
-    //     }
-    // }
 
     function scrollToUser(usernameAbove, username) {
         const interval = setInterval(() => {
@@ -399,7 +468,16 @@ const Leaderboards = ({
 
     function handleCloseButton_reset_Leaderboard() {
         setSlice(20);
+        onlyLoad100UsersOnce = true;
         fetchUsername(sortedTDsAndHonerable_afterFirstLoad.slice(0, 20));
+    }
+
+    function showMessage() {
+        var messageDiv = document.getElementById('message');
+        messageDiv.innerText = 'Coming Soon';
+        setTimeout(() => {
+            messageDiv.innerText = ''; // Clear the message after 2 seconds
+        }, 2000);
     }
 
 
@@ -410,7 +488,7 @@ const Leaderboards = ({
             </div>
 
             <div className='tabs'>
-                <p className="tab active" id="most-active-users" onClick={activbuttonClick}><span className="icon" onClick={activbuttonClick}>🏆</span>Most Active Users</p> {/* On click setwinter to false and most active to true */}
+                <p className="tab active" id="most-active-users" onClick={activbuttonClick}><span className="icon" onClick={activbuttonClick}>🏆</span>Most Curated Users</p> {/* On click setwinter to false and most active to true */}
                 <p className="tab" id="winter-challenge" onClick={winterbuttonClick}><span className="icon">❄️</span>Winter Challenge
                 <div className="initial-snow">
                     <div className="snow">&#10052;</div>
@@ -467,14 +545,40 @@ const Leaderboards = ({
 
                 </p>
             </div>
-            <div className="leaderboard-input-div">
-                <a className="time-button" >Weekly</a>
-                <a className="time-button" >Monthly</a>
-                <a className="time-button" >Yearly</a>
-                <a className="time-button" >All Time</a>
-                <input type="text" id="inputField" placeholder="Enter username" className="leaderboard-input"></input>
-                <a className="leaderboard-input-btn" onClick={logInput}>Submit</a>
-            </div>
+
+            <div className="message" id="message"></div>
+            {!winterChallenge && (    
+                <div className="leaderboard-input-div">
+                    <a className="time-button" onClick={showMessage}>Weekly</a>
+                    <a className="time-button" onClick={showMessage}>Monthly</a>
+                    <a className="time-button" onClick={showMessage}>Yearly</a>
+                    <a className="time-button">All Time</a>
+                    <input type="text" id="inputField" placeholder="Enter username" className="leaderboard-input"></input>
+                    <a className="leaderboard-input-btn" onClick={logInput}>Search</a> 
+                </div>
+            )}
+            {winterChallenge && (    
+                <div className="leaderboard-input-div">
+                    <input type="text" id="inputField" placeholder="Enter username" className="leaderboard-input"></input>
+                    <a className="leaderboard-input-btn" onClick={logInput}>Search</a> 
+                </div>
+            )}
+            
+            {!winterChallenge && (  
+                <div className="leaderboard-header">
+                    <div className="placement-header">Placement</div>
+                    <div className="username-header">Username</div>
+                    <div className="Number-of-Curated-Posts-header">Number of Curated Posts</div>
+                </div>
+            )}
+
+            {winterChallenge && (  
+                <div className="leaderboard-header" style={{backgroundColor: 'rgba(165, 203, 225, 0.8)'}}>
+                    <div className="placement-header">Placement</div>
+                    <div className="username-header">Username</div>
+                    <div className="Number-of-Curated-Posts-header">Number of Curated Posts</div>
+                </div>
+            )}
 
             {loading && ( 
                 <div className='loadingbar'>
