@@ -26,8 +26,8 @@
     "start": "vite",
     "start-local": "vite --config ../vite.config.local.js",
     "build": "vite build",
+    "staging": "vite build --outDir /var/www/com.worldmappin/staging --emptyOutDir",
     "beta": "vite build --outDir /var/www/com.worldmappin/beta --emptyOutDir",
-    "public": "vite build --outDir /var/www/com.worldmappin/public --emptyOutDir",
-    "staging": "vite build --outDir /var/www/com.worldmappin/staging --emptyOutDir"
+    "public": "vite build --outDir /var/www/com.worldmappin/public"
   }
 }
