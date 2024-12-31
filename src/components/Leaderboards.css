@@ -164,7 +164,7 @@
   margin-left: 5px;
   margin-top: 10px;
   
-  p {
+  p {	
     padding-top: 30px;
     padding-bottom: 37px;
   }
@@ -186,6 +186,18 @@
 
 }
 
+.tab {
+    flex: 0 0 auto; /* Do not grow, do not shrink, auto basis */
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    padding: 30px 20px;
+    border: 1px solid #ffffff;
+    border-radius: 10px;
+    position: relative; /* Ensure stacking context for z-index */
+}
+
+
 .tab:hover {
   /* background-color: #ddd; */
 }
@@ -206,7 +218,15 @@
   /* overflow: hidden; */
 }
 
-.tab#most-active-users.active, .tab#winter-challenge.active {  
+#past-challenges {
+	background: linear-gradient(to right, #ffcda7 -10%, #ff5623 100%);
+	color: #000000;
+	margin-right: 5px;
+	/* position: relative; */
+	/* overflow: hidden; */
+}
+
+.tab#most-active-users.active, .tab#winter-challenge.active, .tab#past-challenges.active {  
   color: #000;
   font-weight: bold;
   background-color: #ffffff;  
@@ -216,15 +236,52 @@
   border-radius: 10px;
 }
 
+.scrollable-tabs {
+    display: flex;
+    flex-direction: row;
+    overflow-x: scroll; /* Enables horizontal scrolling */
+    flex-grow: 1; /* Takes remaining space */
+    position: relative;
+    margin-left: 10px; /* Space between Back tab and scrollable tabs */
+    
+    &::-webkit-scrollbar {
+        height: 6px;
+		margin-right: 5px;
+    }
+}
+
+/* Ensure the Back tab has a higher stacking context so it appears above the scrollable area */
+#back-tab {
+	background: linear-gradient(to right, #ff9858 -10%, #ffcda7 100%);
+    z-index: 1; /* Higher z-index to make it stack on top */
+    flex: 0 0 auto; /* Do not grow or shrink */
+	margin-right: -5px;
+	border: 1px solid #000;
+}
+
+#winter-challenge {
+    background: linear-gradient(to right, #a7f5ff -10%, #2370ff 100%);
+    color: #000000;
+    margin-right: 5px;
+}
+
+#future-challenge-1, #future-challenge-2 {
+    background: linear-gradient(to right, #ff56235c -10%, #ffcda736 100%);
+    color: #000000;
+    margin-right: 5px;
+}
+
+
 .loadingbar {	
 	margin-top: 5px;
     position: relative;
-    /* width: 100%; */
+    width: 100%;
     height: 30px; /* Adjust height as needed */
     background-color: #ddd; /* Light gray background */
 
 	margin-left: 5px;
 	margin-right: 7px;
+	z-index: 1000;
 }
 
 .progressbar {
@@ -358,6 +415,13 @@ Leaderboard
   max-height: calc(100% - 50px);
   overflow-y: auto; /* Enables scrolling */
 }
+
+/* Content inside the tab */
+.leaderboard-side-tab .content1 {
+	margin-right: 0px;
+	max-height: calc(100% - 50px);
+	overflow-y: auto; /* Enables scrolling */
+  }
 
 .leaderboard-side-tab .winter-content{
 	max-height: calc(100% - 50px);
@@ -653,10 +717,20 @@ Leaderboard
 		visibility: visible;
 		z-index: 10;
 	}
+
+	.tab {
+		max-width: 37%;
+		padding: 30px 6%;
+		font-size: 13px;
+	}
   
 	.leaderboard-side-tab .content {
 	  	margin-left: 5px;
 	}
+
+	.leaderboard-side-tab .content1 {
+		margin-left: 5px;
+	  }
 
 	.time-button {
 		position: relative;

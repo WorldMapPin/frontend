@@ -21,6 +21,9 @@ let client;
 const max = 1;
 
 var sortedTDsAndHonerable_afterFirstLoad = [];
+var sortedTDsAndHonerable_weekly_afterFirstLoad = [];
+var sortedTDsAndHonerable_monthly_afterFirstLoad = [];
+var sortedTDsAndHonerable_yearly_afterFirstLoad = [];
 
 var sortedWinterChallenge_afterFirstLoad = [];
 
@@ -35,7 +38,9 @@ const Leaderboards = ({
     showWinterchallangeTab
 }) => {
     const [onlyLoadDataOnce, setOnlyLoadDataOnce] = useState(true);
+    const [timeframe, setTimeframe] = useState('alltime');
     const [sortedTDsAndHonerable, setSortedTDsAndHonerable] = useState<[number , string, number, number ][]>([]);
+        
     const [sortedWinterChallenge, setSortedWinterChallenge] = useState<[number , string, number ][]>([]);
 
     const [slice, setSlice] = useState(20);
@@ -52,7 +57,7 @@ const Leaderboards = ({
 
     const [searchParams, setSearchParams] = useState(
         params?.username ? { author: params.username } : (params?.permlink ? { permlink: params.permlink } : (params?.tag ? { tags: [params?.tag] } : { curated_only: false }))
-    );
+    );    
 
     function chunkArray(array, size) {
         const chunks = [];
@@ -61,6 +66,35 @@ const Leaderboards = ({
         }
         return chunks;
     }
+
+    // New CODE ------------------------------------------------------
+    const [activeTab, setActiveTab] = useState('most-active-users');
+    const [showPastChallenges, setShowPastChallenges] = useState(false);
+
+    const pastChallenges = [
+        { id: "winter", name: "Winter Challenge 2023", icon: "❄️" },
+        { id: "spring", name: "Spring Challenge 2023", icon: "🌸" },
+        { id: "summer", name: "Summer Challenge 2023", icon: "☀️" },
+        { id: "fall", name: "Fall Challenge 2023", icon: "🍂" },
+        { id: "winter2022", name: "Winter Challenge 2022", icon: "❄️" },
+        { id: "spring2022", name: "Spring Challenge 2022", icon: "🌸" },
+        { id: "summer2022", name: "Summer Challenge 2022", icon: "☀️" },
+        { id: "fall2022", name: "Fall Challenge 2022", icon: "🍂" },
+    ];
+
+    const pastChallengesClick = () => {
+        setShowPastChallenges(true);
+    };
+    
+    const handleBackClick = () => {
+        setShowPastChallenges(false);
+    };
+    
+    // const selectChallenge = (challengeId: string) => {
+    //     setActiveTab(challengeId);
+    //     setShowPastChallenges(false);
+    // };
+    //------------------------------------------------------
 
     // New function to get the number of posts by a user
     async function getUserPostCount(username) {
@@ -82,13 +116,18 @@ const Leaderboards = ({
         }
     }
 
+    
+    
     const fetchUsername = async (usernameArray) => {
+        
         setloading(true)
+        
         const chunkSize = 1; // Define the chunk size
         const usernameChunks = chunkArray(usernameArray, chunkSize); // Split the array into chunks
         let allProfiles = [];
         let i = 0;
 
+        
         for (const chunk of usernameChunks) {          
             if(allProfiles.length === i){
                 // const profiles = await Promise.all(
@@ -116,11 +155,12 @@ const Leaderboards = ({
                 // Adding a search to add an activity graph can be done here
 
                 i = i + chunkSize;
-                if(usernameArray.length === 10){
-                    setLoader(i*10);
-                } else {
-                    setLoader(i);
+                if(usernameArray.length !== 0){
+                    var x = (i/usernameArray.length)*100
+                    setLoader(x);
+                    // console.log(x);
                 }
+
                 const profiles = await Promise.all(
                     chunk.map(async ([rank, username, tds]) => {
                     return { rank, username, tds };
@@ -133,7 +173,17 @@ const Leaderboards = ({
         setUserProfiles(allProfiles);
         userProfiles_afterfirstload = allProfiles;
         setloading(false);
+        // setLoader(0);
     };
+
+    useEffect(() => { 
+        if(loading){
+            setloading(true)
+        } else {
+            
+        }
+        setloading(false)
+    }, []);
 
     // Function to load ranking data from the API // Okay THIS IS WAY TOO SLOW !!!!!
     // async function loadRankingData() {
@@ -171,21 +221,145 @@ const Leaderboards = ({
     //     }            
     // }
 
-    async function loadRankingData() {
-        if(sortedTDsAndHonerable_afterFirstLoad.length === 0){
-            try {
-                const response = await axios.get('https://worldmappin.com/api/ranking');
-                // console.log(response.data)
-                const formattedData = response.data.map(item => [item.rank, item.author, item.tds]);
-                setSortedTDsAndHonerable(formattedData);
-                sortedTDsAndHonerable_afterFirstLoad = formattedData;
-            } catch (err) {
-                console.error('Error fetching ranking data:', err);
+    // All time
+    // async function loadRankingData() {
+    //     if(sortedTDsAndHonerable_afterFirstLoad.length === 0){
+    //         try {
+    //             const response = await axios.get('https://worldmappin.com/api/ranking');
+    //             // console.log(response.data)
+    //             const formattedData = response.data.map(item => [item.rank, item.author, item.tds]);
+    //             setSortedTDsAndHonerable(formattedData);
+    //             sortedTDsAndHonerable_afterFirstLoad = formattedData;
+    //         } catch (err) {
+    //             console.error('Error fetching ranking data:', err);
+    //         }
+    //     } else {
+    //         setSortedTDsAndHonerable(sortedTDsAndHonerable_afterFirstLoad);
+    //     }            
+    // }
+
+    // // Weekly
+    // async function loadRankingData_weekly() {
+    //     console.log("Weekly was called!")
+    //     setSlice(20);
+    //     if(sortedTDsAndHonerable_afterFirstLoad.length === 0){
+    //         try {
+    //             const response = await axios.get('https://worldmappin.com/api/ranking');
+    //             // console.log(response.data)
+    //             const formattedData = response.data.map(item => [item.rank, item.author, item.tds]);
+    //             setSortedTDsAndHonerable(formattedData);
+    //             sortedTDsAndHonerable_afterFirstLoad = formattedData;
+    //         } catch (err) {
+    //             console.error('Error fetching ranking data:', err);
+    //         }
+    //     } else {
+    //         setSortedTDsAndHonerable(sortedTDsAndHonerable_afterFirstLoad);
+    //     }      
+    // }
+
+    // // Monthly
+    // async function loadRankingData_monthly() {
+    //     if(sortedTDsAndHonerable_monthly_afterFirstLoad.length === 0){
+    //         try {
+    //             const response = await axios.get('https://worldmappin.com/api/ranking');
+    //             // console.log(response.data)
+    //             const formattedData = response.data.map(item => [item.rank, item.author, item.tds]);
+    //             setSortedTDsAndHonerable_monthly(formattedData);
+    //             sortedTDsAndHonerable_monthly_afterFirstLoad = formattedData;
+    //         } catch (err) {
+    //             console.error('Error fetching ranking data:', err);
+    //         }
+    //     } else {
+    //         setSortedTDsAndHonerable_monthly(sortedTDsAndHonerable_monthly_afterFirstLoad);
+    //     }            
+    // }
+
+    // // Yearly
+    // async function loadRankingData_yearly() {
+    //     if(sortedTDsAndHonerable_yearly_afterFirstLoad.length === 0){
+    //         try {
+    //             const response = await axios.get('https://worldmappin.com/api/ranking');
+    //             // console.log(response.data)
+    //             const formattedData = response.data.map(item => [item.rank, item.author, item.tds]);
+    //             setSortedTDsAndHonerable_yearly(formattedData);
+    //             sortedTDsAndHonerable_yearly_afterFirstLoad = formattedData;
+    //         } catch (err) {
+    //             console.error('Error fetching ranking data:', err);
+    //         }
+    //     } else {
+    //         setSortedTDsAndHonerable_yearly(sortedTDsAndHonerable_yearly_afterFirstLoad);
+    //     }            
+    // }
+
+    useEffect(() => {    
+        setSlice(20);
+        setSortedTDsAndHonerable([]);
+
+        onlyLoad100UsersOnce = true;
+        async function loadRankingData() {
+            
+            if(timeframe === 'alltime'){ //sortedTDsAndHonerable_afterFirstLoad.length === 0
+                sortedTDsAndHonerable_afterFirstLoad = [];
+                try {
+                    const response = await axios.get('https://worldmappin.com/api/ranking');
+                    // console.log(response.data)
+                    const formattedData = response.data.map(item => [item.rank, item.author, item.tds]);
+                    setSortedTDsAndHonerable(formattedData);
+                    sortedTDsAndHonerable_afterFirstLoad = formattedData;
+                    fetchUsername(sortedTDsAndHonerable_afterFirstLoad.slice(0, 20));
+                } catch (err) {
+                    console.error('Error fetching ranking data:', err);
+                }
             }
-        } else {
-            setSortedTDsAndHonerable(sortedTDsAndHonerable_afterFirstLoad);
-        }            
-    }
+
+            if(timeframe === 'weekly'){ //sortedTDsAndHonerable_afterFirstLoad.length === 0
+                sortedTDsAndHonerable_afterFirstLoad = [];
+                try {
+                    const response = await axios.get('https://worldmappin.com/api/ranking');
+                    // console.log(response.data)
+                    const formattedData = response.data.map(item => [item.rank, item.author, item.tds]);
+                    setSortedTDsAndHonerable(formattedData);
+                    sortedTDsAndHonerable_afterFirstLoad = formattedData;
+                    fetchUsername(sortedTDsAndHonerable_afterFirstLoad.slice(20, 200));
+                } catch (err) {
+                    console.error('Error fetching ranking data:', err);
+                }
+            }
+
+            if(timeframe === 'monthly'){ //sortedTDsAndHonerable_afterFirstLoad.length === 0
+                sortedTDsAndHonerable_afterFirstLoad = [];
+                try {
+                    const response = await axios.get('https://worldmappin.com/api/ranking');
+                    // console.log(response.data)
+                    const formattedData = response.data.map(item => [item.rank, item.author, item.tds]);
+                    setSortedTDsAndHonerable(formattedData);
+                    sortedTDsAndHonerable_afterFirstLoad = formattedData;
+                    fetchUsername(sortedTDsAndHonerable_afterFirstLoad.slice(50, 200));
+                } catch (err) {
+                    console.error('Error fetching ranking data:', err);
+                }
+            }
+
+            if(timeframe === 'yearly'){ //sortedTDsAndHonerable_afterFirstLoad.length === 0
+                sortedTDsAndHonerable_afterFirstLoad = [];
+                try {
+                    const response = await axios.get('https://worldmappin.com/api/ranking');
+                    // console.log(response.data)
+                    const formattedData = response.data.map(item => [item.rank, item.author, item.tds]);
+                    setSortedTDsAndHonerable(formattedData);
+                    sortedTDsAndHonerable_afterFirstLoad = formattedData;
+                    fetchUsername(sortedTDsAndHonerable_afterFirstLoad.slice(100, 200));
+                } catch (err) {
+                    console.error('Error fetching ranking data:', err);
+                }
+            }
+        }
+
+        // fetchUsername(sortedTDsAndHonerable_afterFirstLoad.slice(0, 20));
+        // setSlice(20);
+        loadRankingData();
+
+    }, [timeframe]);
 
     const handleSlice = () => {
         setSlice(100);    
@@ -195,15 +369,15 @@ const Leaderboards = ({
         }
     }
     
-    async function initializeNode(){
-        node = await initializeClient();  // Assume this function correctly initializes the client        
+    // async function initializeNode(){  NOT NEEDED ATM
+    //     // node = await initializeClient(); // Assume this function correctly initializes the client        
 
-        if(node && onlyLoad10UsersOnce){
-            client = new Client(node);
-            fetchUsername(sortedTDsAndHonerable_afterFirstLoad.slice(0, 20));
-            onlyLoad10UsersOnce = false;
-        }
-    }    
+    //     if(node && onlyLoad10UsersOnce){
+    //         // client = new Client(node);
+    //         fetchUsername(sortedTDsAndHonerable_afterFirstLoad.slice(0, 20));
+    //         onlyLoad10UsersOnce = false;
+    //     }
+    // }    
 
     const handleFilter = ( username, filterData) => {
         const pos = {
@@ -337,10 +511,10 @@ const Leaderboards = ({
     //   }, []);
 
     useEffect(() => {   
-        loadRankingData();
+        // loadRankingData();
         if(onlyLoadDataOnce){
             if(onlyLoadonce){
-                initializeNode();
+                // initializeNode();
                 loadWinterChallengeData();                     
                 //loadRankingData();
                 //setOnlyLoadDataOnce(false);
@@ -353,7 +527,7 @@ const Leaderboards = ({
         }
 
         
-
+    
     }, []);
 
     const tabs = document.querySelectorAll('.tab');
@@ -366,15 +540,23 @@ const Leaderboards = ({
             this.classList.add('active');
         });
     });
+
+    // Function to handle tab click
+    const handleTabClick = (tabId) => {
+        setActiveTab(tabId);
+    };
     
     const activbuttonClick = () => {
         setWinterChallenge(false);
         setUserProfiles(userProfiles_afterfirstload);
+        setActiveTab("most-active-users");        
     };
 
     const winterbuttonClick = () => {
         setWinterChallenge(true);
+        // setShowPastChallenges(false);
         setSortedWinterChallenge(sortedWinterChallenge_afterFirstLoad);
+        setActiveTab("past-challenges");
     };
 
     useEffect(() => {   
@@ -410,7 +592,6 @@ const Leaderboards = ({
         }
         else {
             // Find the index of the username in the sortedTDsAndHonerable array
-            console.log(input)
             const index = sortedTDsAndHonerable.findIndex(entry => entry[1].toLowerCase() === input);
 
             if (index === -1) {
@@ -482,83 +663,96 @@ const Leaderboards = ({
         setTimeout(() => {
             messageDiv.innerText = ''; // Clear the message after 2 seconds
         }, 2000);
-    }
+    }    
 
 
     return (
-        <div className={`leaderboard-side-tab ${isOpen ? 'open' : ''}`}>
+        <div className={`leaderboard-side-tab ${isOpen ? 'open' : ''}`}>           
+
             <div className='filter-close'>
                 <div className="leaderboard-close-btn"><p onClick={() => {handleCloseButtonLeaderboard(), handleCloseButton_reset_Leaderboard()}}>X</p></div>
             </div>
 
-            <div className='tabs'>
-                <p className="tab active" id="most-active-users" onClick={activbuttonClick}><span className="icon" onClick={activbuttonClick}>🏆</span>Most Curated Users</p> {/* On click setwinter to false and most active to true */}
-                <p className="tab" id="winter-challenge" onClick={winterbuttonClick}><span className="icon">❄️</span>Winter Challenge
-                <div className="initial-snow">
-                    <div className="snow">&#10052;</div>
-                    <div className="snow">&#10052;</div>
-                    <div className="snow">&#10052;</div>
-                    <div className="snow">&#10052;</div>
-                    <div className="snow">&#10052;</div>
-                    <div className="snow">&#10052;</div>
-                    <div className="snow">&#10052;</div>
-                    <div className="snow">&#10052;</div>
-                    <div className="snow">&#10052;</div>
-                    <div className="snow">&#10052;</div>
-                    <div className="snow">&#10052;</div>
-                    <div className="snow">&#10052;</div>
-                    <div className="snow">&#10052;</div>
-                    <div className="snow">&#10052;</div>
-                    <div className="snow">&#10052;</div>
-                    <div className="snow">&#10052;</div>
-                    <div className="snow">&#10052;</div>
-                    <div className="snow">&#10052;</div>
-                    <div className="snow">&#10052;</div>
-                    <div className="snow">&#10052;</div>
-                    <div className="snow">&#10052;</div>
-                    <div className="snow">&#10052;</div>
-                    <div className="snow">&#10052;</div>
-                    <div className="snow">&#10052;</div>
-                    <div className="snow">&#10052;</div>
-                    <div className="snow">&#10052;</div>
-                    <div className="snow">&#10052;</div>
-                    <div className="snow">&#10052;</div>
-                    <div className="snow">&#10052;</div>
-                    <div className="snow">&#10052;</div>
-                    <div className="snow">&#10052;</div>
-                    <div className="snow">&#10052;</div>
-                    <div className="snow">&#10052;</div>
-                    <div className="snow">&#10052;</div>
-                    <div className="snow">&#10052;</div>
-                    <div className="snow">&#10052;</div>
-                    <div className="snow">&#10052;</div>
-                    <div className="snow">&#10052;</div>
-                    <div className="snow">&#10052;</div>
-                    <div className="snow">&#10052;</div>
-                    <div className="snow">&#10052;</div>
-                    <div className="snow">&#10052;</div>
-                    <div className="snow">&#10052;</div>
-                    <div className="snow">&#10052;</div>
-                    <div className="snow">&#10052;</div>
-                    <div className="snow">&#10052;</div>
-                    <div className="snow">&#10052;</div>
-                    <div className="snow">&#10052;</div>
-                    <div className="snow">&#10052;</div>
-                    <div className="snow">&#10052;</div>
+            {!showPastChallenges && (
+                <div className='tabs'>
+                    <p className={`tab ${activeTab === 'most-active-users' ? 'active' : ''}`} id="most-active-users" onClick={activbuttonClick} style={{ width: '41%' }}><span className="icon" onClick={activbuttonClick}>🏆</span>Most Curated Users</p>
+                    <p className={`tab ${activeTab === 'past-challenges' ? 'active' : ''}`} id="past-challenges" onClick={pastChallengesClick} style={{ width: '41%' }}><span className="icon" >🎯</span>Past Challenges</p>
                 </div>
+            )}
 
-                </p>
-            </div>
+            {showPastChallenges && (
+                <div className='tabs'>
+                <p className="tab active" id="back-tab" onClick={handleBackClick} style={{ width: '10%' }}><span className="icon" >⬅️</span>Back</p>
+                    <div className="scrollable-tabs">
+                        <p className={`tab ${activeTab === 'past-challenges' ? 'active' : ''}`} id="winter-challenge" onClick={winterbuttonClick}><span className="icon">❄️</span>Winter Challenge 2024
+                        <div className="initial-snow">
+                            <div className="snow">&#10052;</div>
+                            <div className="snow">&#10052;</div>
+                            <div className="snow">&#10052;</div>
+                            <div className="snow">&#10052;</div>
+                            <div className="snow">&#10052;</div>
+                            <div className="snow">&#10052;</div>
+                            <div className="snow">&#10052;</div>
+                            <div className="snow">&#10052;</div>
+                            <div className="snow">&#10052;</div>
+                            <div className="snow">&#10052;</div>
+                            <div className="snow">&#10052;</div>
+                            <div className="snow">&#10052;</div>
+                            <div className="snow">&#10052;</div>
+                            <div className="snow">&#10052;</div>
+                            <div className="snow">&#10052;</div>
+                            <div className="snow">&#10052;</div>
+                            <div className="snow">&#10052;</div>
+                            <div className="snow">&#10052;</div>
+                            <div className="snow">&#10052;</div>
+                            <div className="snow">&#10052;</div>
+                            <div className="snow">&#10052;</div>
+                            <div className="snow">&#10052;</div>
+                            <div className="snow">&#10052;</div>
+                            <div className="snow">&#10052;</div>
+                            <div className="snow">&#10052;</div>
+                            <div className="snow">&#10052;</div>
+                            <div className="snow">&#10052;</div>
+                            <div className="snow">&#10052;</div>
+                            <div className="snow">&#10052;</div>
+                            <div className="snow">&#10052;</div>
+                            <div className="snow">&#10052;</div>
+                            <div className="snow">&#10052;</div>
+                            <div className="snow">&#10052;</div>
+                            <div className="snow">&#10052;</div>
+                            <div className="snow">&#10052;</div>
+                            <div className="snow">&#10052;</div>
+                            <div className="snow">&#10052;</div>
+                            <div className="snow">&#10052;</div>
+                            <div className="snow">&#10052;</div>
+                            <div className="snow">&#10052;</div>
+                            <div className="snow">&#10052;</div>
+                            <div className="snow">&#10052;</div>
+                            <div className="snow">&#10052;</div>
+                            <div className="snow">&#10052;</div>
+                            <div className="snow">&#10052;</div>
+                            <div className="snow">&#10052;</div>
+                            <div className="snow">&#10052;</div>
+                            <div className="snow">&#10052;</div>
+                            <div className="snow">&#10052;</div>
+                            <div className="snow">&#10052;</div>
+                        </div>
+                        </p>
+                        <p className="tab active" id="future-challenge-1">Future Challenge</p>
+                        <p className="tab active" id="future-challenge-2">Future Challenge</p>
+                    </div>
+                </div>
+            )}
 
             <div className="message" id="message"></div>
             {!winterChallenge && (    
                 <div className="leaderboard-input-div">
-                    <a className="time-button" onClick={showMessage}>Weekly</a>
-                    <a className="time-button" onClick={showMessage}>Monthly</a>
-                    <a className="time-button" onClick={showMessage}>Yearly</a>
-                    <a className="time-button">All Time</a>
+                    <a className="time-button" onClick={() => setTimeframe('weekly')}>Weekly</a>
+                    <a className="time-button" onClick={() => setTimeframe('monthly')}>Monthly</a>
+                    <a className="time-button" onClick={() => setTimeframe('yearly')}>Yearly</a>
+                    <a className="time-button" onClick={() => setTimeframe('alltime')}>All Time</a>
                     <input type="text" id="inputField" placeholder="Enter username" className="leaderboard-input"></input>
-                    <a className="leaderboard-input-btn" onClick={logInput}>Search</a> 
+                    <a className="leaderboard-input-btn" onClick={logInput}>Search</a>                     
                 </div>
             )}
             {winterChallenge && (    
@@ -573,6 +767,13 @@ const Leaderboards = ({
                     <div className="placement-header">Placement</div>
                     <div className="username-header">Username</div>
                     <div className="Number-of-Curated-Posts-header">Number of Curated Posts</div>
+                    {/* Doesn't work yet
+                        {loading && ( 
+                        <div className='loadingbar'>
+                            <div className='progressbar' style={{width: `${loader}%`}}></div>
+                            <p>Loading...</p>
+                        </div>
+                    )} */}
                 </div>
             )}
 
@@ -582,17 +783,10 @@ const Leaderboards = ({
                     <div className="username-header">Username</div>
                     <div className="Number-of-Curated-Posts-header">Number of Tickets</div>
                 </div>
-            )}
-
-            {loading && ( 
-                <div className='loadingbar'>
-                    <div className='progressbar' style={{width: `${loader}%`}}></div>
-                    <p>Loading...</p>
-                </div>
-            )}
+            )}            
 
             {/* Most Active Users from TDs */}
-            {!winterChallenge && (                
+            {(!winterChallenge) && (                
                 <div className='content' id="userList">
                     {userProfiles.map((profile, index) => (
                         <div key={profile.rank} id={`user-${profile.username}`} className={"leaderboard-summary"} onClick={() => handleFilter(profile.username, searchParams)}>
@@ -620,7 +814,7 @@ const Leaderboards = ({
                     }
 
                 </div>
-            )}
+            )}            
 
             {/* Winterchallange */}
             {winterChallenge && (

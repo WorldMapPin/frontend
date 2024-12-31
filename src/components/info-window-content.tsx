@@ -51,7 +51,10 @@ const PostSummary = (props) => {
           </a>
         </h2>
         <div className="description">
+        {marker.postDescription !== '<DESCRIPTION GOES HERE>' && (
           <p>{marker.postDescription}</p>
+        )}
+        
         </div>
         <div className="extra-info" onClick={() => handlePosition()}>
           <p>{"@" + marker.username}</p>
