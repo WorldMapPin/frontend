@@ -395,6 +395,16 @@
     margin: 0;
   }
 
+  .mobile-toggle-all-posts {
+    /* background-color: aqua; */
+    overflow: hidden;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;  /* Aligns children elements to the right */   
+    position: relative;
+    margin: 0;
+  }
+
   .mobile-leaderboard-container {
     position: relative;
     display: flex;
@@ -496,7 +506,7 @@
     margin: 4px;
     padding: 0px;
     border-radius: 12px;
-    background-color: rgba(255, 255, 255, 0.65);
+    /* background-color: rgba(255, 255, 255, 0.65); */
     overflow: hidden;
     white-space: nowrap;
     transition: max-width 0.5s ease-in-out, opacity 0.3s ease-in-out;
@@ -506,10 +516,44 @@
   }
   
   .mobile-settings-content.show {    
-    max-width: 250px; /* Adjust based on your content's width */
-    opacity: 1;    
+    max-width: 250px; /* Adjust based on your content's width */    
     right: 18px;
-    background: linear-gradient(145deg, rgba(237, 109, 40, 0.8) 30%, rgba(215, 61, 21, 0.8) 80%);
+    opacity: 1;
+    backdrop-filter: blur(8px);
+    overflow: visible;
+    padding: 10px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  .mobile-settings-content.show::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 12px;
+    background: linear-gradient(145deg, rgba(255, 237, 227, 0.25) 30%, rgba(255, 108, 71, 0.25) 80%);
+    z-index: -1;
+  }
+
+  .mobile-settings-content.show .control-panel2 {
+    background: transparent !important;
+    backdrop-filter: none;
+    box-shadow: none;
+    padding-top: 5px;
+  }
+
+  .mobile-settings-content.show .map-config-label,
+  .mobile-settings-content.show .map-config-select,
+  .mobile-settings-content.show .toggle-label,
+  .mobile-settings-content.show option,
+  .mobile-settings-content.show .toggle-switch,
+  .mobile-settings-content.show .slider {
+    opacity: 1 !important;
+    font-weight: bold;
+    color: #000000;
   }
   
   
@@ -687,4 +731,72 @@
   
   
 
+}
+
+/* Toggle Switch Styles */
+.toggle-switch-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 10px;
+}
+
+/* The switch - the box around the slider */
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 28px;
+}
+
+/* Hide default HTML checkbox */
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #d32f2f; /* Red when off */
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #4CAF50; /* Green when on */
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #4CAF50;
+}
+
+input:checked + .slider:before {
+  transform: translateX(22px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
 }

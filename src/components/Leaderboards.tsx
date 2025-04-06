@@ -415,7 +415,7 @@ const Leaderboards = ({
         if (sortedWinterChallenge_afterFirstLoad.length === 0) {
             try {
                 const response = await axios.get('https://worldmappin.com/api/rankingWinter');
-                // console.log(response.data);
+                console.log(response.data);
                 
                 const formattedData = response.data.map((item, index) => {
                     return {

@@ -1,9 +1,20 @@
+// Node process environment type
+declare const process: {
+  env: {
+    GOOGLE_MAPS_API_KEY?: string;
+    [key: string]: string | undefined;
+  }
+};
+
 import React, { Ref, useCallback, useEffect, useState, useRef } from 'react';
 import { createRoot } from 'react-dom/client';
 import axios from 'axios';
 import { BrowserRouter, Route, Routes, useParams } from 'react-router-dom';
 
 import { APIProvider, InfoWindow, Map, useMap, AdvancedMarker, ControlPosition, MapControl } from '@vis.gl/react-google-maps';
+
+// Import performance utilities from the new module
+import { initPerformanceCheck, NavigatorWithMemory, isExtremelySlowConnection, isSlowConnection, getNetworkSpeed } from './utils/performanceCheck';
 
 import { ClusteredMarkers } from './components/clustered-markers';
 
@@ -100,14 +111,141 @@ const MAP_CONFIGS: MapConfig[] = [
   }
 ];
 
+// Add this type definition near the other type definitions
+type SearchParams = {
+  tags?: string[];
+  author?: string;
+  post_title?: string;
+  start_date?: string;
+  end_date?: string;
+  permlink?: string;
+  curated_only?: boolean;
+};
+
 const App = () => {
   const [geojson, setGeojson] = useState(null);
   const [numClusters, setNumClusters] = useState(0);
+  const [performanceCheckComplete, setPerformanceCheckComplete] = useState(false);
 
-  type MarkerPosition = {
-    lat: number;
-    lng: number;
-  };
+  // Initialize lowEndDevice based on the performance check
+  const [lowEndDevice, setLowEndDevice] = useState(false);
+  // Track the actual device performance detection result separately
+  const [detectedLowEndDevice, setDetectedLowEndDevice] = useState(false);
+  // Add state for showing all posts regardless of performance
+  const [showAllPosts, setShowAllPosts] = useState(false);
+
+  // Make sure performance check is complete before loading data
+  useEffect(() => {
+    // This ensures we complete the performance check before starting
+    let isMounted = true;
+    
+    async function waitForPerformanceCheck() {
+      try {
+        const result = await initPerformanceCheck();
+        if (isMounted) {
+          console.log("Performance detection result:", result);
+          setDetectedLowEndDevice(result); // Store the detection result
+          setLowEndDevice(result);         // Initially set lowEndDevice based on detection
+          
+          // If performance is good (not low-end), automatically set showAllPosts to true
+          if (!result) {
+            setShowAllPosts(true);
+          }
+          
+          setPerformanceCheckComplete(true);
+        }
+      } catch (error) {
+        console.error("Error waiting for performance check:", error);
+        if (isMounted) {
+          setPerformanceCheckComplete(true);
+        }
+      }
+    }
+    
+    waitForPerformanceCheck();
+    
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  // Add a reference to track pending data loading operations
+  const pendingDataLoadRef = useRef<number | null>(null);
+
+  // Effect to update lowEndDevice when showAllPosts changes
+  useEffect(() => {
+    if (performanceCheckComplete) {
+      if (showAllPosts) {
+        // Override lowEndDevice to false when showing all posts
+        setLowEndDevice(false);
+        console.log("Overriding to high-performance mode for full data load");
+      } else {
+        // Restore the actual detection result when not showing all posts
+        setLowEndDevice(detectedLowEndDevice);
+        console.log("Restoring detected performance mode:", detectedLowEndDevice);
+      }
+    }
+  }, [showAllPosts, performanceCheckComplete, detectedLowEndDevice]);
+
+  // Add effect to reload data when showAllPosts changes - with cancellation support
+  useEffect(() => {
+    if (performanceCheckComplete && loadedonce) {
+      try {
+        // Cancel any pending operation
+        if (pendingDataLoadRef.current) {
+          clearTimeout(pendingDataLoadRef.current);
+          pendingDataLoadRef.current = null;
+          console.log("Cancelled pending data load operation");
+        }
+
+        // Start new operation with a small delay to allow cancellation
+        setFetchingMarkers(true);
+        
+        // Add a short delay to allow for quick toggling back
+        pendingDataLoadRef.current = setTimeout(() => {
+          // Check if the state is still the same after the delay
+          // This prevents unnecessary data loads if the user toggled back quickly
+          if (showAllPosts) {
+            console.log("Proceeding with full data mode load");
+            loadmarkersonfirstLoad();
+          } else if (detectedLowEndDevice) {
+            console.log("Proceeding with optimized mode for low-end device");
+            loadmarkersonfirstLoad();
+          }
+          pendingDataLoadRef.current = null;
+        }, 700); // Short delay to allow cancellation
+        
+        // Add a safety timeout to ensure loading state is reset after a delay
+        const safetyTimer = setTimeout(() => {
+          if (fetchingMarkers) {
+            console.log("Safety timeout: forcing loading state to false after showAllPosts change");
+            setFetchingMarkers(false);
+          }
+        }, 30000); // 30 second safety timeout
+        
+        return () => {
+          // Clean up timers when component unmounts or effect re-runs
+          if (pendingDataLoadRef.current) {
+            clearTimeout(pendingDataLoadRef.current);
+            pendingDataLoadRef.current = null;
+          }
+          clearTimeout(safetyTimer);
+        };
+      } catch (error) {
+        console.error("Error when toggling data mode:", error);
+        setFetchingMarkers(false);
+      }
+    }
+  }, [showAllPosts, performanceCheckComplete]);
+
+  useEffect(() => {
+    console.log("App state: lowEndDevice =", lowEndDevice, 
+                "detected =", detectedLowEndDevice, 
+                "showAllPosts =", showAllPosts);
+  }, [lowEndDevice, detectedLowEndDevice, showAllPosts]);
+
+  // Fix the MarkerPosition type declaration to use google.maps.LatLng
+  type MarkerPosition = google.maps.LatLngLiteral;
 
   // Define the state with the correct type
   const [codeModeMarker, setCodeModeMarker] = useState<MarkerPosition | null>(null);
@@ -134,8 +272,7 @@ const App = () => {
   const [fetchingMarkers, setFetchingMarkers] = useState(true);
   const [fetchingStats, setFetchingStats] = useState(false);
 
-  const [performanceTest , setPerformanceTest] = useState(false);
-  const [lowEndDevice , setLowEndDevice] = useState(false);
+  const [performanceTest, setPerformanceTest] = useState(false);
 
   const [showUsernameProfile, setShowUsernameProfile] = useState(false);
 
@@ -169,10 +306,11 @@ const App = () => {
   
   const params = useParams();
 
+  // Add null check for username in the YourComponent function
   function YourComponent() {
     const { username } = useParams();       
     
-    if (username.startsWith('@') && fetchingMarkers) {
+    if (username && username.startsWith('@') && fetchingMarkers) {
       usernameProvided = true;
       usernamep = username.substring(1);
       useEffect(() => { 
@@ -185,7 +323,7 @@ const App = () => {
     return null
   }
 
-  const [searchParams, setSearchParams] = useState(
+  const [searchParams, setSearchParams] = useState<SearchParams>(
     params?.username ? { author: params.username } : (params?.permlink ? { permlink: params.permlink } : (params?.tag ? { tags: [params?.tag] } : { curated_only: false }))
   );
 
@@ -227,9 +365,16 @@ const App = () => {
     return today.toISOString().split('T')[0]; // Returns the date in 'YYYY-MM-DD' format
   }
 
+  function getOneYearAgo() {
+    const today = new Date();
+    today.setFullYear(today.getFullYear() - 1);
+    return today.toISOString().split('T')[0]; // Returns the date in 'YYYY-MM-DD' format
+  }
+
   const handleFilter = filterData => {
     setFetchingMarkers(true)
     const oneMonthAgo = getOneMonthAgo();
+    const oneYearAgo = getOneYearAgo();
 
     // console.log(usernameProvided)
 
@@ -237,12 +382,13 @@ const App = () => {
       tags: filterData && filterData.tags && filterData.tags.length && filterData.tags[0] ? filterData.tags : [],
       author: usernameProvided ? usernamep : filterData ? filterData.username : '',
       post_title: filterData ? filterData.postTitle : '',
-      start_date: lowEndDevice ? oneMonthAgo : filterData ? filterData.startDate : '',
+      start_date: (isExtremelySlowConnection() && !showAllPosts) ? oneMonthAgo : 
+                 (lowEndDevice && !showAllPosts) ? oneYearAgo : 
+                 filterData ? filterData.startDate : '',
       end_date: filterData ? filterData.endDate : '',
       permlink: permlinkProvided ? permlinkP : '',
       curated_only: filterData ? filterData.isCurated : false
     });
-    setLowEndDevice(false); // This is to make the filter work for the user (even though they probably won't be able to fetch 100k pins)
     setShowfiltersettings(false);
   };
   
@@ -253,7 +399,7 @@ const App = () => {
   
   //Handelsclick on Get Code Browser mode
   const handleClick = () => {
-    setInfowindowData(undefined)
+    setInfowindowData(null); // Using null instead of undefined
     setShowfiltersettings(false)
     toggleCodeMode();
     // if(codeMode)
@@ -264,23 +410,42 @@ const App = () => {
   // On reload the all markers with default search search params are loaded here
   useEffect(() => {
     // void loadCastlesGeojson().then(data => setGeojson(data));
-    if(!loadedonce){
-      if(!firstLoad){loadmarkersonfirstLoad();}
+    if(!loadedonce && performanceCheckComplete){
+      if(!firstLoad){
+        console.log("Loading markers with lowEndDevice =", lowEndDevice);
+        loadmarkersonfirstLoad();
+      }
       setFetchingMarkers(true)
       loadedonce = true;      
     }
-  }, [loadedonce, firstLoad, setLocation]);
+  }, [loadedonce, firstLoad, setLocation, lowEndDevice, performanceCheckComplete]);
 
   async function loadmarkersonfirstLoad() {
-
     try {
-      // const response = await axios.post('https://worldmappin.com/api/marker/0/150000/', searchParams);
-      // void convertDatafromApitoGeojson(response.data).then(data => setGeojson(data));   
-      handleFilter(searchParams) 
+      // Apply filter with lowEndDevice taken into account, but respect showAllPosts
+      const initialFilterParams: SearchParams = { ...searchParams };
+      console.log("Current state - lowEndDevice:", lowEndDevice, "showAllPosts:", showAllPosts);
+      
+      // Apply date filter based on device, network speed and mode
+      if (isExtremelySlowConnection() && !showAllPosts) {
+        // For extremely slow connections (<2 Kbps), apply strict limit with date filter
+        initialFilterParams.start_date = getOneMonthAgo();
+        console.log(`Extremely slow connection detected (${getNetworkSpeed().toFixed(2)} Kbps). Loading last month's data only.`);
+      } else if (lowEndDevice && !showAllPosts) {
+        // For slow connections (<6 Kbps), load posts from last year
+        initialFilterParams.start_date = getOneYearAgo();
+        console.log(`Slow connection detected (${getNetworkSpeed().toFixed(2)} Kbps). Loading last year's data.`);
+      } else {
+        // For normal connections or Full Data mode - load all posts without date filter
+        initialFilterParams.start_date = '';
+        console.log("Loading ALL posts in full data mode");
+      }
+      
+      handleFilter(initialFilterParams);
     } catch (err) {
         console.error('Error fetching feature data:', err);
     } finally {
-      setFirstLoad(true)      
+      setFirstLoad(true);
     }
   }
 
@@ -304,22 +469,44 @@ const App = () => {
 
   async function newSearchParams(s) {
     const updatedParams = { ...searchParams, ...s };
-
-    setSearchParams(updatedParams); // This takes a little longer so it's better to pass the updatedParams directly to the api    
-    setFetchingMarkers(true)
+    
+    setSearchParams(updatedParams); 
+    setFetchingMarkers(true);
+    
     try {
-      const response = await axios.post('https://worldmappin.com/api/marker/0/150000/', updatedParams);
-      // console.log(updatedParams)
-      // console.log(response.data)
+      // Adjust data limit based on network speed and device performance
+      let dataLimit = 150000; // Default high limit
+      
+      if (isExtremelySlowConnection() && !showAllPosts) {
+        // For extremely slow connections (<2 Kbps), use strict limit of 5000
+        dataLimit = 5000;
+        console.log(`Extremely slow connection detected (${getNetworkSpeed().toFixed(2)} Kbps). Limiting to ${dataLimit} markers.`);
+      } else if (lowEndDevice && !showAllPosts) {
+        // For slow connections (<6 Kbps), use medium limit fetching 1 year of data
+        console.log(`Slow connection detected (${getNetworkSpeed().toFixed(2)} Kbps). Setting higher limit with date filter.`);
+      } else {
+        console.log("Using maximum data limit for full data mode");
+      }
+      
+      console.log(`Fetching up to ${dataLimit} markers based on device performance and settings`);
+      
+      const response = await axios.post(`https://worldmappin.com/api/marker/0/${dataLimit}/`, updatedParams);
       void convertDatafromApitoGeojson(response.data).then(data => setGeojson(data));
       setYouAreCurrenlyDisplayingNumPins(response.data.length);
+      
+      if (lowEndDevice && !showAllPosts) {
+        console.log(`Low-performance mode: Loaded ${response.data.length} markers (limited)`);
+      } else if (showAllPosts) {
+        console.log(`Show All Posts mode: Loaded ${response.data.length} markers (full dataset)`);
+      }
+      
       if(updatedParams.author) {
-        ifusername( response.data.length, updatedParams.author);         
-      } else{
-        setShowUsernameProfile(false)
+        ifusername(response.data.length, updatedParams.author);
+      } else {
+        setShowUsernameProfile(false);
       }
 
-      if(updatedParams.permlink){
+      if(updatedParams.permlink && response.data.length > 0){
         const pos = {
           lat: response.data[0].lattitude,
           lng: response.data[0].longitude,
@@ -328,7 +515,7 @@ const App = () => {
         handlePosition(pos)
 
         // Update the user location in state
-        setLocation({ location: pos });
+        setLocation({ location: pos } as google.maps.places.Place);
         setMyLocationZoom(12);
       }
 
@@ -351,16 +538,15 @@ const App = () => {
   setGlobalZoom = setMyLocationZoom;
   const [displaymylocation, setDisplaymylocation] = useState(false);
 
-  const [poss, setPoss] = useState({ lat: null, lng: null });
+  const [poss, setPoss] = useState<{ lat: number | null; lng: number | null }>({ lat: null, lng: null });
 
-  function handlePosition(pos) {
+  // Fix the handlePosition function to use LatLngLiteral
+  function handlePosition(pos: google.maps.LatLngLiteral) {
     // Update the state with the new position
     setPoss({
-      lat: pos.lat,
-      lng: pos.lng,
+      lat: pos.lat || 0,
+      lng: pos.lng || 0,
     });
-    
-    // console.log("Position set to:", poss);
   }
 
   const handleClickBottomLogo = () => {
@@ -491,6 +677,149 @@ const App = () => {
     setLeaderboardOpen(!leaderboardOpen);
   };
 
+  // Add state for toggle transition 
+  const [isTogglingMode, setIsTogglingMode] = useState(false);
+  // Add state for performance indicator visibility
+  const [showPerformanceIndicator, setShowPerformanceIndicator] = useState(true);
+
+  // Effect to hide performance indicators after a delay
+  useEffect(() => {
+    if (performanceCheckComplete) {
+      // Show indicator when performance check is complete
+      setShowPerformanceIndicator(true);
+      
+      // Hide indicator after 10 seconds with animation
+      const timer = setTimeout(() => {
+        // Add fade-out class to indicators
+        const indicators = document.querySelectorAll('.performance-indicator');
+        indicators.forEach(indicator => {
+          indicator.classList.add('fade-out');
+        });
+        
+        // Set state after animation completes
+        const hideTimer = setTimeout(() => {
+          setShowPerformanceIndicator(false);
+        }, 2000); // Match the animation duration
+        
+        return () => clearTimeout(hideTimer);
+      }, 10000);
+      
+      // Clear timeout on unmount or when performance check changes
+      return () => clearTimeout(timer);
+    }
+  }, [performanceCheckComplete, showAllPosts]);
+
+  // Effect to re-show indicators briefly when toggling modes
+  useEffect(() => {
+    if (isTogglingMode) {
+      // Remove fade-out class and show indicators
+      setShowPerformanceIndicator(true);
+      setTimeout(() => {
+        const indicators = document.querySelectorAll('.performance-indicator');
+        indicators.forEach(indicator => {
+          indicator.classList.remove('fade-out');
+        });
+      }, 0);
+      
+      // Hide again after the toggling animation finishes with smooth fade
+      const timer = setTimeout(() => {
+        // Add fade-out class
+        const indicators = document.querySelectorAll('.performance-indicator');
+        indicators.forEach(indicator => {
+          indicator.classList.add('fade-out');
+        });
+        
+        // Set state after animation completes
+        const hideTimer = setTimeout(() => {
+          setShowPerformanceIndicator(false);
+        }, 2000); // Match the animation duration
+        
+        return () => clearTimeout(hideTimer);
+      }, 10000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [isTogglingMode]);
+
+  // Add function to handle toggle of "Show All Posts"
+  const handleToggleAllPosts = () => {
+    // If device is high-performance (not low-end), don't allow toggling off
+    if (!detectedLowEndDevice) {
+      console.log("High-performance device - toggle disabled");
+      return; // No change for high-performance devices
+    }
+    
+    // For low-end devices, allow toggling with immediate UI feedback
+    const newValue = !showAllPosts;
+    
+    // Set visual feedback states
+    setIsTogglingMode(true);
+    setTimeout(() => setIsTogglingMode(false), 800);
+    
+    // Cancel any pending fetch operation
+    if (pendingDataLoadRef.current) {
+      clearTimeout(pendingDataLoadRef.current);
+      pendingDataLoadRef.current = null;
+      console.log("Canceled pending operation");
+    }
+    
+    // Set loading state
+    setFetchingMarkers(true);
+    
+    // Set a short delay to allow cancellation
+    pendingDataLoadRef.current = window.setTimeout(async () => {
+      try {
+        // Update the state
+        setShowAllPosts(newValue);
+        console.log(`${newValue ? "Enabling" : "Disabling"} Full Data Mode on low-end device`);
+        
+        // Prepare parameters
+        const params = { ...searchParams };
+        
+        // Apply date filter based on new showAllPosts value
+        if (isExtremelySlowConnection() && !newValue) {
+          // For extremely slow connections (<2 Kbps), apply strict limit with date filter
+          params.start_date = getOneMonthAgo();
+          console.log(`Extremely slow connection detected (${getNetworkSpeed().toFixed(2)} Kbps). Loading last month's data only.`);
+        } else if (detectedLowEndDevice && !newValue) {
+          // For slow connections (<6 Kbps), load posts from last year
+          params.start_date = getOneYearAgo();
+          console.log(`Slow connection detected (${getNetworkSpeed().toFixed(2)} Kbps). Loading last year's data.`);
+        } else {
+          // For normal connections or Full Data mode - load all posts without date filter
+          params.start_date = '';
+          console.log("Loading ALL posts in full data mode");
+        }
+        
+        // Using a high data limit since we're filtering by date instead
+        const dataLimit = 150000;
+        console.log(`Fetching up to ${dataLimit} pins from ${params.start_date}`);
+        
+        // Make the API call directly
+        const response = await axios.post(`https://worldmappin.com/api/marker/0/${dataLimit}/`, params);
+        console.log(`Fetched ${response.data.length} pins`);
+        
+        // Process the data
+        const geoJsonData = await convertDatafromApitoGeojson(response.data);
+        setGeojson(geoJsonData);
+        setYouAreCurrenlyDisplayingNumPins(response.data.length);
+        
+        // Handle author information if needed
+        if(params.author) {
+          ifusername(response.data.length, params.author);
+        }
+        
+        // Clear loading state
+        setFetchingMarkers(false);
+        pendingDataLoadRef.current = null;
+      } catch (error) {
+        console.error("Error loading pins:", error);
+        setFetchingMarkers(false);
+        pendingDataLoadRef.current = null;
+      }
+    }, 300);
+  };
+
   return (
     <APIProvider apiKey={API_KEY} version={'beta'}>
       <BrowserRouter>
@@ -504,12 +833,35 @@ const App = () => {
         </Routes>
       </BrowserRouter>
 
+      {/* 
+        Performance indicators:
+        1. Slow Connection Mode - when device is detected as low-end and not showing all posts
+        2. Very Slow Connection Mode - when connection is extremely slow (<2 Kbps) 
+        3. Good Connection - when device is high-end or showing all posts
+      */}
+      {performanceCheckComplete && showPerformanceIndicator && isExtremelySlowConnection() && !showAllPosts && (
+        <div className={`performance-indicator very-slow ${isTogglingMode ? 'toggling' : ''}`}>
+          <p>Very Slow Connection Mode</p>
+        </div>
+      )}
+
+      {performanceCheckComplete && showPerformanceIndicator && !isExtremelySlowConnection() && detectedLowEndDevice && !showAllPosts && (
+        <div className={`performance-indicator ${isTogglingMode ? 'toggling' : ''}`}>
+          <p>Slow Connection Mode</p>
+        </div>
+      )}
+
+      {performanceCheckComplete && showPerformanceIndicator && (showAllPosts || !detectedLowEndDevice) && (
+        <div className={`performance-indicator full-data ${isTogglingMode ? 'toggling' : ''} ${!detectedLowEndDevice ? 'recommended' : ''}`}>
+          <p>Good Connection</p>
+        </div>
+      )}
+
       {/* <div className="LocationPickerContainer">
         <PlacePicker
           className="LocationPicker"
           ref={pickerRef}
           forMap="gmap"
-          // ${'           '.repeat(15)}
           placeholder={`Search for a place | You are looking at ${youAreCurrenlyDisplayingNumPins} Pins`}
           onPlaceChange={() => {
             if (!pickerRef.current?.value) {
@@ -527,9 +879,9 @@ const App = () => {
           codeMode={codeMode}
           onToggleCodeMode={handleClick}
           onGetLocation={handleGetLocation}
-          showFilterSettings={showfiltersettings}  // Pass the filter visibility state
-          handleFilter={handleFilter}  // Pass the filter function
-          searchParams={searchParams}  // Pass search params if needed
+          showFilterSettings={showfiltersettings}
+          handleFilter={handleFilter}
+          searchParams={searchParams}
           setShowfiltersettings={setShowfiltersettings}
           setLocation={setLocation} 
           setMyLocationZoom={setMyLocationZoom}
@@ -543,6 +895,9 @@ const App = () => {
           }
           toggleLeaderboard={toggleLeaderboard}
           handleCloseButtonLeaderboard={handleCloseButtonLeaderboard}
+          showAllPosts={showAllPosts}
+          onToggleAllPosts={handleToggleAllPosts}
+          isLowPerformanceDevice={detectedLowEndDevice}
         />
       )}
 
@@ -564,7 +919,6 @@ const App = () => {
         <p>Loading stats...</p>
       </div>}
 
-           
         <Map
           onTilesLoaded={handleTilesLoaded}          
           // mapId={'edce5dcfb5575af1'}
@@ -607,11 +961,14 @@ const App = () => {
             if(codeMode){
               const latLng = e.detail?.latLng;
 
-              const { lat, lng } = latLng;//Deconstruct latLng
-
-              // Set the marker and reset clipboard state
-              setCodeModeMarker({ lat, lng });
-              setCopiedToClipboard(false);
+              if (latLng) {
+                // Set the marker and reset clipboard state
+                setCodeModeMarker({ 
+                  lat: latLng.lat, 
+                  lng: latLng.lng 
+                });
+                setCopiedToClipboard(false);
+              }
             }            
           }}
         >          
@@ -740,7 +1097,6 @@ const App = () => {
 
 
 export default App;
-
 export function renderToDom(container: HTMLElement) {
   const root = createRoot(container);
 

@@ -42,6 +42,9 @@ const Navbar = ({
     onMapConfigIdChange,
     toggleLeaderboard,
     handleCloseButtonLeaderboard,
+    showAllPosts,
+    onToggleAllPosts,
+    isLowPerformanceDevice,
 }) => {
   // Declare pickerRef using useRef
   const pickerRef = useRef<TPlacePicker | null>(null);
@@ -68,7 +71,15 @@ const Navbar = ({
   const toggleShowMapControlsOnMobile = () => {
     setShowMapControls(!showMapControls);
     const content = document.getElementById('mobile-settings-content');
-    content.classList.toggle('show');
+    if (content) {
+      content.classList.toggle('show');
+    }
+  };
+
+  const viewAllPosts = () => {
+    if (onToggleAllPosts) {
+      onToggleAllPosts();
+    }
   };
 
   if(!isMenuOpen && isMenuOpen2) {
@@ -108,14 +119,23 @@ const Navbar = ({
                         let types = pickerRef.current?.value.types;
 
                         let viewport = pickerRef.current?.value.viewport;
+                        if (viewport) {
+                          // Type assertion to any to handle the unknown structure safely
+                          const viewportObj = viewport as any;
+                          let bounds = {
+                            ne: { 
+                              lat: viewportObj.getNorthEast().lat(), 
+                              lng: viewportObj.getNorthEast().lng() 
+                            },
+                            sw: { 
+                              lat: viewportObj.getSouthWest().lat(), 
+                              lng: viewportObj.getSouthWest().lng() 
+                            }
+                          };
 
-                        let bounds = {
-                          ne: { lat: Object.values(viewport)[0].hi, lng: Object.values(viewport)[1].hi },
-                          sw: { lat: Object.values(viewport)[0].lo, lng: Object.values(viewport)[1].lo }
-                        };    
-
-                        const zoomLevel = calculateZoomLevel(bounds, types);        
-                        setMyLocationZoom(zoomLevel);
+                          const zoomLevel = calculateZoomLevel(bounds, types);        
+                          setMyLocationZoom(zoomLevel);
+                        }
                     }
                   }}
                   //onKeyDown={handleKeyPress}
@@ -130,6 +150,9 @@ const Navbar = ({
                     mapConfigs={mapConfigs}
                     mapConfigId={mapConfigId}
                     onMapConfigIdChange={onMapConfigIdChange}
+                    showAllPosts={showAllPosts}
+                    onToggleAllPosts={onToggleAllPosts}
+                    isLowPerformanceDevice={isLowPerformanceDevice}
                   />}
                   </div>
               </li>
@@ -204,14 +227,23 @@ const Navbar = ({
                     let types = pickerRef.current?.value.types;
 
                     let viewport = pickerRef.current?.value.viewport;
-                    
-                    let bounds = {
-                      ne: { lat: Object.values(viewport)[0].hi, lng: Object.values(viewport)[1].hi },
-                      sw: { lat: Object.values(viewport)[0].lo, lng: Object.values(viewport)[1].lo }
-                    };
+                    if (viewport) {
+                      // Type assertion to any to handle the unknown structure safely
+                      const viewportObj = viewport as any;
+                      let bounds = {
+                        ne: { 
+                          lat: viewportObj.getNorthEast().lat(), 
+                          lng: viewportObj.getNorthEast().lng() 
+                        },
+                        sw: { 
+                          lat: viewportObj.getSouthWest().lat(), 
+                          lng: viewportObj.getSouthWest().lng() 
+                        }
+                      };
 
-                    const zoomLevel = calculateZoomLevel(bounds, types);
-                    setMyLocationZoom(zoomLevel);
+                      const zoomLevel = calculateZoomLevel(bounds, types);
+                      setMyLocationZoom(zoomLevel);
+                    }
                 }
               }}
             />
@@ -224,7 +256,7 @@ const Navbar = ({
               <p id="get-location-button" onClick={onGetLocation}>
                 My Location
               </p>
-              {!codeMode && <p onClick={() => { toggleShowfiltersettings(); handleCloseButtonLeaderboard();}}>filter the map</p>}
+              {!codeMode && <p onClick={() => { toggleShowfiltersettings(); handleCloseButtonLeaderboard();}}>Filter The Map</p>}
             </div>
 
             <div className="leaderboard-mobile-settings">
@@ -265,6 +297,9 @@ const Navbar = ({
                 mapConfigs={mapConfigs}
                 mapConfigId={mapConfigId}
                 onMapConfigIdChange={onMapConfigIdChange}
+                showAllPosts={showAllPosts}
+                onToggleAllPosts={onToggleAllPosts}
+                isLowPerformanceDevice={isLowPerformanceDevice}
               />}
             </div>
           </div>
