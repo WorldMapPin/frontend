@@ -72,7 +72,7 @@ function ControlPanel({
       
       <div className="map-config toggle-container">
         <div className="toggle-switch-container control-panel-toggle">
-          <span className="toggle-label">Load All Posts</span>
+          <span className="toggle-label">Load All Pins</span>
           <label 
             className={`toggle-switch ${!isLowPerformanceDevice ? 'disabled high-performance' : ''} ${isProcessing ? 'processing' : ''}`}
             title={getTooltipText()}

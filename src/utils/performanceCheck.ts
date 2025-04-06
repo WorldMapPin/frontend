@@ -46,7 +46,7 @@ export function checkPerformance(): Promise<boolean> {
     const checkComplete = () => {
       checksCompleted++;
       if (checksCompleted >= totalChecks) {
-        console.log(`Device performance assessment: ${isLowPerformance ? 'Low-end' : 'High-end'}`);
+        // console.log(`Device performance assessment: ${isLowPerformance ? 'Low-end' : 'High-end'}`);
         resolve(isLowPerformance);
       }
     };
@@ -77,12 +77,12 @@ export function checkPerformance(): Promise<boolean> {
             totalSpeedKbps += speedKbps;
             speedSamples++;
             
-            console.log(`Speed sample ${speedSamples}: ${speedKbps.toFixed(2)} Kbps`);
+            // console.log(`Speed sample ${speedSamples}: ${speedKbps.toFixed(2)} Kbps`);
             
             if (speedSamples >= samplesNeeded) {
               const averageSpeed = totalSpeedKbps / speedSamples;
               networkSpeedKbps = averageSpeed; // Store the speed for external access
-              console.log(`Average network speed: ${averageSpeed.toFixed(2)} Kbps`);
+              // console.log(`Average network speed: ${averageSpeed.toFixed(2)} Kbps`);
               
               console.log(averageSpeed)
               // If speed is less than 6 Kbps, consider it a low-performance device
@@ -123,7 +123,7 @@ export function checkPerformance(): Promise<boolean> {
       // Set a timeout in case tests don't complete
       setTimeout(() => {
         if (speedSamples < samplesNeeded) {
-          console.warn(`Network test timed out after collecting ${speedSamples} samples`);
+          // console.warn(`Network test timed out after collecting ${speedSamples} samples`);
           isLowPerformance = true; // Assume low performance if test times out
           checkComplete();
         }
@@ -136,13 +136,13 @@ export function checkPerformance(): Promise<boolean> {
       
       // Check for low memory (less than 4GB)
       if (nav.deviceMemory && nav.deviceMemory < 4) {
-        console.log(`Low memory device detected: ${nav.deviceMemory}GB RAM`);
+        // console.log(`Low memory device detected: ${nav.deviceMemory}GB RAM`);
         isLowPerformance = true;
       }
       
       // Check for low CPU cores (less than 4)
       if (navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4) {
-        console.log(`Low CPU device detected: ${navigator.hardwareConcurrency} cores`);
+        // console.log(`Low CPU device detected: ${navigator.hardwareConcurrency} cores`);
         isLowPerformance = true;
       }
       
@@ -166,7 +166,7 @@ export function checkPerformance(): Promise<boolean> {
         } else {
           // Test complete
           const fps = (frames / (elapsed / 1000)).toFixed(1);
-          console.log(`Graphics performance: ${fps} FPS`);
+          // console.log(`Graphics performance: ${fps} FPS`);
           
           // If FPS is less than 30, consider it a low-performance device
           if (parseFloat(fps) < 30) {
@@ -183,7 +183,7 @@ export function checkPerformance(): Promise<boolean> {
       // Set a timeout in case the test doesn't complete
       setTimeout(() => {
         if (frames === 0) {
-          console.warn('Graphics performance test timed out');
+          // console.warn('Graphics performance test timed out');
           isLowPerformance = true; // Assume low performance if test times out
           checkComplete();
         }
@@ -198,7 +198,7 @@ export function checkPerformance(): Promise<boolean> {
     // Overall timeout as a safety measure
     setTimeout(() => {
       if (checksCompleted < totalChecks) {
-        console.warn(`Performance check timed out after completing ${checksCompleted}/${totalChecks} checks`);
+        // console.warn(`Performance check timed out after completing ${checksCompleted}/${totalChecks} checks`);
         resolve(true); // Assume low performance if overall timeout is hit
       }
     }, 10000);
@@ -219,7 +219,7 @@ export function initPerformanceCheck(): Promise<boolean> {
     console.log("Starting initial performance check...");
     performanceCheckPromise = checkPerformance().then(result => {
       isLowPerformanceDevice = result;
-      console.log(`Initial device assessment complete: ${isLowPerformanceDevice ? 'Low-performance' : 'High-performance'} device`);
+      // console.log(`Initial device assessment complete: ${isLowPerformanceDevice ? 'Low-performance' : 'High-performance'} device`);
       return result;
     }).catch(error => {
       console.error("Performance check failed:", error);

@@ -143,7 +143,7 @@ const App = () => {
       try {
         const result = await initPerformanceCheck();
         if (isMounted) {
-          console.log("Performance detection result:", result);
+          // console.log("Performance detection result:", result);
           setDetectedLowEndDevice(result); // Store the detection result
           setLowEndDevice(result);         // Initially set lowEndDevice based on detection
           
@@ -178,11 +178,11 @@ const App = () => {
       if (showAllPosts) {
         // Override lowEndDevice to false when showing all posts
         setLowEndDevice(false);
-        console.log("Overriding to high-performance mode for full data load");
+        // console.log("Overriding to high-performance mode for full data load");
       } else {
         // Restore the actual detection result when not showing all posts
         setLowEndDevice(detectedLowEndDevice);
-        console.log("Restoring detected performance mode:", detectedLowEndDevice);
+        // console.log("Restoring detected performance mode:", detectedLowEndDevice);
       }
     }
   }, [showAllPosts, performanceCheckComplete, detectedLowEndDevice]);
@@ -195,7 +195,7 @@ const App = () => {
         if (pendingDataLoadRef.current) {
           clearTimeout(pendingDataLoadRef.current);
           pendingDataLoadRef.current = null;
-          console.log("Cancelled pending data load operation");
+          // console.log("Cancelled pending data load operation");
         }
 
         // Start new operation with a small delay to allow cancellation
@@ -206,10 +206,10 @@ const App = () => {
           // Check if the state is still the same after the delay
           // This prevents unnecessary data loads if the user toggled back quickly
           if (showAllPosts) {
-            console.log("Proceeding with full data mode load");
+            // console.log("Proceeding with full data mode load");
             loadmarkersonfirstLoad();
           } else if (detectedLowEndDevice) {
-            console.log("Proceeding with optimized mode for low-end device");
+            // console.log("Proceeding with optimized mode for low-end device");
             loadmarkersonfirstLoad();
           }
           pendingDataLoadRef.current = null;
@@ -218,7 +218,7 @@ const App = () => {
         // Add a safety timeout to ensure loading state is reset after a delay
         const safetyTimer = setTimeout(() => {
           if (fetchingMarkers) {
-            console.log("Safety timeout: forcing loading state to false after showAllPosts change");
+            // console.log("Safety timeout: forcing loading state to false after showAllPosts change");
             setFetchingMarkers(false);
           }
         }, 30000); // 30 second safety timeout
@@ -412,7 +412,7 @@ const App = () => {
     // void loadCastlesGeojson().then(data => setGeojson(data));
     if(!loadedonce && performanceCheckComplete){
       if(!firstLoad){
-        console.log("Loading markers with lowEndDevice =", lowEndDevice);
+        // console.log("Loading markers with lowEndDevice =", lowEndDevice);
         loadmarkersonfirstLoad();
       }
       setFetchingMarkers(true)
@@ -424,21 +424,21 @@ const App = () => {
     try {
       // Apply filter with lowEndDevice taken into account, but respect showAllPosts
       const initialFilterParams: SearchParams = { ...searchParams };
-      console.log("Current state - lowEndDevice:", lowEndDevice, "showAllPosts:", showAllPosts);
+      // console.log("Current state - lowEndDevice:", lowEndDevice, "showAllPosts:", showAllPosts);
       
       // Apply date filter based on device, network speed and mode
       if (isExtremelySlowConnection() && !showAllPosts) {
         // For extremely slow connections (<2 Kbps), apply strict limit with date filter
         initialFilterParams.start_date = getOneMonthAgo();
-        console.log(`Extremely slow connection detected (${getNetworkSpeed().toFixed(2)} Kbps). Loading last month's data only.`);
+        // console.log(`Extremely slow connection detected (${getNetworkSpeed().toFixed(2)} Kbps). Loading last month's data only.`);
       } else if (lowEndDevice && !showAllPosts) {
         // For slow connections (<6 Kbps), load posts from last year
         initialFilterParams.start_date = getOneYearAgo();
-        console.log(`Slow connection detected (${getNetworkSpeed().toFixed(2)} Kbps). Loading last year's data.`);
+        // console.log(`Slow connection detected (${getNetworkSpeed().toFixed(2)} Kbps). Loading last year's data.`);
       } else {
         // For normal connections or Full Data mode - load all posts without date filter
         initialFilterParams.start_date = '';
-        console.log("Loading ALL posts in full data mode");
+        // console.log("Loading ALL posts in full data mode");
       }
       
       handleFilter(initialFilterParams);
@@ -480,25 +480,25 @@ const App = () => {
       if (isExtremelySlowConnection() && !showAllPosts) {
         // For extremely slow connections (<2 Kbps), use strict limit of 5000
         dataLimit = 5000;
-        console.log(`Extremely slow connection detected (${getNetworkSpeed().toFixed(2)} Kbps). Limiting to ${dataLimit} markers.`);
+        // console.log(`Extremely slow connection detected (${getNetworkSpeed().toFixed(2)} Kbps). Limiting to ${dataLimit} markers.`);
       } else if (lowEndDevice && !showAllPosts) {
         // For slow connections (<6 Kbps), use medium limit fetching 1 year of data
-        console.log(`Slow connection detected (${getNetworkSpeed().toFixed(2)} Kbps). Setting higher limit with date filter.`);
+        // console.log(`Slow connection detected (${getNetworkSpeed().toFixed(2)} Kbps). Setting higher limit with date filter.`);
       } else {
-        console.log("Using maximum data limit for full data mode");
+        // console.log("Using maximum data limit for full data mode");
       }
       
-      console.log(`Fetching up to ${dataLimit} markers based on device performance and settings`);
+      // console.log(`Fetching up to ${dataLimit} markers based on device performance and settings`);
       
       const response = await axios.post(`https://worldmappin.com/api/marker/0/${dataLimit}/`, updatedParams);
       void convertDatafromApitoGeojson(response.data).then(data => setGeojson(data));
       setYouAreCurrenlyDisplayingNumPins(response.data.length);
       
-      if (lowEndDevice && !showAllPosts) {
-        console.log(`Low-performance mode: Loaded ${response.data.length} markers (limited)`);
-      } else if (showAllPosts) {
-        console.log(`Show All Posts mode: Loaded ${response.data.length} markers (full dataset)`);
-      }
+      // if (lowEndDevice && !showAllPosts) {
+      //   console.log(`Low-performance mode: Loaded ${response.data.length} markers (limited)`);
+      // } else if (showAllPosts) {
+      //   console.log(`Show All Posts mode: Loaded ${response.data.length} markers (full dataset)`);
+      // }
       
       if(updatedParams.author) {
         ifusername(response.data.length, updatedParams.author);
@@ -702,7 +702,7 @@ const App = () => {
         }, 2000); // Match the animation duration
         
         return () => clearTimeout(hideTimer);
-      }, 10000);
+      }, 5000);
       
       // Clear timeout on unmount or when performance check changes
       return () => clearTimeout(timer);
@@ -745,7 +745,7 @@ const App = () => {
   const handleToggleAllPosts = () => {
     // If device is high-performance (not low-end), don't allow toggling off
     if (!detectedLowEndDevice) {
-      console.log("High-performance device - toggle disabled");
+      // console.log("High-performance device - toggle disabled");
       return; // No change for high-performance devices
     }
     
@@ -760,7 +760,7 @@ const App = () => {
     if (pendingDataLoadRef.current) {
       clearTimeout(pendingDataLoadRef.current);
       pendingDataLoadRef.current = null;
-      console.log("Canceled pending operation");
+      // console.log("Canceled pending operation");
     }
     
     // Set loading state
@@ -771,7 +771,7 @@ const App = () => {
       try {
         // Update the state
         setShowAllPosts(newValue);
-        console.log(`${newValue ? "Enabling" : "Disabling"} Full Data Mode on low-end device`);
+        // console.log(`${newValue ? "Enabling" : "Disabling"} Full Data Mode on low-end device`);
         
         // Prepare parameters
         const params = { ...searchParams };
@@ -780,24 +780,24 @@ const App = () => {
         if (isExtremelySlowConnection() && !newValue) {
           // For extremely slow connections (<2 Kbps), apply strict limit with date filter
           params.start_date = getOneMonthAgo();
-          console.log(`Extremely slow connection detected (${getNetworkSpeed().toFixed(2)} Kbps). Loading last month's data only.`);
+          // console.log(`Extremely slow connection detected (${getNetworkSpeed().toFixed(2)} Kbps). Loading last month's data only.`);
         } else if (detectedLowEndDevice && !newValue) {
           // For slow connections (<6 Kbps), load posts from last year
           params.start_date = getOneYearAgo();
-          console.log(`Slow connection detected (${getNetworkSpeed().toFixed(2)} Kbps). Loading last year's data.`);
+          // console.log(`Slow connection detected (${getNetworkSpeed().toFixed(2)} Kbps). Loading last year's data.`);
         } else {
           // For normal connections or Full Data mode - load all posts without date filter
           params.start_date = '';
-          console.log("Loading ALL posts in full data mode");
+          // console.log("Loading ALL posts in full data mode");
         }
         
         // Using a high data limit since we're filtering by date instead
         const dataLimit = 150000;
-        console.log(`Fetching up to ${dataLimit} pins from ${params.start_date}`);
+        // console.log(`Fetching up to ${dataLimit} pins from ${params.start_date}`);
         
         // Make the API call directly
         const response = await axios.post(`https://worldmappin.com/api/marker/0/${dataLimit}/`, params);
-        console.log(`Fetched ${response.data.length} pins`);
+        // console.log(`Fetched ${response.data.length} pins`);
         
         // Process the data
         const geoJsonData = await convertDatafromApitoGeojson(response.data);
@@ -836,8 +836,9 @@ const App = () => {
       {/* 
         Performance indicators:
         1. Slow Connection Mode - when device is detected as low-end and not showing all posts
-        2. Very Slow Connection Mode - when connection is extremely slow (<2 Kbps) 
-        3. Good Connection - when device is high-end or showing all posts
+        2. Very Slow Connection Mode - when connection is extremely slow (<2 Kbps) and not showing all posts
+        3. Good Connection - when device is high-end
+        4. Slow Connection With Full Data - when a slow connection user toggles to full data
       */}
       {performanceCheckComplete && showPerformanceIndicator && isExtremelySlowConnection() && !showAllPosts && (
         <div className={`performance-indicator very-slow ${isTogglingMode ? 'toggling' : ''}`}>
@@ -851,8 +852,14 @@ const App = () => {
         </div>
       )}
 
-      {performanceCheckComplete && showPerformanceIndicator && (showAllPosts || !detectedLowEndDevice) && (
-        <div className={`performance-indicator full-data ${isTogglingMode ? 'toggling' : ''} ${!detectedLowEndDevice ? 'recommended' : ''}`}>
+      {performanceCheckComplete && showPerformanceIndicator && showAllPosts && detectedLowEndDevice && (
+        <div className={`performance-indicator slow-with-full-data ${isTogglingMode ? 'toggling' : ''}`}>
+          <p>Slow Connection - May Take Longer</p>
+        </div>
+      )}
+
+      {performanceCheckComplete && showPerformanceIndicator && !detectedLowEndDevice && (
+        <div className={`performance-indicator full-data recommended ${isTogglingMode ? 'toggling' : ''}`}>
           <p>Good Connection</p>
         </div>
       )}
