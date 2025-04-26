@@ -72,8 +72,11 @@ const HiveAuth: React.FC<HiveAuthProps> = ({
       // Random challenge data for the signature
       const challenge = `login-${Date.now()}`;
       
+      // Convert username to lowercase to make it case-insensitive
+      const normalizedUsername = username.toLowerCase();
+      
       window.hive_keychain.requestSignBuffer(
-        username,
+        normalizedUsername,
         challenge,
         'Posting',
         (response: any) => {
@@ -84,7 +87,7 @@ const HiveAuth: React.FC<HiveAuthProps> = ({
             console.log('Successful login with Keychain');
             // Delay the onLogin call slightly to show the success message
             setTimeout(() => {
-              onLogin(username);
+              onLogin(normalizedUsername);
             }, 1000);
           } else {
             setErrorMessage(response.message || 'Authentication failed');
