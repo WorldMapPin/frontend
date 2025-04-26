@@ -1,0 +1,289 @@
+/* Riddle Overlay Styles */
+.riddle-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  pointer-events: all;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Different overlay styles for each riddle */
+.riddle-overlay-1 {
+  background: radial-gradient(circle, rgba(89, 131, 252, 0.4) 0%, rgba(41, 53, 86, 0.7) 100%);
+  backdrop-filter: blur(5px);
+}
+
+.riddle-overlay-2 {
+  background: radial-gradient(circle, rgba(252, 89, 180, 0.4) 0%, rgba(86, 41, 72, 0.7) 100%);
+  backdrop-filter: blur(5px);
+}
+
+.riddle-overlay-3 {
+  background: radial-gradient(circle, rgba(252, 221, 89, 0.4) 0%, rgba(117, 86, 41, 0.7) 100%);
+  backdrop-filter: blur(5px);
+}
+
+.riddle-overlay-4 {
+  background: radial-gradient(circle, rgba(89, 252, 154, 0.4) 0%, rgba(41, 86, 62, 0.7) 100%);
+  backdrop-filter: blur(5px);
+}
+
+.riddle-overlay-5 {
+  background: radial-gradient(circle, rgba(186, 89, 252, 0.4) 0%, rgba(72, 41, 86, 0.7) 100%);
+  backdrop-filter: blur(5px);
+}
+
+/* Custom theme elements for each riddle */
+.riddle-overlay-1 .riddle-number {
+  background: linear-gradient(135deg, #5983fc 0%, #2935c0 100%);
+}
+
+.riddle-overlay-2 .riddle-number {
+  background: linear-gradient(135deg, #fc59b4 0%, #c02980 100%);
+}
+
+.riddle-overlay-3 .riddle-number {
+  background: linear-gradient(135deg, #fcdd59 0%, #c09c29 100%);
+}
+
+.riddle-overlay-4 .riddle-number {
+  background: linear-gradient(135deg, #59fc9a 0%, #29c050 100%);
+}
+
+.riddle-overlay-5 .riddle-number {
+  background: linear-gradient(135deg, #ba59fc 0%, #7a29c0 100%);
+}
+
+/* Theme-specific decoration for each riddle */
+.riddle-overlay-1 .riddle-decoration-1 {
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M20,20 L80,20 L80,80 L20,80 Z" fill="none" stroke="%235983fc" stroke-width="2"/></svg>');
+}
+
+.riddle-overlay-2 .riddle-decoration-1 {
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M50,20 L80,40 L65,80 L35,80 L20,40 Z" fill="none" stroke="%23fc59b4" stroke-width="2"/></svg>');
+}
+
+.riddle-overlay-3 .riddle-decoration-1 {
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M30,10 L70,10 L90,50 L70,90 L30,90 L10,50 Z" fill="none" stroke="%23fcdd59" stroke-width="2"/></svg>');
+}
+
+.riddle-overlay-4 .riddle-decoration-1 {
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M20,50 C20,30 40,20 50,20 C60,20 80,30 80,50 C80,70 60,80 50,80 C40,80 20,70 20,50 Z" fill="none" stroke="%2359fc9a" stroke-width="2"/></svg>');
+}
+
+.riddle-overlay-5 .riddle-decoration-1 {
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M50,20 L90,50 L50,80 L10,50 Z" fill="none" stroke="%23ba59fc" stroke-width="2"/></svg>');
+}
+
+.riddle-content {
+  background-color: rgba(255, 255, 255, 0.85);
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  width: 90%;
+  max-width: 500px;
+  padding: 30px;
+  text-align: center;
+  position: relative;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  overflow: hidden;
+  margin: 0 20px;
+  animation: slideUp 0.6s ease-out forwards;
+}
+
+.riddle-content::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.7);
+}
+
+.riddle-header {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.riddle-title {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  background-image: linear-gradient(135deg, #333 0%, #111 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  position: relative;
+  display: inline-block;
+}
+
+.riddle-number {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, #4d7ea8 0%, #2c5d8f 100%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.riddle-text {
+  font-size: 18px;
+  line-height: 1.6;
+  margin-bottom: 25px;
+  color: #333;
+  font-weight: 500;
+}
+
+.riddle-hint {
+  font-size: 14px;
+  font-style: italic;
+  color: #666;
+  margin-bottom: 20px;
+  padding: 10px;
+  border-radius: 8px;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.riddle-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  font-size: 24px;
+  color: #999;
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.riddle-close:hover {
+  color: #4d7ea8;
+  background-color: rgba(77, 126, 168, 0.1);
+}
+
+/* Decorative elements */
+.riddle-decoration {
+  position: absolute;
+  opacity: 0.15;
+  z-index: -1;
+}
+
+.riddle-decoration-1 {
+  top: -10%;
+  right: -10%;
+  width: 40%;
+  height: 40%;
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M30,10 L70,10 L90,50 L70,90 L30,90 L10,50 Z" fill="none" stroke="black" stroke-width="2"/></svg>');
+  transform: rotate(15deg);
+}
+
+.riddle-decoration-2 {
+  bottom: -10%;
+  left: -10%;
+  width: 30%;
+  height: 30%;
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="black" stroke-width="2"/></svg>');
+}
+
+.riddle-progress {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.progress-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #ddd;
+  transition: all 0.3s ease;
+}
+
+.progress-dot.active {
+  background-color: #4d7ea8;
+  transform: scale(1.2);
+}
+
+.progress-dot.completed {
+  background-color: #4CAF50;
+}
+
+/* Riddle-specific progress dot colors */
+.riddle-overlay-1 .progress-dot.active {
+  background-color: #5983fc;
+}
+
+.riddle-overlay-2 .progress-dot.active {
+  background-color: #fc59b4;
+}
+
+.riddle-overlay-3 .progress-dot.active {
+  background-color: #fcdd59;
+}
+
+.riddle-overlay-4 .progress-dot.active {
+  background-color: #59fc9a;
+}
+
+.riddle-overlay-5 .progress-dot.active {
+  background-color: #ba59fc;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .riddle-content {
+    padding: 20px;
+    width: 95%;
+  }
+  
+  .riddle-title {
+    font-size: 24px;
+  }
+  
+  .riddle-text {
+    font-size: 16px;
+  }
+} 

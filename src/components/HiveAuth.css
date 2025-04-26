@@ -1,0 +1,179 @@
+.hive-auth-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 2.5rem 2rem;
+  max-width: 400px;
+  width: 100%;
+  margin: 0 auto;
+  border-radius: 12px;
+  background-color: #f8f8f8;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.hive-auth-input {
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.hive-auth-input input {
+  width: 90%;
+  padding: 0.9rem 1rem;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  text-align: center;
+  color: #444;
+  background-color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) inset;
+}
+
+.hive-auth-input input:focus {
+  outline: none;
+  border-color: #4d7ea8;
+  box-shadow: 0 0 0 3px rgba(77, 126, 168, 0.2), 0 2px 4px rgba(0, 0, 0, 0.05) inset;
+}
+
+.hive-auth-input input::placeholder {
+  color: #aaa;
+  opacity: 1;
+  font-style: italic;
+  font-size: 1rem;
+  transition: opacity 0.2s ease;
+}
+
+.hive-auth-input input:focus::placeholder {
+  opacity: 0.6;
+}
+
+.hive-auth-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.hive-auth-buttons a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 2rem;
+  min-width: 220px;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  text-decoration: none;
+}
+
+.hive-auth-buttons a:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.hive-auth-buttons a:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.keychain-button {
+  background: linear-gradient(135deg, #4d7ea8 0%, #2c5d8f 100%);
+  color: white;
+  position: relative;
+  overflow: hidden;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.keychain-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transition: left 0.7s ease;
+}
+
+.keychain-button:hover {
+  color: white;
+  background: linear-gradient(135deg, #5b8cb9 0%, #3972aa 100%);
+}
+
+.keychain-button:hover::before {
+  left: 100%;
+}
+
+a.disabled {
+  pointer-events: none;
+  background: #ccc !important;
+  cursor: not-allowed;
+  box-shadow: none !important;
+}
+
+.keychain-missing {
+  margin-top: 15px;
+  padding: 12px;
+  background-color: #fff4e5;
+  border: 1px solid #ffcc80;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.keychain-missing p {
+  margin: 0 0 10px 0;
+  font-size: 14px;
+  color: #e65100;
+}
+
+.install-link {
+  display: inline-block;
+  padding: 8px 16px;
+  background-color: #ff9800;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.install-link:hover {
+  background-color: #f57c00;
+}
+
+/* Message containers */
+.hive-auth-message {
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.hive-auth-error {
+  background-color: rgba(255, 99, 71, 0.1);
+  border: 1px solid #ff6347;
+  color: #d32f2f;
+}
+
+.hive-auth-success {
+  background-color: rgba(76, 175, 80, 0.1);
+  border: 1px solid #4caf50;
+  color: #388e3c;
+} 

@@ -310,7 +310,6 @@
     border: 1px solid #ccc; /* Grey border */
     border-radius: 4px; /* Rounded corners */
     cursor: pointer; /* Cursor indicates clickable item */
-		
 	text-align: center;
 	font-size: 12px;
 	border-radius: 10px;
@@ -319,6 +318,24 @@
 
 .time-button:hover {
     background-color: #e1e1e1; /* Slightly darker on hover */
+}
+
+.time-button-disabled {
+	position: relative;
+	min-width: 48px;
+    padding: 10px 5px;
+    margin-right: 3px; /* Space between buttons */
+    background-color: #f0f0f0; /* Light grey background, adjust color as needed */
+    border: 1px solid #ccc; /* Grey border */
+    border-radius: 4px; /* Rounded corners */
+    cursor: pointer; /* Cursor indicates clickable item */
+	text-align: center;
+	font-size: 12px;
+	border-radius: 10px;
+	cursor: pointer;
+	
+	pointer-events: none; /* disables clicks */
+	opacity: 0.5; /* grays it out */
 }
 
 .leaderboard-input-div{
@@ -725,11 +742,11 @@ Leaderboard
 	}
   
 	.leaderboard-side-tab .content {
-	  	margin-left: 5px;
+	  	/* margin-left: 5px; */
 	}
 
 	.leaderboard-side-tab .content1 {
-		margin-left: 5px;
+		margin-left: 0px;
 	  }
 
 	.time-button {
@@ -821,11 +838,11 @@ Leaderboard
 	}
 
 	.next-users {		
-		margin-bottom: 140px; /* Spacing above and below the button */
+		margin-bottom: 50px; /* Spacing above and below the button */
 	}
 
 	.leaderboard-summary:last-child {
-		margin-bottom: 150px;  /* More space for the last post only */
+		margin-bottom: 70px;  /* More space for the last post only */
 	}
   }
 

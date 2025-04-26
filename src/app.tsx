@@ -49,6 +49,13 @@ import ControlPanel from './components/mapStyles';
 //Leaderboard
 import Leaderboards from './components/Leaderboards'
 
+import GrazEasterEgg from './components/GrazEasterEgg';
+import GrazLeaderboard from './components/GrazLeaderboard';
+
+// Import Riddle components
+import RiddleRouter from './components/RiddleRouter';
+import RiddleLauncher from './components/RiddleLauncher';
+
 export let setGlobalLocation: (location: google.maps.places.Place | undefined) => void;
 export let setGlobalZoom: (zoom: number | undefined) => void;
 export let mapZoom = 3;
@@ -820,6 +827,27 @@ const App = () => {
     }, 300);
   };
 
+  const [showGrazEasterEgg, setShowGrazEasterEgg] = useState(false);
+
+  const handleEasterEggTrigger = (tagString) => {
+    // Make sure we can detect the tag with or without the # symbol
+    if (tagString.includes("#GrazAndSeek") || 
+        tagString.includes("GrazAndSeek")) {
+      console.log("Easter egg triggered!");
+      setShowGrazEasterEgg(true);
+      
+      // Pan and zoom to Graz
+      setLocation({ 
+        location: { lat: 47.07749, lng: 15.43124 } 
+      } as google.maps.places.Place);
+      setMyLocationZoom(14);
+    }
+  };
+
+  const handleCloseEasterEgg = () => {
+    setShowGrazEasterEgg(false);
+  };
+
   return (
     <APIProvider apiKey={API_KEY} version={'beta'}>
       <BrowserRouter>
@@ -829,8 +857,12 @@ const App = () => {
           <Route path="/:username" element={<YourComponent />} />
           <Route path="p/:permlink" element={<PermLink />} />
           <Route path="/winter-challenge" element={<OpenWinterChallenge />} />
+          <Route path="GrazAndSeek-Leaderboard" element={<GrazLeaderboard />} />
           <Route path="*" element={null} /> {/*TODO Add PAGE NOT FOUND*/}
         </Routes>
+        
+        {/* Add RiddleRouter to handle riddle routes */}
+        <RiddleRouter />
       </BrowserRouter>
 
       {/* 
@@ -905,8 +937,29 @@ const App = () => {
           showAllPosts={showAllPosts}
           onToggleAllPosts={handleToggleAllPosts}
           isLowPerformanceDevice={detectedLowEndDevice}
+          onTagChange={handleEasterEggTrigger}
         />
       )}
+
+      {/* Add RiddleLauncher to the UI - can be placed wherever makes most sense */}
+      <div className="riddle-launcher-container" style={{
+        position: 'fixed',
+        bottom: '85px',
+        right: '20px',
+        zIndex: 100,
+        animation: 'pulseAttention 2s infinite'
+      }}>
+        <style>
+          {`
+            @keyframes pulseAttention {
+              0% { transform: scale(1); }
+              50% { transform: scale(1.05); }
+              100% { transform: scale(1); }
+            }
+          `}
+        </style>
+        <RiddleLauncher buttonText="Geography Treasure Hunt" />
+      </div>
 
       <div className="logo-with-text">
         <img onClick={handleClickBottomLogo} src={logoWithText} alt="" />
@@ -1082,6 +1135,8 @@ const App = () => {
           {(showUsernameProfile) && (
               <SlidingUserTab userInfowindowData={geojson} username={showUsername.toLowerCase()} pinCount={showUsersNumberOfPins} toggleMenuApp={toggleMenu_close} isMobile={isMobile} handleCloseButtonLeaderboard={handleCloseButtonLeaderboard}/>
           )}
+
+          {showGrazEasterEgg && <GrazEasterEgg onClose={handleCloseEasterEgg} />}
 
         </Map>        
         

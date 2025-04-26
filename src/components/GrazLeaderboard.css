@@ -1,0 +1,783 @@
+.graz-leaderboard-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 30px 20px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  color: #333;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+/* Main leaderboard styles from Leaderboards.css */
+.worldmappin-logo {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 10px auto;
+}
+
+.leaderboard-side-tab {
+  margin-top: 60px;
+  height: 100%;
+  width: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  padding-top: 0px;
+  transition: width 0.5s;
+  color: rgb(0, 0, 0);
+  z-index: 10;
+}
+
+.leaderboard-side-tab .content {
+  margin-right: 0px;
+  max-height: calc(100% - 50px);
+  overflow-y: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.leaderboard-side-tab .content::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+.leaderboard-side-tab.open {
+  width: 500px;
+}
+
+.leaderboard-header-2 {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px 0;
+  background-color: #f4f4f4;
+  margin-top: 5px;
+  border-top: 2px solid #000000;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.placement-header {
+  margin-left: 5px;
+  text-align: center;
+  color: #202020;
+  font-size: 12px;
+  flex: 1;
+}
+
+.username-header-2 {
+  margin-left: 0px;
+  margin-right: 55px;
+  text-align: center;
+  color: #202020;
+  font-size: 12px;
+  flex: 2;
+}
+
+.Number-of-Curated-Posts-header {
+  margin-left: 15px;
+  text-align: center;
+  color: #202020;
+  font-size: 12px;
+  flex: 2;
+}
+
+.leaderboard-input-div {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  width: 97%;
+  position: relative;
+  margin-left: auto;
+  margin-right: 6px;
+  display: flex;
+  flex-direction: row;
+  right: 0;
+  height: 42px;
+}
+
+.leaderboard-input {
+  width: 100%;
+  margin-left: auto;
+  padding: 10px 15px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px 0 0 8px;
+  box-shadow: inset 0 1px 3px #ddd;
+  outline: none;
+  height: 100%;
+  box-sizing: border-box;
+}
+  
+.leaderboard-input-btn {
+  padding: 0 5px;
+  background: #4d7ea8;
+  color: white;
+  text-align: center;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 0 8px 8px 0;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 80px;
+  height: 100%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+  
+.leaderboard-input-btn:hover {
+  background: #2c5d8f;
+}
+
+/* Remove all pseudo-element content */
+.leaderboard-input-btn::before,
+.leaderboard-input-btn::after {
+  content: none !important;
+  display: none !important;
+}
+
+.leaderboard-input-btn::before {
+  content: "Search";
+}
+
+.leaderboard-input-btn::after {
+  content: "Search";
+}
+
+.leaderboard-summary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  margin: 5px 5px;
+  background-color: #f8f8f8;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.leaderboard-summary:hover {
+  background: rgba(252, 213, 175, 0.5);
+}
+
+.leaderboard-summary:last-child {
+  margin-bottom: 50px;
+}
+
+.next-users {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.next-users p {
+  background-color: #5f2720;
+  color: white;
+  border: none;
+  padding: 10px;
+  margin: 0px;
+  margin-right: 6px;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease;
+}
+
+.next-users p:hover {
+  background-color: #e0574f;
+}
+
+.leaderboard-summary li {
+  list-style: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 15px;
+  margin: 0;
+  margin-top: 5px;
+}
+
+.leaderboard-summary small {
+  font-size: 18px;
+  font-weight: bold;
+  color: #000000;
+  width: 60px;
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  flex-shrink: 0;
+  flex-grow: 0;
+}
+
+.leaderboard-profile-content {
+  height: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+}
+
+.leaderboard-summary h4 {
+  font-size: 17px;
+  margin: 0;
+}
+
+.leaderboard-username-link {
+  font-size: 17px;
+  color: #000000;
+  text-decoration: none;
+  display: block;
+  cursor: pointer;
+  margin-bottom: 0px;
+  text-align: center;
+  position: relative;
+  padding-right: 0px;
+}
+
+.leaderboard-username-link:hover {
+  text-decoration: underline;
+}
+
+/* Highlight the user that was searched */
+@keyframes spin-shadow {
+  0%, 100% {
+    box-shadow: 0 0 0 1px white, 0 0 0 3px orange;
+  }
+  50% {
+    box-shadow: 0 0 0 1px orange, 0 0 0 3px white;
+  }
+}
+
+.highlight-border {
+  animation: spin-shadow 1.5s linear infinite;
+  border-radius: 10px;
+  margin: 5px;
+}
+
+/* Trophy and spinner styles */
+.trophy {
+  font-size: 18px;
+  text-align: center;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(77, 126, 168, 0.2);
+  border-radius: 50%;
+  border-top-color: #4d7ea8;
+  animation: spin 1s ease-in-out infinite;
+  margin-bottom: 15px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-container p {
+  color: #6c757d;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.error-container {
+  padding: 20px;
+  background-color: #fff4e5;
+  border-radius: 8px;
+  text-align: center;
+  margin: 20px 0;
+}
+
+.error-container p {
+  color: #e65100;
+  margin: 0 0 15px 0;
+  font-weight: 500;
+}
+
+.error-container button {
+  background-color: #ff9800;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.error-container button:hover {
+  background-color: #f57c00;
+}
+
+.empty-leaderboard {
+  padding: 30px;
+  text-align: center;
+  background-color: #f1f8ff;
+  border-radius: 8px;
+  border: 1px dashed #b3d7ff;
+  margin: 20px 0;
+}
+
+.empty-leaderboard p {
+  color: #0366d6;
+  font-weight: 500;
+  margin: 0;
+}
+
+.back-button {
+  display: inline-block;
+  background: linear-gradient(135deg, #4d7ea8 0%, #2c5d8f 100%);
+  color: white;
+  padding: 10px 25px;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(44, 93, 143, 0.3);
+}
+
+.back-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(44, 93, 143, 0.4);
+}
+
+/* Updated Leaderboard Title Styles */
+.leaderboard-title-container {
+  text-align: center;
+  padding: 20px 0;
+  position: relative;
+  background: #0a0e17;
+  border-bottom: 3px solid #1e3c5a;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.leaderboard-title-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #0a0e17;
+  z-index: 0;
+}
+
+.leaderboard-title-container::after {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  background: linear-gradient(180deg, transparent, rgba(10, 14, 23, 0.7));
+}
+
+@keyframes matrix-fall {
+  0% {
+    opacity: 0;
+    transform: translateY(-100px);
+  }
+  10% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 0.9; /* Keep digits visible longer */
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(300px);
+  }
+}
+
+.matrix-digit {
+  position: absolute;
+  color: rgba(67, 255, 100, 0.45);
+  font-family: monospace;
+  font-size: 14px;
+  z-index: 1;
+  animation: matrix-fall linear infinite, matrix-pulse 2s ease-in-out infinite alternate;
+  text-shadow: 0 0 8px rgba(67, 255, 100, 0.4);
+  pointer-events: none;
+}
+
+/* Add a subtle pulsing animation to make digits more vibrant */
+@keyframes matrix-pulse {
+  from {
+    text-shadow: 0 0 5px rgba(67, 255, 100, 0.3);
+  }
+  to {
+    text-shadow: 0 0 10px rgba(67, 255, 100, 0.6);
+  }
+}
+
+/* Contain the matrix effect within the leaderboard entries container */
+.leaderboard-entries-container {
+  position: relative;
+  overflow: hidden; /* Hide digits that go outside the container */
+  height: auto;
+  min-height: 50px;
+  border-bottom: 1px solid transparent; /* Invisible border to define the bottom edge */
+}
+
+/* Ensure the Load More button is outside the matrix effect */
+.next-users {
+  position: relative;
+  z-index: 3; /* Higher than matrix digits */
+  margin-top: 10px; /* Space above the button */
+  clear: both; /* Ensure it's below all floating elements */
+}
+
+.graz-title, .graz-subtitle {
+  position: relative;
+  z-index: 2;
+  top: 5px;
+}
+
+.graz-title {  
+  margin: 0;
+  font-size: 32px;
+  font-weight: 800;
+  background: linear-gradient(45deg, #fff 10%, #ffcc66 50%, #fff 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  letter-spacing: 1px;
+  animation: titleGlow 2s ease-in-out infinite alternate;
+}
+
+.graz-title span {
+  display: inline-block;
+  background: linear-gradient(45deg, #ffcc66 10%, #ff9933 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@keyframes titleGlow {
+  from {
+    text-shadow: 0 0 5px rgba(255, 204, 102, 0.3), 0 0 10px rgba(255, 204, 102, 0.3);
+  }
+  to {
+    text-shadow: 0 0 10px rgba(255, 204, 102, 0.7), 0 0 20px rgba(255, 204, 102, 0.5);
+  }
+}
+
+.graz-subtitle {
+  margin: 8px 0 0;
+  font-size: 16px;
+  color: #e6e6e6;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+}
+
+/* Close Button - Custom X icon */
+.close-leaderboard-btn {
+  position: absolute; /* Position it absolutely within the container */
+  top: 10px; /* Distance from the top of the container */
+  right: 10px; /* Distance from the right side of the container */
+  background-color: transparent;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  color: #e6e6e6;
+  
+  p {
+    margin-top: auto;
+    display: inline-flex;
+    align-content: center;
+    justify-content: center;
+    font-family: "Quicksand", sans-serif;
+    box-sizing: border-box;
+    padding: 5px 10px 5px 10px;
+    color: white;
+    font-size: 0.75em;
+    font-weight: bold;
+    background-color: rgba(255, 255, 255, 0.75);
+    border-radius: 5px;
+    border: unset;
+  }
+
+  p:hover {
+      background-color: rgb(255, 255, 255);
+      cursor: pointer;
+  }
+}
+
+/* Remove the custom X */
+.close-leaderboard-btn::before,
+.close-leaderboard-btn::after {
+  content: none;
+}
+
+.close-leaderboard-btn::before {
+  content: "×";
+  font-size: 32px;
+  line-height: 0.8;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Custom Search Icon */
+.search-icon {
+  display: none;
+}
+
+/* Date and Time Container */
+.date-time-container {
+  display: flex;
+  margin-left: auto;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.date-solved {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin-right: 15px;
+}
+
+.time-solved {
+  font-size: 16px;
+  font-weight: 600;
+  color: #4b974b;
+  min-width: 50px;
+  text-align: right;
+}
+
+/* Updated header for date/time */
+.date-solved-header {
+  text-align: right;
+  margin-right: 30px;
+  color: #202020;
+  font-size: 12px;
+  flex: 1.5;
+}
+
+.time-solved-header {
+  text-align: center;
+  color: #202020;
+  font-size: 12px;
+  flex: 0.8;
+  margin-right: 10px;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 1100px) {
+	/* Adjust styles for smaller screens */
+
+  .next-users p {
+    margin-right: 0px;
+  }
+
+	.leaderboard-input {
+		width: 100%;
+	}
+
+	.placement-header {
+		position: fixed;
+		margin-left: 20px;
+	}
+
+	.username-header {
+		position: fixed;
+		margin-left: 140px;
+	}
+
+	.Number-of-Curated-Posts-header {
+		display: flex;
+		flex-grow: 1; /* Allows this element to take up any extra space */
+    	justify-content: flex-end; /* Aligns the text to the right */
+		margin-right: 5px;
+	}
+
+	.leaderboard-side-tab {
+		width: 95%; 
+		height: 0; /* Start with no height - hidden */
+		bottom: 0; /* Slide in from the bottom */
+		left: 50%; 
+		transform: translateX(-50%);
+		top: auto;
+		visibility: hidden;
+		margin-top: 0;
+	}
+  
+	/* When the tab is open on smaller screens */
+	.leaderboard-side-tab.open {
+		height: 75%;
+		width: 95%;
+		visibility: visible;
+		z-index: 10;
+		overflow-y: auto; /* Ensure content can scroll */
+	}
+
+	.tab {
+		max-width: 37%;
+		padding: 30px 6%;
+		font-size: 13px;
+	}
+  
+	.leaderboard-side-tab .content {
+	  	/* margin-left: 5px; */
+		max-height: none; /* Remove height limitation */
+		overflow-y: auto; /* Allow scrolling */
+	}
+
+	.leaderboard-side-tab .content1 {
+		margin-left: 5px;
+	  }
+
+	.time-button {
+		position: relative;
+		min-width: 43px;
+		padding: 10px 2px;
+		margin-right: 3px;
+		font-size: 10px;
+	}
+
+	.leaderboard-summary {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		padding: 10px;
+		margin: 3px 3px;
+		background-color: #f8f8f8;
+		border-radius: 10px;
+		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+	}
+	
+	.leaderboard-summary li {
+		list-style: none;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+		width: 100%;
+		margin: 0;
+		padding: 1px 0; /* Minimized padding inside each list item */
+	}
+	
+	.leaderboard-summary small {
+		font-size: 1.2em; /* Keep the smaller font size to save space */
+		color: #000000;
+		width: 60px;
+		display: inline-block;
+		overflow: hidden;
+		white-space: nowrap;
+		flex-shrink: 0;
+		flex-grow: 0;
+		position: relative;
+		left: 5px;
+	}
+	
+	.leaderboard-profile-content {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		width: 100%;
+		padding: 1px 0; /* Reduced vertical padding */
+	}
+	
+	.leaderboard-summary mark {
+		color: #000;
+		padding: 0px 2px; /* Minimized padding to reduce height */
+		border-radius: 2px;
+		margin-top: 3px; /* Reduced top margin for tighter fitting */
+	}
+
+	.leaderboard-summary h3 {
+		font-size: 16px;
+	}
+
+	.leaderboard-summary h4 {
+		position: relative;
+		right: 5px;
+		margin: 0;
+	}
+
+	.leaderboard-profile-picture {
+		width: 30px;
+		height: 30px;
+		margin-bottom: -5px;
+		margin-right: 20px;
+	}
+
+	.leaderboard-username-link {
+		font-size: 14px;
+		color: #007bff;
+		text-decoration: none;
+		display: block;
+		cursor: pointer;
+		margin-bottom: 0px;
+		text-align: center;
+		position: relative;
+		
+		padding-right: 0px;
+	}
+
+	.next-users {		
+		margin-bottom: 0px; /* Spacing above and below the button */
+	}
+
+	.leaderboard-summary:last-child {
+		margin-bottom: 0px;  /* Reduced space for the last post */
+	}
+}
+
+/* Additional fix for the content overflowing */
+.leaderboard-side-tab.open {
+    overflow: auto;
+}
+
+.leaderboard-side-tab .content {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch; /* For smooth scrolling on iOS */
+}
+
+.close-leaderboard-btn:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
+}
+
+/* User Avatar */
+.user-avatar {
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+/* Add variation classes for matrix digits with different brightness levels */
+.matrix-digit.bright {
+  color: rgba(67, 255, 100, 0.7);
+  text-shadow: 0 0 12px rgba(67, 255, 100, 0.6);
+  font-weight: bold;
+}
+
+.matrix-digit.medium {
+  color: rgba(67, 255, 100, 0.55);
+  text-shadow: 0 0 10px rgba(67, 255, 100, 0.5);
+} 

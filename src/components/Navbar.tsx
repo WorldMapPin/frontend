@@ -45,6 +45,7 @@ const Navbar = ({
     showAllPosts,
     onToggleAllPosts,
     isLowPerformanceDevice,
+    onTagChange,
 }) => {
   // Declare pickerRef using useRef
   const pickerRef = useRef<TPlacePicker | null>(null);
@@ -178,7 +179,7 @@ const Navbar = ({
 
         {/* Filter Container */}
         <div className="filter-container">
-            {showFilterSettings && <FilterComponent onFilter={handleFilter} searchParams={searchParams} />}
+            {showFilterSettings && <FilterComponent onFilter={handleFilter} searchParams={searchParams} onTagChange={onTagChange} />}
 
             {showFilterSettings && 
                 <div className='filter-close'>
@@ -309,7 +310,7 @@ const Navbar = ({
 
           <div className="filter-container">
 
-            {showFilterSettings && <FilterComponent onFilter={handleFilter} searchParams={searchParams} />}
+            {showFilterSettings && <FilterComponent onFilter={handleFilter} searchParams={searchParams} onTagChange={onTagChange} />}
 
             {showFilterSettings && <div className='filter-close'>
               <div className="close-btn"><p onClick={() => setShowfiltersettings(false)}>X</p>

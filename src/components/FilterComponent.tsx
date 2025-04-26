@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-const FilterComponent = ({ onFilter, searchParams }) => {
+const FilterComponent = ({ onFilter, searchParams, onTagChange }) => {
   const [tags, setTags] = useState(searchParams?.tags?.join(', ') || '');
   const [username, setUsername] = useState(searchParams?.author || '');
   const [postTitle, setPostTitle] = useState(searchParams?.post_title || '');
@@ -21,7 +21,7 @@ const FilterComponent = ({ onFilter, searchParams }) => {
     const endDate = new Date(searchParams.end_date);
 
     // Calculate the time difference in days
-    const daysDifference = Math.floor((endDate - startDate) / (1000 * 3600 * 24));
+    const daysDifference = Math.floor((endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24));
     // console.log(daysDifference);
 
     if (daysDifference <= 8) {
@@ -44,6 +44,48 @@ const FilterComponent = ({ onFilter, searchParams }) => {
     if (event.key === 'Enter') {
       applyFilter();
     }
+  };
+
+  const handleTagsChange = (e) => {
+    const newTags = e.target.value;
+    setTags(newTags);
+    
+    // Check for Easter Egg trigger
+    if (onTagChange) {
+      onTagChange(newTags);
+    }
+    
+    // Check for GrazAndSeek and close filter
+    checkForGrazAndSeek(newTags);
+  };
+  
+  // Check for GrazAndSeek and close filter
+  const checkForGrazAndSeek = (text) => {
+    if (text && (text.toLowerCase().includes('grazandseek') || text.toLowerCase().includes('#grazandseek'))) {
+      console.log('GrazAndSeek detected, closing filter');
+      // Find the close button and trigger a click
+      const closeBtn = document.querySelector('.filter-close .close-btn p');
+      if (closeBtn) {
+        // Use the HTMLElement interface to ensure click() is available
+        (closeBtn as HTMLElement).click();
+      }
+    }
+  };
+
+  const handleUsernameChange = (e) => {
+    const newUsername = e.target.value;
+    setUsername(newUsername);
+    
+    // Check for GrazAndSeek and close filter
+    checkForGrazAndSeek(newUsername);
+  };
+  
+  const handlePostTitleChange = (e) => {
+    const newPostTitle = e.target.value;
+    setPostTitle(newPostTitle);
+    
+    // Check for GrazAndSeek and close filter
+    checkForGrazAndSeek(newPostTitle);
   };
 
   const calculateDates = (range) => {
@@ -123,7 +165,7 @@ const FilterComponent = ({ onFilter, searchParams }) => {
           type="text"
           id="tags"
           value={tags}
-          onChange={e => setTags(e.target.value)}
+          onChange={handleTagsChange}
           onKeyDown={handleKeyPress}
           placeholder="tag1, tag2, tag3"
         />
@@ -135,7 +177,7 @@ const FilterComponent = ({ onFilter, searchParams }) => {
           type="text"
           id="username"
           value={username}
-          onChange={e => setUsername(e.target.value)}
+          onChange={handleUsernameChange}
           onKeyDown={handleKeyPress}
           placeholder="@username"
         />
@@ -147,7 +189,7 @@ const FilterComponent = ({ onFilter, searchParams }) => {
           type="text"
           id="postTitle"
           value={postTitle}
-          onChange={e => setPostTitle(e.target.value)}
+          onChange={handlePostTitleChange}
           onKeyDown={handleKeyPress}
         />
       </div>

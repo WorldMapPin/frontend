@@ -744,12 +744,12 @@ const Leaderboards = ({
                 </div>
             )}
 
-            <div className="message" id="message"></div>
+            {/* <div className="message" id="message"></div> */}
             {!winterChallenge && (    
                 <div className="leaderboard-input-div">
-                    <a className="time-button" onClick={() => setTimeframe('weekly')}>Weekly</a>
-                    <a className="time-button" onClick={() => setTimeframe('monthly')}>Monthly</a>
-                    <a className="time-button" onClick={() => setTimeframe('yearly')}>Yearly</a>
+                    <a className="time-button-disabled" onClick={() => setTimeframe('weekly')}>Weekly</a>
+                    <a className="time-button-disabled" onClick={() => setTimeframe('monthly')}>Monthly</a>
+                    <a className="time-button-disabled" onClick={() => setTimeframe('yearly')}>Yearly</a>
                     <a className="time-button" onClick={() => setTimeframe('alltime')}>All Time</a>
                     <input type="text" id="inputField" placeholder="Enter username" className="leaderboard-input"></input>
                     <a className="leaderboard-input-btn" onClick={logInput}>Search</a>                     
