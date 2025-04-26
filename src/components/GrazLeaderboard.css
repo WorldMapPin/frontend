@@ -61,8 +61,8 @@
 }
 
 .placement-header {
-  margin-left: 5px;
-  text-align: center;
+  margin-left: 15px;
+  text-align: left;
   color: #202020;
   font-size: 12px;
   flex: 1;
@@ -71,7 +71,7 @@
 .username-header-2 {
   margin-left: 0px;
   margin-right: 55px;
-  text-align: center;
+  text-align: left;
   color: #202020;
   font-size: 12px;
   flex: 2;
@@ -545,14 +545,14 @@
 }
 
 .date-solved {
-  font-size: 16px;
+  font-size: 13px;
   font-weight: 600;
   color: #333;
   margin-right: 15px;
 }
 
 .time-solved {
-  font-size: 16px;
+  font-size: 12px;
   font-weight: 600;
   color: #4b974b;
   min-width: 50px;
@@ -562,7 +562,7 @@
 /* Updated header for date/time */
 .date-solved-header {
   text-align: right;
-  margin-right: 30px;
+  margin-right: 0px;
   color: #202020;
   font-size: 12px;
   flex: 1.5;
@@ -717,7 +717,7 @@
 	}
 
 	.leaderboard-username-link {
-		font-size: 14px;
+		font-size: 13px;
 		color: #007bff;
 		text-decoration: none;
 		display: block;

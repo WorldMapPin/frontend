@@ -14,6 +14,7 @@ interface LeaderboardEntry {
   username: string;
   date: string;
   time: string;
+  formattedTime?: string;
 }
 
 const GrazLeaderboard: React.FC = () => {
@@ -188,6 +189,7 @@ const GrazLeaderboard: React.FC = () => {
           const username = String(entry[1]);
           const date = String(entry[2]);
           const time = String(entry[3]);
+          const formattedTime = entry.length >= 5 ? String(entry[4]) : undefined;
           
           const lowercaseUsername = username.toLowerCase();
           
@@ -197,7 +199,8 @@ const GrazLeaderboard: React.FC = () => {
               rank,
               username,
               date,
-              time
+              time,
+              formattedTime
             });
           }
         }
@@ -230,6 +233,61 @@ const GrazLeaderboard: React.FC = () => {
       return dateString;
     } catch (e) {
       return dateString;
+    }
+  };
+
+  // Format the time to be in 24-hour format without AM/PM but keeping seconds
+  const formatTime = (timeString: string) => {
+    try {
+      // If it already has the correct format (e.g. "14:30:45"), return it
+      if (/^\d{1,2}:\d{2}(:\d{2})?$/.test(timeString)) {
+        return timeString;
+      }
+      
+      // Check if it has AM/PM
+      const isPM = timeString.toLowerCase().includes('pm');
+      const isAM = timeString.toLowerCase().includes('am');
+      
+      // Extract hours, minutes, and seconds
+      const timeParts = timeString.replace(/\s*[APap][Mm]\s*/, '').split(':');
+      
+      if (timeParts.length >= 2) {
+        let hours = parseInt(timeParts[0], 10);
+        const minutes = parseInt(timeParts[1], 10);
+        
+        // Get seconds if available
+        let seconds = 0;
+        if (timeParts.length >= 3) {
+          // The seconds part might have whitespace or other characters
+          seconds = parseInt(timeParts[2].trim(), 10);
+        }
+        
+        // Convert to 24-hour format if PM
+        if (isPM && hours < 12) {
+          hours += 12;
+        }
+        // Convert 12 AM to 00
+        if (isAM && hours === 12) {
+          hours = 0;
+        }
+        
+        // Format with leading zeros
+        const formattedHours = hours.toString().padStart(2, '0');
+        const formattedMinutes = minutes.toString().padStart(2, '0');
+        
+        // Include seconds if they were in the original time
+        if (timeParts.length >= 3 && !isNaN(seconds)) {
+          const formattedSeconds = seconds.toString().padStart(2, '0');
+          return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+        } else {
+          return `${formattedHours}:${formattedMinutes}`;
+        }
+      }
+      
+      // If we can't parse it, return the original
+      return timeString;
+    } catch (e) {
+      return timeString;
     }
   };
 
@@ -373,7 +431,7 @@ const GrazLeaderboard: React.FC = () => {
                       </div>
                       <div className="date-time-container">
                         <span className="date-solved">{formatDate(entry.date)}</span>
-                        <span className="time-solved">{entry.time}</span>
+                        <span className="time-solved">{entry.formattedTime || formatTime(entry.time)}</span>
                       </div>
                     </div>
                   </li>

@@ -127,10 +127,16 @@ const GrazEasterEgg: React.FC<GrazEasterEggProps> = ({ onClose }) => {
       const now = new Date();
       const date = now.toLocaleDateString("en-US");
       const time = now.toLocaleTimeString("en-US");
+      
+      // Create formatted time in 24-hour format with seconds
+      const hours = now.getHours().toString().padStart(2, '0');
+      const minutes = now.getMinutes().toString().padStart(2, '0');
+      const seconds = now.getSeconds().toString().padStart(2, '0');
+      const formattedTime = `${hours}:${minutes}:${seconds}`;
 
       // Store the actual rank in the row data (not the index)
       // This way the rank is directly readable from the leaderboard data
-      const row = [userRank, username, date, time];
+      const row = [userRank, username, date, time, formattedTime];
 
       console.log(`Adding ${username} to leaderboard with rank ${userRank}`);
 
