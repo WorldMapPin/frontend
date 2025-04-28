@@ -590,13 +590,24 @@
 
 	.placement-header {
 		position: fixed;
-		margin-left: 20px;
+		margin-left: 15px;
 	}
 
-	.username-header {
-		position: fixed;
-		margin-left: 140px;
+	.username-header-2 {
+		margin-left: 0px;
+    margin-right: 170px;
+    left: 70px;
+    text-align: right;
+    color: #202020;
+    font-size: 12px;
+    flex: 2;
+    position: fixed;
 	}
+
+  .date-solved-header {
+    flex: 6;
+    margin-right: 10px;
+  }
 
 	.Number-of-Curated-Posts-header {
 		display: flex;

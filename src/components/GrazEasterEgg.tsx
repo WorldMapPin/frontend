@@ -5,7 +5,7 @@ import HiveAuth from './HiveAuth';
 
 // Graz coordinates
 const GRAZ_COORDINATES = { lat: 47.07749, lng: 15.43124 };
-const CORRECT_CODE = '1234';
+const CORRECT_CODE = process.env.CORRECT_CODE;
 
 interface GrazEasterEggProps {
   onClose: () => void;

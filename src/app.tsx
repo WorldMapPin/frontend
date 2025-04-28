@@ -836,6 +836,9 @@ const App = () => {
       console.log("Easter egg triggered!");
       setShowGrazEasterEgg(true);
       
+      // Close the mobile menu if it's open
+      toggleMenu_close();
+      
       // Pan and zoom to Graz
       setLocation({ 
         location: { lat: 47.07749, lng: 15.43124 } 
