@@ -28,32 +28,32 @@ const RIDDLES: RiddleData[] = [
   },
   {
     number: 2,
-    title: "Graz Clue",
-    text: "Where rivers meet and clocktowers climb, find the city frozen in time. Count the letters of its name, then subtract the buzz — what number remains?",
+    title: "Mission: Meltdown",
+    text: "A stealthy slab is loitering on a tabletop, wrapped up like a spy in violet. Give that wrapper a flip, and you’ll spot a digit posing for a selfie. Write it down before the bar melts or “escapes.”",
     hint: "No hits here, but you're close.",
     answer: "map",
     nextRiddleKey: "R2nH6fTgK8dL"
   },
   {
     number: 3,
-    title: "Buzz Party",
-    text: "Beneath the neon, nights ignite, a party's roar, a city's light. Count the times we've danced till day — The Buzz has called — now, what's the way?",
-    hint: "No hits here, but you're close.",
+    title: "The 28-Day Calendar Conundrum",
+    text: "At least how many months in a year have 28 days? Take only the final digit of that number and write it down.",
+    hint: "No hits here, but we're sure you're close.",
     answer: "compass",
     nextRiddleKey: "p5mS9yE2cX4V"
   },
   {
     number: 4,
-    title: "The Dev",
-    text: "In maps and codes he hides his trace, a silent scribe in digital space. His posts are keys, but here's the feat: Find the sum, then add no cheat.",
+    title: "Someone?",
+    text: "There’s a globe-trotting dev who commits in coordinates, peppering the planet with pixel-bright pins instead of pull requests. His trail of markers forms a secret checksum of his travels. Curious? Swing by the team page. His rank stands proudly beside his name, but what matters is the tally of pins he’s logged: count them all no more, no less and you’ll unlock the number you seek.",
     hint: "No hits here, but this one is easy.",
     answer: "land",
     nextRiddleKey: "Z3kW8bJ7rU6D"
   },
   {
     number: 5,
-    title: "The Explorer's Secret",
-    text: "I am an odd number, remove one letter and I become even. Think not in sums, but in the riddle's reason. Solve my name, and you will see — The number you seek is found in me.",
+    title: "The Alphabetical-Order Number",
+    text: "Exactly one English number-word between 1 and 100 has its letters arranged in perfect alphabetical order. How many letters are in that word?",
     hint: "No hits again, it's the last one.",
     answer: "experience",
   }

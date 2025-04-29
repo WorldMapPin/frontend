@@ -19,7 +19,7 @@ const usernameArray = [
   { username: 'louis88', description: 'Graphic Design, Testing & Communication' },
   { username: 'rivalzzz', description: 'Communication' },
   { username: 'godfish', description: 'Community' },
-  { username: 'masterswatch', description: 'Frontend' },
+  { username: 'masterswatch', description: 'Frontend, Riddle?' },
   { username: 'uniforced', description: 'Frontend' },
   { username: 'sunsea', description: 'Enduser Testing' },
   { username: 'ybanezkim26', description: 'Curation' },
