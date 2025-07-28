@@ -5,7 +5,7 @@ import { Client } from "@hiveio/dhive";
 import axios from 'axios';
 import initializeClient from './initializeClient';
 import worldmappinlogo from '../assets/worldmappin-logo.png';
-
+import './GrazLeaderboard.css';
 import FilterComponent from './FilterComponent';
 
 
@@ -35,7 +35,8 @@ const Leaderboards = ({
     newSearchParams,
     setLocation,
     setMyLocationZoom,
-    showWinterchallangeTab
+    showWinterchallangeTab,
+    showGrazAndSeekTab
 }) => {
     const [onlyLoadDataOnce, setOnlyLoadDataOnce] = useState(true);
     const [timeframe, setTimeframe] = useState('alltime');
@@ -57,7 +58,96 @@ const Leaderboards = ({
 
     const [searchParams, setSearchParams] = useState(
         params?.username ? { author: params.username } : (params?.permlink ? { permlink: params.permlink } : (params?.tag ? { tags: [params?.tag] } : { curated_only: false }))
-    );    
+    );
+
+    // Add ref for GrazAndSeek matrix effect
+    const grazLeaderboardContentRef = useRef<HTMLDivElement>(null);
+
+    // Matrix effect functions for GrazAndSeek
+    const createMatrixDigit = (container: HTMLDivElement, width: number, height: number) => {
+        const digit = document.createElement('div');
+        digit.className = 'matrix-digit';
+        
+        // Randomly assign brightness variations
+        const brightnessRoll = Math.random();
+        if (brightnessRoll > 0.85) {
+            digit.classList.add('bright'); // 15% chance of being bright
+        } else if (brightnessRoll > 0.6) {
+            digit.classList.add('medium'); // 25% chance of being medium
+        }
+        
+        // Generate a character for the matrix
+        const roll = Math.random();
+        if (roll > 0.8) {
+            // Binary (20% chance)
+            digit.textContent = Math.random() > 0.5 ? '0' : '1';
+        } else if (roll > 0.6) {
+            // Numbers (20% chance)
+            digit.textContent = Math.floor(Math.random() * 10).toString();
+        } else if (roll > 0.3) {
+            // Special characters (30% chance)
+            const specialChars = '!@#$%^&*()[]{}|;:,.<>?/\\=+-_';
+            digit.textContent = specialChars.charAt(Math.floor(Math.random() * specialChars.length));
+        } else {
+            // Letters (30% chance)
+            const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+            digit.textContent = letters.charAt(Math.floor(Math.random() * letters.length));
+        }
+        
+        // Random positioning
+        const left = Math.random() * width;
+        const top = Math.random() * height;
+        digit.style.left = `${left}px`;
+        digit.style.top = `${top}px`;
+        
+        // Random speed
+        const duration = 5 + Math.random() * 10;
+        digit.style.animationDuration = `${duration}s, ${2 + Math.random() * 3}s`; // Fall and pulse durations
+        
+        // Add to container
+        container.appendChild(digit);
+        
+        // Remove after animation completes
+        setTimeout(() => {
+            if (digit.parentNode === container) {
+                container.removeChild(digit);
+            }
+        }, duration * 1000);
+    };
+
+    // Add matrix effect to container
+    const applyMatrixEffect = (container: HTMLDivElement) => {
+        if (!container) return;
+        
+        // Clear any existing digits
+        const existingDigits = container.querySelectorAll('.matrix-digit');
+        existingDigits.forEach(digit => digit.remove());
+        
+        // Get container dimensions
+        const containerWidth = container.clientWidth;
+        const containerHeight = container.clientHeight || window.innerHeight;
+        
+        // Determine number of digits based on container size
+        const density = 0.3; // Lower number means fewer digits
+        const area = containerWidth * containerHeight;
+        const digitCount = Math.max(30, Math.floor(area * density / 10000));
+        
+        // Create initial digits
+        for (let i = 0; i < digitCount; i++) {
+            createMatrixDigit(container, containerWidth, containerHeight);
+        }
+        
+        // Create new digits periodically
+        const interval = setInterval(() => {
+            if (container && document.body.contains(container)) {
+                createMatrixDigit(container, containerWidth, containerHeight);
+            } else {
+                clearInterval(interval);
+            }
+        }, 200);
+        
+        return interval;
+    };
 
     function chunkArray(array, size) {
         const chunks = [];
@@ -66,6 +156,15 @@ const Leaderboards = ({
         }
         return chunks;
     }
+
+    const grazAndSeekData = [
+        { rank: 1, username: 'livinguktaiwan', date: '05/02/2025', time: '16:10:11' },
+        { rank: 2, username: 'ph1102', date: '05/02/2025', time: '16:13:14' },
+        { rank: 3, username: 'duskobgd', date: '05/06/2025', time: '22:50:50' },
+        { rank: 4, username: 'sanjeevm', date: '05/07/2025', time: '11:29:36' },
+        { rank: 5, username: 'ninaeatshere', date: '05/08/2025', time: '14:27:45' },
+      ];
+      const [showGrazAndSeek, setShowGrazAndSeek] = useState(false);
 
     // New CODE ------------------------------------------------------
     const [activeTab, setActiveTab] = useState('most-active-users');
@@ -88,6 +187,8 @@ const Leaderboards = ({
     
     const handleBackClick = () => {
         setShowPastChallenges(false);
+        setShowGrazAndSeek(false);
+        setActiveTab('most-active-users');
     };
     
     // const selectChallenge = (challengeId: string) => {
@@ -523,6 +624,12 @@ const Leaderboards = ({
                 if(showWinterchallangeTab){
                     setWinterChallenge(true);
                 }
+
+                if(showGrazAndSeekTab){
+                    setShowGrazAndSeek(true);
+                    setActiveTab('grazandseek');
+                    setShowPastChallenges(true);
+                }
           }
         }
 
@@ -564,6 +671,33 @@ const Leaderboards = ({
             setUserProfiles(userProfiles_afterfirstload);
         }
     }, []);
+
+    // Apply matrix effect to GrazAndSeek leaderboard
+    useEffect(() => {
+        const grazLeaderboardContent = grazLeaderboardContentRef.current;
+        if (!grazLeaderboardContent || !showGrazAndSeek) return;
+        
+        const interval = applyMatrixEffect(grazLeaderboardContent);
+        
+        return () => clearInterval(interval);
+    }, [showGrazAndSeek, grazAndSeekData]);
+
+    // Prevent body scrolling when leaderboard is open
+    useEffect(() => {
+        if (isOpen) {
+            document.body.classList.add('leaderboard-open');
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.classList.remove('leaderboard-open');
+            document.body.style.overflow = '';
+        }
+
+        // Cleanup on unmount
+        return () => {
+            document.body.classList.remove('leaderboard-open');
+            document.body.style.overflow = '';
+        };
+    }, [isOpen]);
 
     function logInput() {
         var input = document.getElementById('inputField').value.toLowerCase() // Convert input to lowercase
@@ -667,7 +801,7 @@ const Leaderboards = ({
 
 
     return (
-        <div className={`leaderboard-side-tab ${isOpen ? 'open' : ''}`}>           
+        <div className={`leaderboard-side-tab ${isOpen ? 'open' : ''} ${showGrazAndSeek ? 'graz-active' : ''}`}>           
 
             <div className='filter-close'>
                 <div className="leaderboard-close-btn"><p onClick={() => {handleCloseButtonLeaderboard(), handleCloseButton_reset_Leaderboard()}}>X</p></div>
@@ -676,7 +810,7 @@ const Leaderboards = ({
             {!showPastChallenges && (
                 <div className='tabs'>
                     <p className={`tab ${activeTab === 'most-active-users' ? 'active' : ''}`} id="most-active-users" onClick={activbuttonClick} style={{ width: '41%' }}><span className="icon" onClick={activbuttonClick}>🏆</span>Most Curated Users</p>
-                    <p className={`tab ${activeTab === 'past-challenges' ? 'active' : ''}`} id="past-challenges" onClick={pastChallengesClick} style={{ width: '41%' }}><span className="icon" >🎯</span>Past Challenges</p>
+                    <p className={`tab ${activeTab === 'past-challenges' ? 'active' : ''}`} id="past-challenges" onClick={pastChallengesClick} style={{ width: '41%' }}><span className="icon" >🎯</span>Challenges</p>
                 </div>
             )}
 
@@ -684,8 +818,16 @@ const Leaderboards = ({
                 <div className='tabs'>
                 <p className="tab active" id="back-tab" onClick={handleBackClick} style={{ width: '10%' }}><span className="icon" >⬅️</span>Back</p>
                     <div className="scrollable-tabs">
-                        <p className={`tab ${activeTab === 'past-challenges' ? 'active' : ''}`} id="winter-challenge" onClick={winterbuttonClick}><span className="icon">❄️</span>Winter Challenge 2024
+                        <p className={`tab ${activeTab === 'ultimate-challenge' ? 'active' : ''}`} id="ultimate-challenge" onClick={() => { setWinterChallenge(true); setShowGrazAndSeek(false); setActiveTab('ultimate-challenge'); }}>Ultimate Adventures Challenge</p>
+                        <p className={`tab ${activeTab === 'grazandseek' ? 'active' : ''}`} id="graz-challenge" onClick={() => { setShowGrazAndSeek(true); setWinterChallenge(false); setActiveTab('grazandseek'); }}>
+                          <span style={{opacity: 0.6, fontSize: '0.8em', marginRight: '5px'}}>{'{ }'}</span>
+                          GrazAndSeek Challenge
+                          <span style={{opacity: 0.6, fontSize: '0.8em', marginLeft: '5px'}}>{'< />'}</span>
+                        </p>
+                        <p className={`tab ${activeTab === 'winter-challenge' ? 'active' : ''}`} id="winter-challenge" onClick={() => { setWinterChallenge(true); setShowGrazAndSeek(false); setActiveTab('winter-challenge'); }}><span className="icon">❄️</span>Winter Challenge 2024
                         <div className="initial-snow">
+                            <div className="snow">&#10052;</div>
+                            <div className="snow">&#10052;</div>
                             <div className="snow">&#10052;</div>
                             <div className="snow">&#10052;</div>
                             <div className="snow">&#10052;</div>
@@ -738,14 +880,58 @@ const Leaderboards = ({
                             <div className="snow">&#10052;</div>
                         </div>
                         </p>
-                        <p className="tab active" id="future-challenge-1">Future Challenge</p>
-                        <p className="tab active" id="future-challenge-2">Future Challenge</p>
-                    </div>
+                        {/* <p className="tab active" id="future-challenge-1">Future Challenge</p>
+                        <p className="tab active" id="future-challenge-2">Future Challenge</p> */}
+    </div>
+  </div>
+)}
+
+
+{showGrazAndSeek && (
+  <div className="graz-leaderboard-content">
+    <div className="leaderboard-title-container">
+      <h1 className="graz-title">GrazAndSeek <span>Leaderboard</span></h1>
+      <p className="graz-subtitle">Secret Code Solvers Hall of Fame</p>
+    </div>
+
+    <div className="leaderboard-input-div">
+      <input type="text" id="inputField" placeholder="Enter username" className="leaderboard-input"></input>
+      <a className="leaderboard-input-btn" onClick={logInput}>Search</a> 
+    </div>
+    
+    <div className="leaderboard-header-2">
+      <div className="placement-header">Rank</div>
+      <div className="username-header-2">Username</div>
+      <div className="date-solved-header">Date Solved</div>
+      <div className="time-solved-header">Time</div>
+    </div>
+    
+    <div className="leaderboard-entries-container" ref={grazLeaderboardContentRef}>
+      {grazAndSeekData.map((entry) => (
+        <div key={entry.rank} className="leaderboard-summary">
+          <li>
+            <div className="leaderboard-profile-content">
+              <small>{entry.rank}</small>
+              <div className="leaderboard-user-info">
+                <div className="user-avatar">
+                  <img src={`https://images.hive.blog/u/${entry.username}/avatar/small`} alt={`${entry.username}'s avatar`} onError={(e) => { e.currentTarget.src = 'https://images.hive.blog/u/default/avatar/small'; }} />
                 </div>
-            )}
+                <a href={`https://peakd.com/@${entry.username}`} target="_blank" rel="noopener noreferrer" className="leaderboard-username-link">{entry.username}</a>
+              </div>
+              <div className="date-time-container">
+                <span className="date-solved">{entry.date}</span>
+                <span className="time-solved">{entry.time}</span>
+              </div>
+            </div>
+          </li>
+        </div>
+      ))}
+    </div>
+  </div>
+)}
 
             {/* <div className="message" id="message"></div> */}
-            {!winterChallenge && (    
+            {!showGrazAndSeek && !winterChallenge && (    
                 <div className="leaderboard-input-div">
                     <a className="time-button-disabled" onClick={() => setTimeframe('weekly')}>Weekly</a>
                     <a className="time-button-disabled" onClick={() => setTimeframe('monthly')}>Monthly</a>
@@ -755,14 +941,14 @@ const Leaderboards = ({
                     <a className="leaderboard-input-btn" onClick={logInput}>Search</a>                     
                 </div>
             )}
-            {winterChallenge && (    
+            {!showGrazAndSeek && winterChallenge && (    
                 <div className="leaderboard-input-div">
                     <input type="text" id="inputField" placeholder="Enter username" className="leaderboard-input"></input>
                     <a className="leaderboard-input-btn" onClick={logInput}>Search</a> 
                 </div>
             )}
             
-            {!winterChallenge && (  
+            {!showGrazAndSeek && !winterChallenge && (  
                 <div className="leaderboard-header">
                     <div className="placement-header">Placement</div>
                     <div className="username-header">Username</div>
@@ -777,7 +963,7 @@ const Leaderboards = ({
                 </div>
             )}
 
-            {winterChallenge && (  
+            {!showGrazAndSeek && winterChallenge && (  
                 <div className="leaderboard-header" style={{backgroundColor: 'rgba(165, 203, 225, 0.8)'}}>
                     <div className="placement-header">Placement</div>
                     <div className="username-header">Username</div>
@@ -786,7 +972,7 @@ const Leaderboards = ({
             )}            
 
             {/* Most Active Users from TDs */}
-            {(!winterChallenge) && (                
+            {!showGrazAndSeek && (!winterChallenge) && (                
                 <div className='content' id="userList">
                     {userProfiles.map((profile, index) => (
                         <div key={profile.rank} id={`user-${profile.username}`} className={"leaderboard-summary"} onClick={() => handleFilter(profile.username, searchParams)}>
@@ -817,59 +1003,12 @@ const Leaderboards = ({
             )}            
 
             {/* Winterchallange */}
-            {winterChallenge && (
+            {!showGrazAndSeek && winterChallenge && (
                 <div className='winter-content'>
                     <div className='initial-snow-temp'>
+                    <div className="snow">&#10052;</div>
                         <div className="snow">&#10052;</div>
-                        <div className="snow">&#10052;</div>
-                        <div className="snow">&#10052;</div>
-                        <div className="snow">&#10052;</div>
-                        <div className="snow">&#10052;</div>
-                        <div className="snow">&#10052;</div>
-                        <div className="snow">&#10052;</div>
-                        <div className="snow">&#10052;</div>
-                        <div className="snow">&#10052;</div>
-                        <div className="snow">&#10052;</div>
-                        <div className="snow">&#10052;</div>
-                        <div className="snow">&#10052;</div>
-                        <div className="snow">&#10052;</div>
-                        <div className="snow">&#10052;</div>
-                        <div className="snow">&#10052;</div>
-                        <div className="snow">&#10052;</div>
-                        <div className="snow">&#10052;</div>
-                        <div className="snow">&#10052;</div>
-                        <div className="snow">&#10052;</div>
-                        <div className="snow">&#10052;</div>
-                        <div className="snow">&#10052;</div>
-                        <div className="snow">&#10052;</div>
-                        <div className="snow">&#10052;</div>
-                        <div className="snow">&#10052;</div>
-                        <div className="snow">&#10052;</div>
-                        <div className="snow">&#10052;</div>
-                        <div className="snow">&#10052;</div>
-                        <div className="snow">&#10052;</div>
-                        <div className="snow">&#10052;</div>
-                        <div className="snow">&#10052;</div>
-                        <div className="snow">&#10052;</div>
-                        <div className="snow">&#10052;</div>
-                        <div className="snow">&#10052;</div>
-                        <div className="snow">&#10052;</div>
-                        <div className="snow">&#10052;</div>
-                        <div className="snow">&#10052;</div>
-                        <div className="snow">&#10052;</div>
-                        <div className="snow">&#10052;</div>
-                        <div className="snow">&#10052;</div>
-                        <div className="snow">&#10052;</div>
-                        <div className="snow">&#10052;</div>
-                        <div className="snow">&#10052;</div>
-                        <div className="snow">&#10052;</div>
-                        <div className="snow">&#10052;</div>
-                        <div className="snow">&#10052;</div>
-                        <div className="snow">&#10052;</div>
-                        <div className="snow">&#10052;</div>
-                        <div className="snow">&#10052;</div>
-                        <div className="snow">&#10052;</div>
-                        <div className="snow">&#10052;</div>
+                        
                     </div>
 
 

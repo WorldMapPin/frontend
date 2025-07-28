@@ -860,7 +860,17 @@ const App = () => {
           <Route path="/:username" element={<YourComponent />} />
           <Route path="p/:permlink" element={<PermLink />} />
           <Route path="/winter-challenge" element={<OpenWinterChallenge />} />
-          <Route path="GrazAndSeek-Leaderboard" element={<GrazLeaderboard />} />
+          <Route path="GrazAndSeek-Leaderboard" element={
+            <Leaderboards 
+              showGrazAndSeekTab={true}
+              handleCloseButtonLeaderboard={() => {}}
+              setGeojson={() => {}}
+              newSearchParams={() => {}}
+              setLocation={() => {}}
+              setMyLocationZoom={() => {}}
+              showWinterchallangeTab={false}
+            />
+          } />
           <Route path="*" element={null} /> {/*TODO Add PAGE NOT FOUND*/}
         </Routes>
         
@@ -1152,6 +1162,7 @@ const App = () => {
             setLocation={setLocation}
             setMyLocationZoom={setMyLocationZoom}
             showWinterchallangeTab={showWinterchallangeTab}
+            showGrazAndSeekTab={false}
           />
         )}
         

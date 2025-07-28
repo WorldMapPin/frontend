@@ -47,6 +47,7 @@
 
 .leaderboard-side-tab.open {
   width: 500px;
+  overflow: hidden;
 }
 
 .leaderboard-header-2 {
@@ -63,7 +64,7 @@
 .placement-header {
   margin-left: 15px;
   text-align: left;
-  color: #202020;
+  color: #cbcbcb;
   font-size: 12px;
   flex: 1;
 }
@@ -72,7 +73,7 @@
   margin-left: 0px;
   margin-right: 55px;
   text-align: left;
-  color: #202020;
+  color: #cbcbcb;
   font-size: 12px;
   flex: 2;
 }
@@ -80,7 +81,7 @@
 .Number-of-Curated-Posts-header {
   margin-left: 15px;
   text-align: center;
-  color: #202020;
+  color: #cbcbcb;
   font-size: 12px;
   flex: 2;
 }
@@ -547,7 +548,7 @@
 .date-solved {
   font-size: 13px;
   font-weight: 600;
-  color: #333;
+  color: #cbcbcb;
   margin-right: 15px;
 }
 
@@ -563,14 +564,14 @@
 .date-solved-header {
   text-align: right;
   margin-right: 0px;
-  color: #202020;
+  color: #cbcbcb;
   font-size: 12px;
   flex: 1.5;
 }
 
 .time-solved-header {
   text-align: center;
-  color: #202020;
+  color: #cbcbcb;
   font-size: 12px;
   flex: 0.8;
   margin-right: 10px;
@@ -598,7 +599,7 @@
     margin-right: 170px;
     left: 70px;
     text-align: right;
-    color: #202020;
+    color: #cbcbcb;
     font-size: 12px;
     flex: 2;
     position: fixed;
@@ -625,6 +626,7 @@
 		top: auto;
 		visibility: hidden;
 		margin-top: 0;
+		overflow: hidden;
 	}
   
 	/* When the tab is open on smaller screens */
