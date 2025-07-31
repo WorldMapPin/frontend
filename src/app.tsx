@@ -869,6 +869,19 @@ const App = () => {
               setLocation={() => {}}
               setMyLocationZoom={() => {}}
               showWinterchallangeTab={false}
+              showUltimateAdventureTab={false}
+            />
+          } />
+          <Route path="Ultimate-Adventures-Leaderboard" element={
+            <Leaderboards 
+              showUltimateAdventureTab={true}
+              handleCloseButtonLeaderboard={() => {}}
+              setGeojson={() => {}}
+              newSearchParams={() => {}}
+              setLocation={() => {}}
+              setMyLocationZoom={() => {}}
+              showWinterchallangeTab={false}
+              showGrazAndSeekTab={false}
             />
           } />
           <Route path="*" element={null} /> {/*TODO Add PAGE NOT FOUND*/}
@@ -1155,15 +1168,16 @@ const App = () => {
         
 
         {leaderboardOpen && (
-          <Leaderboards
-            handleCloseButtonLeaderboard={handleCloseButtonLeaderboard}
-            setGeojson={setGeojson}
-            newSearchParams={newSearchParams}
-            setLocation={setLocation}
-            setMyLocationZoom={setMyLocationZoom}
-            showWinterchallangeTab={showWinterchallangeTab}
-            showGrazAndSeekTab={false}
-          />
+                      <Leaderboards 
+              handleCloseButtonLeaderboard={handleCloseButtonLeaderboard} 
+              setGeojson={setGeojson}
+              newSearchParams={newSearchParams}
+              setLocation={setLocation}
+              setMyLocationZoom={setMyLocationZoom}
+              showWinterchallangeTab={showWinterchallangeTab}
+              showGrazAndSeekTab={false}
+              showUltimateAdventureTab={false}
+            />
         )}
         
         

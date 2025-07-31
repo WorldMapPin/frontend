@@ -26,6 +26,7 @@ var sortedTDsAndHonerable_monthly_afterFirstLoad = [];
 var sortedTDsAndHonerable_yearly_afterFirstLoad = [];
 
 var sortedWinterChallenge_afterFirstLoad = [];
+var sortedUltimateAdventure_afterFirstLoad: {rank: number, username: string, score: number}[] = [];
 
 var userProfiles_afterfirstload = [];
 
@@ -36,13 +37,15 @@ const Leaderboards = ({
     setLocation,
     setMyLocationZoom,
     showWinterchallangeTab,
-    showGrazAndSeekTab
+    showGrazAndSeekTab,
+    showUltimateAdventureTab
 }) => {
     const [onlyLoadDataOnce, setOnlyLoadDataOnce] = useState(true);
     const [timeframe, setTimeframe] = useState('alltime');
     const [sortedTDsAndHonerable, setSortedTDsAndHonerable] = useState<[number , string, number, number ][]>([]);
         
     const [sortedWinterChallenge, setSortedWinterChallenge] = useState<[number , string, number ][]>([]);
+    const [sortedUltimateAdventure, setSortedUltimateAdventure] = useState<{rank: number, username: string, score: number}[]>([]);
 
     const [slice, setSlice] = useState(20);
 
@@ -165,6 +168,7 @@ const Leaderboards = ({
         { rank: 5, username: 'ninaeatshere', date: '05/08/2025', time: '14:27:45' },
       ];
       const [showGrazAndSeek, setShowGrazAndSeek] = useState(false);
+    const [showUltimateAdventure, setShowUltimateAdventure] = useState(false);
 
     // New CODE ------------------------------------------------------
     const [activeTab, setActiveTab] = useState('most-active-users');
@@ -188,6 +192,7 @@ const Leaderboards = ({
     const handleBackClick = () => {
         setShowPastChallenges(false);
         setShowGrazAndSeek(false);
+        setShowUltimateAdventure(false);
         setActiveTab('most-active-users');
     };
     
@@ -537,6 +542,30 @@ const Leaderboards = ({
         }
     }
 
+    async function loadUltimateAdventureData() {
+        if (sortedUltimateAdventure_afterFirstLoad.length === 0) {
+            try {
+                const response = await axios.get('https://worldmappin.com/api/ranking202508'); //https://worldmappin.com/api/ranking202508
+                console.log('Ultimate Adventure data:', response.data);
+                
+                const formattedData = response.data.map((item, index) => {
+                    return {
+                        rank: index + 1,
+                        username: item.author,
+                        score: item.tickets
+                    };
+                });   
+
+                setSortedUltimateAdventure(formattedData);
+                sortedUltimateAdventure_afterFirstLoad = formattedData;
+            } catch (err) {
+                console.error('Error fetching ultimate adventure ranking data:', err);
+            }
+        } else {
+            setSortedUltimateAdventure(sortedUltimateAdventure_afterFirstLoad);
+        }
+    }
+
     // Leaderboard for all pins on the map
     // const [allData, setAllData] = useState(null);
     // const [sortedUsernames, setSortedUsernames] = useState<[string, number][]>([]);
@@ -616,7 +645,8 @@ const Leaderboards = ({
         if(onlyLoadDataOnce){
             if(onlyLoadonce){
                 // initializeNode();
-                loadWinterChallengeData();                     
+                loadWinterChallengeData();
+                loadUltimateAdventureData();                     
                 //loadRankingData();
                 //setOnlyLoadDataOnce(false);
                 onlyLoadonce = false;
@@ -628,6 +658,12 @@ const Leaderboards = ({
                 if(showGrazAndSeekTab){
                     setShowGrazAndSeek(true);
                     setActiveTab('grazandseek');
+                    setShowPastChallenges(true);
+                }
+
+                if(showUltimateAdventureTab){
+                    setShowUltimateAdventure(true);
+                    setActiveTab('ultimate-challenge');
                     setShowPastChallenges(true);
                 }
           }
@@ -717,12 +753,20 @@ const Leaderboards = ({
                 return; // If username is not found, exit the function
             }
 
-            if (index2 > 0) {
-                const usernameAbove = sortedWinterChallenge[index2-1].username;
-                scrollToUser(usernameAbove, input)
-            } else {
-                scrollToUser(input, input)
+            // Scroll to the found user
+            scrollToUser('', input)
+        }
+        else if (showUltimateAdventure) {
+            // Find the index of the username in the sortedUltimateAdventure array
+            const index3 = sortedUltimateAdventure.findIndex(entry => { return entry.username === input; });
+
+            if (index3 === -1) {
+                console.log('Username not found.');
+                return; // If username is not found, exit the function
             }
+
+            // Scroll to the found user
+            scrollToUser('', input)
         }
         else {
             // Find the index of the username in the sortedTDsAndHonerable array
@@ -753,21 +797,34 @@ const Leaderboards = ({
             fetchUsername(relevantEntries);
             setSlice(100);
             
-            if (index > 0) {
-                const usernameAbove = sortedTDsAndHonerable[index-1][1];
-                scrollToUser(usernameAbove, input)
-            } else {
-                scrollToUser(input, input)
-            }
+            // Scroll to the found user
+            scrollToUser('', input)
         }
     }
 
     function scrollToUser(usernameAbove, username) {
         const interval = setInterval(() => {
             const userElement = document.getElementById(`user-${username}`);
-            const userAboveElement = document.getElementById(`user-${usernameAbove}`);
-            if (userElement && userAboveElement) {
-                userAboveElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            if (userElement) {
+                // Account for fixed elements at top - responsive offset
+                const isMobile = window.innerWidth <= 1100;
+                const offset = isMobile ? 120 : 150; // Smaller offset for mobile due to compact design
+                const elementPosition = userElement.offsetTop;
+                // Find the scrollable container
+                const container = userElement.closest('.content, .ultimate-content, .winter-content') || 
+                                 userElement.closest('.leaderboard-side-tab');
+                
+                if (container) {
+                    // Scroll to position accounting for fixed elements
+                    container.scrollTo({
+                        top: Math.max(0, elementPosition - offset), // Ensure we don't scroll negative
+                        behavior: 'smooth'
+                    });
+                } else {
+                    // Fallback to regular scrollIntoView but with 'start' to minimize shift
+                    userElement.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+                }
+                
                 clearInterval(interval); // Clear the interval once the element is found and scrolled to
     
                 // Apply the animation class
@@ -801,7 +858,7 @@ const Leaderboards = ({
 
 
     return (
-        <div className={`leaderboard-side-tab ${isOpen ? 'open' : ''} ${showGrazAndSeek ? 'graz-active' : ''}`}>           
+        <div className={`leaderboard-side-tab ${isOpen ? 'open' : ''} ${showGrazAndSeek ? 'graz-active' : ''} ${showUltimateAdventure ? 'ultimate-active' : ''} ${winterChallenge ? 'winter-active' : ''}`}>           
 
             <div className='filter-close'>
                 <div className="leaderboard-close-btn"><p onClick={() => {handleCloseButtonLeaderboard(), handleCloseButton_reset_Leaderboard()}}>X</p></div>
@@ -818,13 +875,13 @@ const Leaderboards = ({
                 <div className='tabs'>
                 <p className="tab active" id="back-tab" onClick={handleBackClick} style={{ width: '10%' }}><span className="icon" >⬅️</span>Back</p>
                     <div className="scrollable-tabs">
-                        <p className={`tab ${activeTab === 'ultimate-challenge' ? 'active' : ''}`} id="ultimate-challenge" onClick={() => { setWinterChallenge(true); setShowGrazAndSeek(false); setActiveTab('ultimate-challenge'); }}>Ultimate Adventures Challenge</p>
-                        <p className={`tab ${activeTab === 'grazandseek' ? 'active' : ''}`} id="graz-challenge" onClick={() => { setShowGrazAndSeek(true); setWinterChallenge(false); setActiveTab('grazandseek'); }}>
+                        <p className={`tab ${activeTab === 'ultimate-challenge' ? 'active' : ''}`} id="ultimate-challenge" onClick={() => { setShowUltimateAdventure(true); setWinterChallenge(false); setShowGrazAndSeek(false); setActiveTab('ultimate-challenge'); }}>Ultimate Adventures Challenge</p>
+                        <p className={`tab ${activeTab === 'grazandseek' ? 'active' : ''}`} id="graz-challenge" onClick={() => { setShowGrazAndSeek(true); setWinterChallenge(false); setShowUltimateAdventure(false); setActiveTab('grazandseek'); }}>
                           <span style={{opacity: 0.6, fontSize: '0.8em', marginRight: '5px'}}>{'{ }'}</span>
                           GrazAndSeek Challenge
                           <span style={{opacity: 0.6, fontSize: '0.8em', marginLeft: '5px'}}>{'< />'}</span>
                         </p>
-                        <p className={`tab ${activeTab === 'winter-challenge' ? 'active' : ''}`} id="winter-challenge" onClick={() => { setWinterChallenge(true); setShowGrazAndSeek(false); setActiveTab('winter-challenge'); }}><span className="icon">❄️</span>Winter Challenge 2024
+                        <p className={`tab ${activeTab === 'winter-challenge' ? 'active' : ''}`} id="winter-challenge" onClick={() => { setWinterChallenge(true); setShowGrazAndSeek(false); setShowUltimateAdventure(false); setActiveTab('winter-challenge'); }}><span className="icon">❄️</span>Winter Challenge 2024
                         <div className="initial-snow">
                             <div className="snow">&#10052;</div>
                             <div className="snow">&#10052;</div>
@@ -930,8 +987,45 @@ const Leaderboards = ({
   </div>
 )}
 
+{showUltimateAdventure && (
+  <div className='ultimate-content'>
+    <div className="ultimate-leaderboard-content">
+      <div className="leaderboard-input-div">
+        <input type="text" id="inputField" placeholder="Enter explorer name" className="leaderboard-input"></input>
+        <a className="leaderboard-input-btn" onClick={logInput}>Search</a> 
+      </div>
+      
+      <div className="leaderboard-header-2">
+        <div className="placement-header">Rank</div>
+        <div className="username-header-2">Explorer</div>
+        <div className="time-solved-header">Number of Tickets</div>
+      </div>
+      
+      <div className='content' id="userList">
+        {sortedUltimateAdventure.map((profile, index) => (
+          <div key={index} id={`user-${profile.username}`} className="leaderboard-summary" onClick={() => handleFilter(profile.username, searchParams)}>
+            <li>
+              <small>{profile.rank}</small>
+              <div className="leaderboard-profile-content">
+                <div className="leaderboard-user-info">
+                  <div className='leaderboard-profile-column'>
+                    <img src={`https://images.hive.blog/u/${profile.username}/avatar`} alt={`${profile.username}'s profile`} className="leaderboard-profile-picture" />
+                  </div>
+                </div>
+                <a href={`https://peakd.com/@${profile.username}`} target="_blank" rel="noopener noreferrer" className="leaderboard-username-link">@{profile.username}</a>
+              </div>
+              
+              <h4>{profile.score}</h4>
+            </li>                    
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+)}
+
             {/* <div className="message" id="message"></div> */}
-            {!showGrazAndSeek && !winterChallenge && (    
+            {!showGrazAndSeek && !winterChallenge && !showUltimateAdventure && (    
                 <div className="leaderboard-input-div">
                     <a className="time-button-disabled" onClick={() => setTimeframe('weekly')}>Weekly</a>
                     <a className="time-button-disabled" onClick={() => setTimeframe('monthly')}>Monthly</a>
@@ -948,7 +1042,7 @@ const Leaderboards = ({
                 </div>
             )}
             
-            {!showGrazAndSeek && !winterChallenge && (  
+            {!showGrazAndSeek && !winterChallenge && !showUltimateAdventure && (  
                 <div className="leaderboard-header">
                     <div className="placement-header">Placement</div>
                     <div className="username-header">Username</div>
@@ -972,7 +1066,7 @@ const Leaderboards = ({
             )}            
 
             {/* Most Active Users from TDs */}
-            {!showGrazAndSeek && (!winterChallenge) && (                
+            {!showGrazAndSeek && (!winterChallenge) && (!showUltimateAdventure) && (                
                 <div className='content' id="userList">
                     {userProfiles.map((profile, index) => (
                         <div key={profile.rank} id={`user-${profile.username}`} className={"leaderboard-summary"} onClick={() => handleFilter(profile.username, searchParams)}>

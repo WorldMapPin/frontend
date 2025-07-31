@@ -128,7 +128,7 @@
 .placement-header {
 	margin-left: 5px;
     text-align: center;
-    color: #202020;
+    /* color: #202020; */
 	font-size: 12px;
 }
 .username-header	{
@@ -398,26 +398,164 @@
     }
 }
 
+/* Adventure Theme Animations */
+@keyframes compassSpin {
+    0% {
+        transform: translateY(-50%) rotate(0deg);
+    }
+    100% {
+        transform: translateY(-50%) rotate(15deg);
+    }
+}
+
+@keyframes compassSpinActive {
+    0% {
+        transform: translateY(-50%) rotate(0deg);
+    }
+    100% {
+        transform: translateY(-50%) rotate(360deg);
+    }
+}
+
+@keyframes compassSpinHover {
+    0%, 100% {
+        transform: translateY(-50%) rotate(-5deg);
+    }
+    50% {
+        transform: translateY(-50%) rotate(5deg);
+    }
+}
+
+@keyframes treasureGlint {
+    0% {
+        left: -100%;
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    50% {
+        left: 100%;
+        opacity: 1;
+    }
+    100% {
+        left: 100%;
+        opacity: 0;
+    }
+}
+
+@keyframes woodGrain {
+    0%, 100% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+}
+
+@keyframes parchmentFlutter {
+    0%, 100% {
+        transform: translateY(0px) rotate(0deg);
+    }
+    25% {
+        transform: translateY(-2px) rotate(0.5deg);
+    }
+    75% {
+        transform: translateY(2px) rotate(-0.5deg);
+    }
+}
+
+@keyframes treasureSparkle {
+    0%, 100% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+}
+
+@keyframes adventureSweep {
+    0% {
+        left: -100%;
+        opacity: 0;
+    }
+    25% {
+        opacity: 0.8;
+    }
+    75% {
+        opacity: 0.8;
+    }
+    100% {
+        left: 100%;
+        opacity: 0;
+    }
+}
+
 /* Ultimate Adventures Challenge Tab */
 #ultimate-challenge {
-    background: linear-gradient(135deg, #4a1a4a 0%, #7a2a7a 50%, #4a1a4a 100%);
-    color: #ff69b4;
-    border: 1px solid #ff69b4;
-    box-shadow: 0 0 8px rgba(255, 105, 180, 0.3);
+    background: linear-gradient(135deg, #8B5E3C 0%, #6B4423 25%, #A67C52 50%, #6B4423 75%, #8B5E3C 100%);
+    color: #F4E4BC;
+    border: 1px solid #D4AF37;
+    box-shadow: 0 0 8px rgba(212, 175, 55, 0.3);
     font-weight: 600;
+    position: relative;
+    overflow: hidden;
+    font-family: serif;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    padding-left: 35px;
+}
+
+@media screen and (max-width: 1100px) {
+    #ultimate-challenge {
+        padding-left: 20px;
+    }
+}
+
+#ultimate-challenge::before {
+    content: '🗺️';
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.2em;
+    opacity: 0.7;
+    animation: compassSpin 3s ease-in-out infinite alternate;
+}
+
+#ultimate-challenge::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.3), transparent);
+    animation: treasureGlint 4s ease-in-out infinite;
 }
 
 #ultimate-challenge.active {
-    background: linear-gradient(135deg, #2a0a2a 0%, #4a1a4a 50%, #2a0a2a 100%);
-    border: 2px solid #ff69b4;
-    box-shadow: 0 0 15px rgba(255, 105, 180, 0.6);
+    background: linear-gradient(135deg, #6B4423 0%, #4A2F1A 25%, #8B5E3C 50%, #4A2F1A 75%, #6B4423 100%);
+    border: 2px solid #D4AF37;
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.6), inset 0 0 20px rgba(212, 175, 55, 0.2);
     transform: scale(1.02);
 }
 
+#ultimate-challenge.active::before {
+    opacity: 1;
+    animation: compassSpinActive 2s linear infinite;
+}
+
 #ultimate-challenge:hover {
-    background: linear-gradient(135deg, #5a2a5a 0%, #8a3a8a 50%, #5a2a5a 100%);
-    box-shadow: 0 0 12px rgba(255, 105, 180, 0.5);
+    background: linear-gradient(135deg, #A67C52 0%, #8B5E3C 25%, #D4AF37 50%, #8B5E3C 75%, #A67C52 100%);
+    box-shadow: 0 0 12px rgba(212, 175, 55, 0.5);
     transform: translateY(-2px);
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7);
+}
+
+#ultimate-challenge:hover::before {
+    animation: compassSpinHover 1.5s ease-in-out infinite;
 }
 
 /* Winter Challenge Tab - Enhanced */
@@ -464,6 +602,12 @@
     padding-left: 10px;
     height: auto;
     min-height: fit-content;
+}
+
+@media screen and (max-width: 1100px) {
+    #back-tab {
+        margin-right: 0px;
+    }
 }
 
 #back-tab::before {
@@ -704,6 +848,8 @@ Leaderboard
   margin-right: 0px;
   max-height: calc(100% - 50px);
   overflow-y: auto; /* Enables scrolling */
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on mobile */
+  scroll-behavior: smooth; /* Ensure smooth scrolling for search */
 }
 
 /* Content inside the tab */
@@ -711,11 +857,66 @@ Leaderboard
 	margin-right: 0px;
 	max-height: calc(100% - 50px);
 	overflow-y: auto; /* Enables scrolling */
-  }
+	-webkit-overflow-scrolling: touch; /* Smooth scrolling on mobile */
+	scroll-behavior: smooth; /* Ensure smooth scrolling for search */
+}
 
 .leaderboard-side-tab .winter-content{
 	max-height: calc(100% - 50px);
 	overflow-y: auto; /* Enables scrolling */
+	-webkit-overflow-scrolling: touch; /* Smooth scrolling on mobile */
+	scroll-behavior: smooth; /* Ensure smooth scrolling for search */
+}
+
+.leaderboard-side-tab .ultimate-content{
+	max-height: calc(100% - 50px);
+	overflow-y: auto; /* Enables scrolling */
+}
+
+/* Webkit scrollbar styling for Ultimate Adventure - Always visible */
+.leaderboard-side-tab .ultimate-content::-webkit-scrollbar {
+	width: 8px;
+	background: rgba(139, 94, 60, 0.3);
+}
+
+.leaderboard-side-tab .ultimate-content::-webkit-scrollbar-track {
+	background: rgba(139, 94, 60, 0.3);
+	border-radius: 4px;
+}
+
+.leaderboard-side-tab .ultimate-content::-webkit-scrollbar-thumb {
+	background: linear-gradient(180deg, rgba(212, 175, 55, 0.6), rgba(166, 124, 82, 0.8));
+	border-radius: 4px;
+	border: 1px solid rgba(107, 68, 35, 0.3);
+	min-height: 20px; /* Ensure thumb is always visible */
+}
+
+.leaderboard-side-tab .ultimate-content::-webkit-scrollbar-thumb:hover {
+	background: linear-gradient(180deg, rgba(212, 175, 55, 0.8), rgba(166, 124, 82, 0.9));
+	box-shadow: 0 0 5px rgba(212, 175, 55, 0.3);
+}
+
+/* Force scrollbar to always show */
+.leaderboard-side-tab .ultimate-content {
+	scrollbar-width: thin; /* Firefox */
+	scrollbar-color: rgba(212, 175, 55, 0.5) rgba(139, 94, 60, 0.3); /* Firefox */
+	overflow-y: scroll !important; /* Always show scrollbar */
+	-webkit-overflow-scrolling: touch; /* Smooth scrolling on mobile */
+	scroll-behavior: smooth; /* Ensure smooth scrolling for search */
+}
+
+/* Ensure main leaderboard content is always scrollable */
+.leaderboard-side-tab > div:not(.tabs):not(.modal-leaderboard) {
+	max-height: calc(100% - 120px);
+	overflow-y: auto;
+	-webkit-overflow-scrolling: touch;
+}
+
+/* Ensure leaderboard entries container is scrollable */
+.leaderboard-entries-container {
+	max-height: calc(100vh - 200px);
+	overflow-y: auto;
+	-webkit-overflow-scrolling: touch;
 }
 
 .leaderboard-side-tab.open {
@@ -833,6 +1034,9 @@ body:has(.leaderboard-side-tab.open) {
     animation: spin-shadow 1.5s linear infinite;
     border-radius: 10px; /* Smoother corners, consistent with the shadow */
 	margin: 5px;
+	/* Prevent layout shifts during animation */
+	box-sizing: border-box;
+	will-change: box-shadow;
 }
 
 .leaderboard-summary li {
@@ -983,21 +1187,56 @@ body:has(.leaderboard-side-tab.open) {
 		width: 100%;
 	}
 
+	.tabs {
+		display: flex;
+		flex-wrap: nowrap;
+		overflow-x: auto;
+		gap: 3px;
+		margin-left: 8px;
+		margin-top: 15px;
+		padding: 5px;
+		padding-left: 8px;
+	}
+
+	/* Copy GrazAndSeek header implementation for mobile */
+	.leaderboard-header {
+		display: flex;
+		justify-content: space-between;
+		width: 100%;
+		padding: 8px 0;
+		background-color: #f4f4f4;
+		margin-top: 5px;
+		border-top: 2px solid #000000;
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+	}
+
 	.placement-header {
-		position: fixed;
-		margin-left: 20px;
+		margin-left: 12px;
+		text-align: left;
+		/* color: #202020; */
+		font-size: 9px;
+		font-weight: bold;
+		flex: 1;
 	}
 
 	.username-header {
-		position: fixed;
-		margin-left: 140px;
+		margin-left: 0px;
+		margin-right: 40px;
+		text-align: left;
+		color: #202020;
+		
+		font-weight: bold;
+		flex: 2;
 	}
 
 	.Number-of-Curated-Posts-header {
-		display: flex;
-		flex-grow: 1; /* Allows this element to take up any extra space */
-    	justify-content: flex-end; /* Aligns the text to the right */
-		margin-right: 5px;
+		margin-left: 10px;
+		margin-right: 12px;
+		text-align: center;
+		color: #202020;
+		font-size: 9px;
+		font-weight: bold;
+		flex: 2;
 	}
 
 	.leaderboard-side-tab {
@@ -1022,40 +1261,53 @@ body:has(.leaderboard-side-tab.open) {
 	}
 
 	.tab {
-		max-width: 37%;
-		padding: 30px 6%;
-		font-size: 13px;
+		flex: 1;
+		min-width: 120px;
+		padding: 25px 6px;
+		margin-top: 5px;
+		font-size: 11px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 
     #back-tab {
-        padding: 38px 0px;
-        padding-left: 0px;
+        padding: 25px 10px;
+        margin-top: 5px;
+        min-width: 90px;
+        flex: 0 0 auto;
+        font-size: 11px;
     }
   
 	.leaderboard-side-tab .content {
-	  	/* margin-left: 5px; */
+		max-height: calc(100% - 50px);
+		overflow-y: auto;
+		-webkit-overflow-scrolling: touch;
 	}
 
 	.leaderboard-side-tab .content1 {
 		margin-left: 0px;
-	  }
+		max-height: calc(100% - 50px);
+		overflow-y: auto;
+		-webkit-overflow-scrolling: touch;
+	}
 
 	.time-button {
 		position: relative;
 		min-width: 43px;
 		padding: 10px 2px;
 		margin-right: 3px;
-		font-size: 10px;
+		font-size: 9px;
 	}
   
 	.leaderboard-summary {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		padding: 10px;
+		padding: 8px;
 		margin: 3px 3px;
 		background-color: #f8f8f8;
-		border-radius: 10px;
+		border-radius: 8px;
 		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 	}
 	
@@ -1064,31 +1316,29 @@ body:has(.leaderboard-side-tab.open) {
 		display: flex;
 		flex-direction: row;
 		align-items: center;
-		justify-content: space-between;
 		width: 100%;
 		margin: 0;
-		padding: 1px 0; /* Minimized padding inside each list item */
+		padding: 6px 12px;
+		box-sizing: border-box;
 	}
 	
 	.leaderboard-summary small {
-		font-size: 1.2em; /* Keep the smaller font size to save space */
+		font-size: 12px;
+		font-weight: bold;
 		color: #000000;
-		width: 60px;
-		display: inline-block;
+		flex: 0 0 50px;
+		text-align: left;
+		margin: 0;
 		overflow: hidden;
 		white-space: nowrap;
-		flex-shrink: 0;
-		flex-grow: 0;
-		position: relative;
-		left: 5px;
 	}
 	
 	.leaderboard-profile-content {
 		display: flex;
 		flex-direction: row;
 		align-items: center;
-		width: 100%;
-		padding: 1px 0; /* Reduced vertical padding */
+		flex: 1;
+		padding-left: 10px;
 	}
 	
 	.leaderboard-summary mark {
@@ -1099,32 +1349,40 @@ body:has(.leaderboard-side-tab.open) {
 	}
 
 	.leaderboard-summary h3 {
-		font-size: 16px;
+		font-size: 11px;
+		font-weight: bold;
+		margin: 0;
+		text-align: center;
 	}
 
 	.leaderboard-summary h4 {
-		position: relative;
-		right: 5px;
+		flex: 0 0 80px;
+		text-align: right;
 		margin: 0;
+		font-size: 11px;
+		font-weight: bold;
 	}
 
 	.leaderboard-profile-picture {
-		width: 30px;
-		height: 30px;
-		margin-bottom: -5px;
-		margin-right: 20px;
+		width: 24px;
+		height: 24px;
+		border-radius: 50%;
+		object-fit: cover;
+		border: 1px solid #007bff;
+		margin-right: 8px;
+		flex-shrink: 0;
 	}
 
 	.leaderboard-username-link {
-		font-size: 14px;
-		color: #007bff;
+		font-size: 11px;
+		font-weight: 600;
+		color: #000000;
 		text-decoration: none;
 		display: block;
 		cursor: pointer;
 		margin-bottom: 0px;
-		text-align: center;
+		text-align: left;
 		position: relative;
-		
 		padding-right: 0px;
 	}
 
@@ -1135,7 +1393,15 @@ body:has(.leaderboard-side-tab.open) {
 	.leaderboard-summary:last-child {
 		margin-bottom: 70px;  /* More space for the last post only */
 	}
-  }
+
+	/* Ensure all mobile content areas are scrollable */
+	.leaderboard-side-tab .winter-content,
+	.leaderboard-side-tab .ultimate-content {
+		max-height: calc(100% - 50px);
+		overflow-y: auto;
+		-webkit-overflow-scrolling: touch;
+	}
+}
 
 .snow:nth-child(2n) {
 	filter: blur(1px);
@@ -1604,15 +1870,27 @@ body:has(.leaderboard-side-tab.open) {
 
 /* Mobile responsive improvements */
 @media screen and (max-width: 768px) {
+    .tabs {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+        margin-left: 10px;
+        padding-left: 10px;
+    }
+
     .scrollable-tabs {
-        gap: 6px;
+        gap: 4px;
         padding: 3px 0;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
     }
     
     .scrollable-tabs .tab {
         min-width: 140px;
-        padding: 20px 15px;
-        font-size: 12px;
+        padding: 20px 6px;
+        margin-top: 0px;
+        font-size: 10px;
+        flex-shrink: 0;
     }
     
     #graz-challenge {
@@ -1623,6 +1901,15 @@ body:has(.leaderboard-side-tab.open) {
         font-size: 0.7em;
     }
     
+    /* Ensure back tab works on small mobile screens */
+    .tabs #back-tab {
+        min-width: 90px;
+        padding: 20px 6px;
+        margin-top: 0px;
+        font-size: 10px;
+        flex-shrink: 0;
+    }
+
     /* Reduce animation intensity on mobile for better performance */
     @media (prefers-reduced-motion: reduce) {
         #graz-challenge::before,
@@ -1870,4 +2157,463 @@ body:has(.leaderboard-side-tab.open) {
     100% {
         left: 100%;
     }
+}
+
+/* Ultimate Adventure Theme */
+.leaderboard-side-tab.ultimate-active {
+    background: 
+        linear-gradient(135deg, #8B5E3C 0%, #6B4423 25%, #A67C52 50%, #6B4423 75%, #8B5E3C 100%),
+        repeating-linear-gradient(
+            45deg,
+            transparent,
+            transparent 10px,
+            rgba(212, 175, 55, 0.1) 10px,
+            rgba(212, 175, 55, 0.1) 20px
+        );
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    box-shadow: inset 0 0 50px rgba(212, 175, 55, 0.1);
+    background-size: 100% 100%, 20px 20px;
+    animation: woodGrain 8s ease-in-out infinite;
+}
+
+.leaderboard-side-tab.ultimate-active::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 15% 25%, rgba(212, 175, 55, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 85% 75%, rgba(212, 175, 55, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(139, 94, 60, 0.05) 0%, transparent 70%),
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 95px,
+            rgba(212, 175, 55, 0.03) 95px,
+            rgba(212, 175, 55, 0.03) 100px
+        );
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.8;
+}
+
+.leaderboard-side-tab.ultimate-active .content {
+    position: relative;
+    z-index: 2;
+}
+
+/* Adventure Leaderboard Content */
+.ultimate-leaderboard-content {
+    background: 
+        linear-gradient(180deg, 
+            rgba(139, 94, 60, 0.9) 0%, 
+            rgba(107, 68, 35, 0.8) 25%,
+            rgba(166, 124, 82, 0.7) 50%,
+            rgba(107, 68, 35, 0.8) 75%,
+            rgba(139, 94, 60, 0.9) 100%
+        );
+    border-radius: 12px;
+    padding: 12px;
+    margin: 12px 0;
+    border: 2px solid rgba(212, 175, 55, 0.4);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 
+        0 4px 15px rgba(0, 0, 0, 0.3),
+        inset 0 0 20px rgba(212, 175, 55, 0.1);
+}
+
+/* Fix alignment for ultimate adventure components - Make all components same total width */
+.ultimate-leaderboard-content .leaderboard-input-div {
+    width: calc(100% - 16px);
+    margin: 0 8px;
+    box-sizing: border-box;
+    padding: 0 8px; /* Reduced padding */
+    display: flex; /* Make it a flex container */
+    align-items: center; /* Center items vertically */
+    gap: 0; /* No gap between input and button */
+}
+
+.ultimate-leaderboard-content .leaderboard-header-2 {
+    width: calc(100% - 16px);
+    margin: 0 8px;
+    box-sizing: border-box;
+    padding: 8px 8px;
+}
+
+.ultimate-leaderboard-content .content {
+    width: calc(100% - 16px);
+    margin: 0 8px;
+    box-sizing: border-box;
+}
+
+.ultimate-leaderboard-content .leaderboard-summary {
+    margin: 6px 0;
+    padding: 6px 8px;
+    box-sizing: border-box;
+}
+
+
+
+.ultimate-leaderboard-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.2), transparent);
+    animation: adventureSweep 6s ease-in-out infinite;
+    z-index: 1;
+}
+
+.ultimate-leaderboard-content::after {
+    content: '🧭';
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 2em;
+    opacity: 0.1;
+    animation: compassSpinActive 20s linear infinite;
+    z-index: 1;
+}
+
+.ultimate-leaderboard-content > * {
+    position: relative;
+    z-index: 2;
+}
+
+
+
+/* Adventure Header Styling */
+.ultimate-leaderboard-content .leaderboard-header-2 {
+    background: linear-gradient(90deg, 
+        rgba(107, 68, 35, 0.9) 0%, 
+        rgba(139, 94, 60, 0.8) 50%, 
+        rgba(107, 68, 35, 0.9) 100%
+    );
+    border: 2px solid rgba(212, 175, 55, 0.5);
+    border-radius: 8px;
+    color: #F4E4BC;
+    font-family: serif;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* Width and padding set above in alignment section */
+}
+
+.ultimate-leaderboard-content .placement-header {
+    flex: 0 0 50px;
+    text-align: left !important;
+    margin-left: 0px;
+}
+
+.ultimate-leaderboard-content .username-header-2 {
+    flex: 1;
+    text-align: left !important;
+    margin-left: 8px;
+}
+
+.ultimate-leaderboard-content .time-solved-header {
+    flex: 0 0 120px;
+    text-align: center !important;
+    margin-right: 0px;
+}
+
+/* Adventure Leaderboard Entry Styling */
+.ultimate-leaderboard-content .leaderboard-summary {
+    background: linear-gradient(90deg, 
+        rgba(139, 94, 60, 0.8) 0%, 
+        rgba(166, 124, 82, 0.6) 25%,
+        rgba(212, 175, 55, 0.1) 50%,
+        rgba(166, 124, 82, 0.6) 75%,
+        rgba(139, 94, 60, 0.8) 100%
+    );
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 8px;
+    margin: 8px 0;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.ultimate-leaderboard-content .leaderboard-summary li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 8px;
+}
+
+.ultimate-leaderboard-content .leaderboard-summary small {
+    flex: 0 0 50px;
+    text-align: left;
+    margin: 0;
+    margin-left: 0px;
+}
+
+.ultimate-leaderboard-content .leaderboard-profile-content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    margin-left: 8px;
+}
+
+.ultimate-leaderboard-content .leaderboard-summary h4 {
+    /* flex: 0 0 120px; */
+    text-align: center;
+    margin: 0;
+    margin-right: 0px;
+}
+
+.ultimate-leaderboard-content .leaderboard-summary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 15px,
+        rgba(212, 175, 55, 0.05) 15px,
+        rgba(212, 175, 55, 0.05) 30px
+    );
+    pointer-events: none;
+    z-index: 1;
+}
+
+.ultimate-leaderboard-content .leaderboard-summary:hover {
+    background: linear-gradient(90deg, 
+        rgba(166, 124, 82, 0.9) 0%, 
+        rgba(212, 175, 55, 0.3) 25%,
+        rgba(244, 228, 188, 0.2) 50%,
+        rgba(212, 175, 55, 0.3) 75%,
+        rgba(166, 124, 82, 0.9) 100%
+    );
+    border-color: rgba(212, 175, 55, 0.6);
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+    transform: translateX(8px) scale(1.02);
+    animation: parchmentFlutter 2s ease-in-out infinite;
+}
+
+.ultimate-leaderboard-content .leaderboard-username-link {
+    color: #D4AF37 !important;
+    font-family: serif;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    font-weight: 700;
+    font-size: 1.0em;  /* Reduced from 1.1em to 0.9em */
+    position: relative;
+    z-index: 2;
+}
+
+.ultimate-leaderboard-content .leaderboard-username-link:hover {
+    color: #F4E4BC !important;
+    text-shadow: 2px 2px 6px rgba(212, 175, 55, 0.8);
+    transition: all 0.3s ease;
+}
+
+.ultimate-leaderboard-content .leaderboard-profile-content small {
+    color: #D4AF37;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    font-family: serif;
+    font-size: 1.1em;
+    position: relative;
+    z-index: 2;
+}
+
+/* Adventure Input Styling */
+.ultimate-leaderboard-content .leaderboard-input {
+    background: linear-gradient(180deg, 
+        rgba(244, 228, 188, 0.9) 0%, 
+        rgba(244, 228, 188, 0.95) 100%
+    );
+    border: 2px solid #D4AF37;
+    border-radius: 8px;
+    color: #6B4423;
+    font-family: serif;
+    font-weight: 600;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
+    width: auto; /* Override default 32% width */
+    flex: 1; /* Take up remaining space in flex container */
+    margin: 0; /* Remove auto margins that might interfere */
+}
+
+.ultimate-leaderboard-content .leaderboard-input:focus {
+    background: rgba(244, 228, 188, 1);
+    border-color: #A67C52;
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.5), inset 0 2px 5px rgba(0, 0, 0, 0.2);
+    outline: none;
+}
+
+.ultimate-leaderboard-content .leaderboard-input::placeholder {
+    color: rgba(107, 68, 35, 0.7);
+    font-style: italic;
+}
+
+.ultimate-leaderboard-content .leaderboard-input-btn {
+    background: linear-gradient(135deg, #D4AF37 0%, #B8941F 100%);
+    color: #6B4423;
+    border: 2px solid #8B5E3C;
+    font-family: serif;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(244, 228, 188, 0.5);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+    flex-shrink: 0; /* Don't let button shrink */
+    white-space: nowrap; /* Keep button text on one line */
+}
+
+.ultimate-leaderboard-content .leaderboard-input-btn:hover {
+    background: linear-gradient(135deg, #F4E4BC 0%, #D4AF37 100%);
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4);
+    transform: translateY(-2px);
+    border-color: #6B4423;
+}
+
+/* Adventure Badge System */
+.ultimate-leaderboard-content .leaderboard-summary:nth-child(1) small::after {
+    content: ' 🥇';
+    font-size: 1.2em;
+}
+
+.ultimate-leaderboard-content .leaderboard-summary:nth-child(2) small::after {
+    content: ' 🥈';
+    font-size: 1.2em;
+}
+
+.ultimate-leaderboard-content .leaderboard-summary:nth-child(3) small::after {
+    content: ' 🥉';
+    font-size: 1.2em;
+}
+
+.ultimate-leaderboard-content .leaderboard-summary:nth-child(n+4):nth-child(-n+10) small::after {
+    content: ' 💎';
+    font-size: 1em;
+    opacity: 0.8;
+}
+
+/* Responsive Adventure Theme */
+@media screen and (max-width: 768px) {
+    .ultimate-leaderboard-content {
+        padding: 15px;
+        margin: 10px 0;
+    }
+    
+    .ultimate-leaderboard-content::after {
+        font-size: 1.5em;
+        top: 5px;
+        right: 10px;
+    }
+}
+
+/* Accessibility and Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    .ultimate-leaderboard-content::before,
+    .ultimate-leaderboard-content::after,
+    .ultimate-leaderboard-content .leaderboard-summary::before {
+        animation: none;
+    }
+    
+    .leaderboard-side-tab.ultimate-active {
+        animation: none;
+    }
+    
+    #ultimate-challenge::before,
+    #ultimate-challenge::after {
+        animation: none;
+    }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+    .ultimate-leaderboard-content {
+        background: #8B5E3C;
+        border: 3px solid #D4AF37;
+    }
+    
+    .ultimate-leaderboard-content .leaderboard-username-link {
+        color: #FFFFFF !important;
+    }
+}
+.ultimate-leaderboard-content .leaderboard-header-2 {
+    margin-top: 15px; /* Add space below the header */
+}
+
+/* Dynamic Back Button Styles */
+.graz-active #back-tab {
+    background: linear-gradient(45deg, #0a1f0a, #143714);
+    border: 1px solid #1a8f1a;
+    color: #00ff00;
+    text-shadow: 0 0 5px #00ff00;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+}
+
+.graz-active #back-tab::before {
+    display: none;
+}
+
+.graz-active #back-tab .icon {
+    color: #00ff00;
+}
+
+.graz-active #back-tab:hover {
+    background: linear-gradient(45deg, #143714, #1a4b1a);
+    border-color: #20b020;
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+    color: #40ff40;
+}
+
+/* Winter Challenge Back Button */
+.winter-active #back-tab {
+    background: linear-gradient(45deg, #1e3d5c, #2c5885);
+    border: 1px solid #4c89c7;
+    color: #a8d8ff;
+    text-shadow: 0 0 5px #a8d8ff;
+    box-shadow: 0 0 10px rgba(168, 216, 255, 0.3);
+}
+
+.winter-active #back-tab::before {
+    display: none;
+}
+
+.winter-active #back-tab .icon {
+    color: #a8d8ff;
+}
+
+.winter-active #back-tab:hover {
+    background: linear-gradient(45deg, #2c5885, #3a75b2);
+    border-color: #5c99d7;
+    box-shadow: 0 0 15px rgba(168, 216, 255, 0.5);
+    color: #c8e8ff;
+}
+
+/* Ultimate Adventure Back Button */
+.ultimate-active #back-tab {
+    background: linear-gradient(45deg, #4a2f0d, #6b4315);
+    border: 1px solid #c17722;
+    color: #ffd700;
+    text-shadow: 0 0 5px #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.ultimate-active #back-tab::before {
+    display: none;
+}
+
+.ultimate-active #back-tab .icon {
+    color: #ffd700;
+}
+
+.ultimate-active #back-tab:hover {
+    background: linear-gradient(45deg, #6b4315, #8c571c);
+    border-color: #e18728;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+    color: #ffe44d;
 }
