@@ -1,15 +1,11 @@
 import {defineConfig, loadEnv} from 'vite';
 
 export default defineConfig(({mode}) => {
-  const {
-    GOOGLE_MAPS_API_KEY = 'WMP Key',
-    CORRECT_CODE = '6255'
-  } = loadEnv(mode, process.cwd(), '');
+  const {GOOGLE_MAPS_API_KEY = 'Your Api Key Here'} = loadEnv(mode, process.cwd(), '');
 
   return {
     define: {
-      'process.env.GOOGLE_MAPS_API_KEY': JSON.stringify(GOOGLE_MAPS_API_KEY),
-      'process.env.CORRECT_CODE': JSON.stringify(CORRECT_CODE)
+      'process.env.GOOGLE_MAPS_API_KEY': JSON.stringify(GOOGLE_MAPS_API_KEY)
     },
     resolve: {
       alias: {
