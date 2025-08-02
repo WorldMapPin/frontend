@@ -733,6 +733,14 @@ const App = () => {
   };
 
   const toggleLeaderboard = () => {
+    // Check if we're already on a leaderboard route
+    const isOnLeaderboardRoute = window.location.pathname.includes('Leaderboard');
+    
+    // If we're on a leaderboard route, don't open the overlay leaderboard
+    if (isOnLeaderboardRoute) {
+      return;
+    }
+    
     setLeaderboardOpen(!leaderboardOpen);
   };
 
@@ -884,6 +892,7 @@ const App = () => {
   // Ultimate Adventure Notification State
   const [showUltimateNotification, setShowUltimateNotification] = useState(false);
   const [notificationSlided, setNotificationSlided] = useState(false);
+  const [notificationShownOnce, setNotificationShownOnce] = useState(false);
 
   // Check if current date is before 01.09.2025
   const isBeforeNotificationExpiry = () => {
@@ -894,21 +903,15 @@ const App = () => {
 
   // Show Ultimate Adventure notification
   useEffect(() => {
-    if (isBeforeNotificationExpiry() && !notificationSlided) {
+    if (isBeforeNotificationExpiry() && !notificationShownOnce) {
       const timer = setTimeout(() => {
         setShowUltimateNotification(true);
+        setNotificationShownOnce(true);
         
         // Hide notification after 15 seconds and slide to top left
         const hideTimer = setTimeout(() => {
           setShowUltimateNotification(false);
           setNotificationSlided(true);
-          
-          // Allow notification to show again after 30 seconds
-          const resetTimer = setTimeout(() => {
-            setNotificationSlided(false);
-          }, 30000);
-          
-          return () => clearTimeout(resetTimer);
         }, 15000);
         
         return () => clearTimeout(hideTimer);
@@ -916,7 +919,7 @@ const App = () => {
       
       return () => clearTimeout(timer);
     }
-  }, [notificationSlided]);
+  }, [notificationShownOnce]);
 
   // Handle Ultimate Adventure notification click
   const handleUltimateNotificationClick = () => {

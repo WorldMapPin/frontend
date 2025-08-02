@@ -7,6 +7,7 @@
   font-size: 1rem;
   cursor: pointer;
   
+  
   p {
     margin-top: auto;
     display: inline-flex;
@@ -20,6 +21,9 @@
     font-weight: bold;
     background-color: rgba(11, 11, 11, 0.75);
     border-radius: 5px;
+    position: relative;
+    z-index: 1000;
+    right: 0px;
     border: unset;
   }
 
