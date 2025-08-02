@@ -50,7 +50,7 @@
   overflow: hidden;
 }
 
-.leaderboard-header-2 {
+.leaderboard-header-3 {
   display: flex;
   justify-content: space-between;
   width: 100%;
@@ -164,9 +164,7 @@
   background: rgba(252, 213, 175, 0.5);
 }
 
-.leaderboard-summary:last-child {
-  margin-bottom: 50px;
-}
+
 
 .next-users {
   text-align: center;
@@ -733,10 +731,6 @@
 
 	.next-users {		
 		margin-bottom: 0px; /* Spacing above and below the button */
-	}
-
-	.leaderboard-summary:last-child {
-		margin-bottom: 0px;  /* Reduced space for the last post */
 	}
 }
 

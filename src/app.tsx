@@ -9,7 +9,7 @@ declare const process: {
 import React, { Ref, useCallback, useEffect, useState, useRef } from 'react';
 import { createRoot } from 'react-dom/client';
 import axios from 'axios';
-import { BrowserRouter, Route, Routes, useParams } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, useParams, useNavigate } from 'react-router-dom';
 
 import { APIProvider, InfoWindow, Map, useMap, AdvancedMarker, ControlPosition, MapControl } from '@vis.gl/react-google-maps';
 
@@ -127,6 +127,55 @@ type SearchParams = {
   end_date?: string;
   permlink?: string;
   curated_only?: boolean;
+};
+
+// Wrapper components for route-based leaderboards
+const GrazAndSeekLeaderboardRoute = ({ setLeaderboardOpen, setGeojson, newSearchParams, setLocation, setMyLocationZoom, showWinterchallangeTab, showUltimateAdventureTab }) => {
+  const navigate = useNavigate();
+  
+  const handleClose = () => {
+    // Close any overlay leaderboard that might be open behind this one
+    setLeaderboardOpen(false);
+    // Navigate back to home page
+    navigate('/');
+  };
+
+  return (
+    <Leaderboards 
+      showGrazAndSeekTab={true}
+      handleCloseButtonLeaderboard={handleClose}
+      setGeojson={setGeojson}
+      newSearchParams={newSearchParams}
+      setLocation={setLocation}
+      setMyLocationZoom={setMyLocationZoom}
+      showWinterchallangeTab={showWinterchallangeTab}
+      showUltimateAdventureTab={showUltimateAdventureTab}
+    />
+  );
+};
+
+const UltimateAdventureLeaderboardRoute = ({ setLeaderboardOpen, setGeojson, newSearchParams, setLocation, setMyLocationZoom, showWinterchallangeTab, showGrazAndSeekTab }) => {
+  const navigate = useNavigate();
+  
+  const handleClose = () => {
+    // Close any overlay leaderboard that might be open behind this one
+    setLeaderboardOpen(false);
+    // Navigate back to home page
+    navigate('/');
+  };
+
+  return (
+    <Leaderboards 
+      showUltimateAdventureTab={true}
+      handleCloseButtonLeaderboard={handleClose}
+      setGeojson={setGeojson}
+      newSearchParams={newSearchParams}
+      setLocation={setLocation}
+      setMyLocationZoom={setMyLocationZoom}
+      showWinterchallangeTab={showWinterchallangeTab}
+      showGrazAndSeekTab={showGrazAndSeekTab}
+    />
+  );
 };
 
 const App = () => {
@@ -350,6 +399,7 @@ const App = () => {
 
   const [openWinterChallengeOnceperLink, SetOpenWinterChallengeOnceperLink] = useState(true);
   const [showWinterchallangeTab, setShowWinterchallangeTab] = useState(false);
+  const [showUltimateAdventureTab, setShowUltimateAdventureTab] = useState(false);
 
   function OpenWinterChallenge() {
 
@@ -678,9 +728,19 @@ const App = () => {
 
   const handleCloseButtonLeaderboard = () => {
     setLeaderboardOpen(false);
+    setShowUltimateAdventureTab(false);
+    setShowWinterchallangeTab(false);
   };
 
   const toggleLeaderboard = () => {
+    // Check if we're already on a leaderboard route
+    const isOnLeaderboardRoute = window.location.pathname.includes('Leaderboard');
+    
+    // If we're on a leaderboard route, don't open the overlay leaderboard
+    if (isOnLeaderboardRoute) {
+      return;
+    }
+    
     setLeaderboardOpen(!leaderboardOpen);
   };
 
@@ -829,6 +889,47 @@ const App = () => {
 
   const [showGrazEasterEgg, setShowGrazEasterEgg] = useState(false);
 
+  // Ultimate Adventure Notification State
+  const [showUltimateNotification, setShowUltimateNotification] = useState(false);
+  const [notificationSlided, setNotificationSlided] = useState(false);
+  const [notificationShownOnce, setNotificationShownOnce] = useState(false);
+
+  // Check if current date is before 01.09.2025
+  const isBeforeNotificationExpiry = () => {
+    const currentDate = new Date();
+    const expiryDate = new Date('2025-09-01');
+    return currentDate < expiryDate;
+  };
+
+  // Show Ultimate Adventure notification
+  useEffect(() => {
+    if (isBeforeNotificationExpiry() && !notificationShownOnce) {
+      const timer = setTimeout(() => {
+        setShowUltimateNotification(true);
+        setNotificationShownOnce(true);
+        
+        // Hide notification after 15 seconds and slide to top left
+        const hideTimer = setTimeout(() => {
+          setShowUltimateNotification(false);
+          setNotificationSlided(true);
+        }, 15000);
+        
+        return () => clearTimeout(hideTimer);
+      }, 2000); // Show after 2 seconds of page load
+      
+      return () => clearTimeout(timer);
+    }
+  }, [notificationShownOnce]);
+
+  // Handle Ultimate Adventure notification click
+  const handleUltimateNotificationClick = () => {
+    setShowUltimateNotification(false);
+    setNotificationSlided(true);
+    setShowUltimateAdventureTab(true);
+    setShowWinterchallangeTab(false);
+    setLeaderboardOpen(true);
+  };
+
   const handleEasterEggTrigger = (tagString) => {
     // Make sure we can detect the tag with or without the # symbol
     if (tagString.includes("#GrazAndSeek") || 
@@ -855,15 +956,14 @@ const App = () => {
     <APIProvider apiKey={API_KEY} version={'beta'}>
       <BrowserRouter>
         <Routes>
-          {/* <Route path="/" element={null} /> */}
+          <Route path="/" element={null} />
           <Route path="t/:tag" element={null} />                  
           <Route path="/:username" element={<YourComponent />} />
           <Route path="p/:permlink" element={<PermLink />} />
           <Route path="/winter-challenge" element={<OpenWinterChallenge />} />
           <Route path="GrazAndSeek-Leaderboard" element={
-            <Leaderboards 
-              showGrazAndSeekTab={true}
-              handleCloseButtonLeaderboard={() => {}}
+            <GrazAndSeekLeaderboardRoute 
+              setLeaderboardOpen={setLeaderboardOpen}
               setGeojson={() => {}}
               newSearchParams={() => {}}
               setLocation={() => {}}
@@ -873,9 +973,8 @@ const App = () => {
             />
           } />
           <Route path="Ultimate-Adventures-Leaderboard" element={
-            <Leaderboards 
-              showUltimateAdventureTab={true}
-              handleCloseButtonLeaderboard={() => {}}
+            <UltimateAdventureLeaderboardRoute 
+              setLeaderboardOpen={setLeaderboardOpen}
               setGeojson={() => {}}
               newSearchParams={() => {}}
               setLocation={() => {}}
@@ -919,6 +1018,39 @@ const App = () => {
       {performanceCheckComplete && showPerformanceIndicator && !detectedLowEndDevice && (
         <div className={`performance-indicator full-data recommended ${isTogglingMode ? 'toggling' : ''}`}>
           <p>Good Connection</p>
+        </div>
+      )}
+
+      {/* Ultimate Adventure Notification */}
+      {showUltimateNotification && isBeforeNotificationExpiry() && (
+        <div 
+          className={`ultimate-adventure-notification ${showUltimateNotification ? 'show' : ''} ${notificationSlided ? 'slide-out' : ''}`}
+          onClick={handleUltimateNotificationClick}
+        >
+          <div className="notification-content">
+            <div className="notification-icon">🗺️</div>
+            <div className="notification-text">
+              <h3>Ultimate Adventures Challenge</h3>
+              <p>Join the adventure and explore the world!</p>
+              <div className="notification-links">
+                <span className="notification-link">Click to join now →</span>
+                <a 
+                  href="https://peakd.com/hive-163772/@worldmappin/the-ultimate-adventure-challenge-to-win-a-hivefest-ticket" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="notification-peakd-link"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  Link to PeakD
+                </a>
+              </div>
+            </div>
+          </div>
+          <div className="notification-sparkles">
+            <span>✨</span>
+            <span>⭐</span>
+            <span>💎</span>
+          </div>
         </div>
       )}
 
@@ -1176,7 +1308,7 @@ const App = () => {
               setMyLocationZoom={setMyLocationZoom}
               showWinterchallangeTab={showWinterchallangeTab}
               showGrazAndSeekTab={false}
-              showUltimateAdventureTab={false}
+              showUltimateAdventureTab={showUltimateAdventureTab}
             />
         )}
         
