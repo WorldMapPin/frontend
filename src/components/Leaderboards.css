@@ -30,6 +30,14 @@
 
 }
 
+@media screen and (max-width: 1100px) {
+    .leaderboard-close-btn {
+        top: 2px; /* Distance from the top of the container */
+        right: 2px;
+        font-size: 0.85rem;
+    }
+}
+
 .overlay-leaderboard {
   position: fixed;
   top: 0;
@@ -241,17 +249,17 @@
     display: flex;
     flex-direction: row;
     overflow-x: auto; /* Enables horizontal scrolling */
-    overflow-y: hidden;
+    overflow-y: visible; /* Allow content to expand without clipping */
     flex-grow: 1; /* Takes remaining space */
     position: relative;
     margin-left: 10px; /* Space between Back tab and scrollable tabs */
     scroll-behavior: smooth; /* Smooth scrolling */
-    padding: 5px 0; /* Add some padding for better touch targets */
+    padding: 5px 10px; /* Add horizontal padding to prevent clipping */
     gap: 8px; /* Space between tabs */
     
     /* Touch-friendly scrolling */
     -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;
+    
     
     /* Custom pill-shaped scrollbar styling */
     &::-webkit-scrollbar {
@@ -511,6 +519,13 @@
     #ultimate-challenge {
         padding-left: 20px;
     }
+
+    #most-active-users{
+        padding: 27px 20px;
+      }
+    #past-challenges{
+        padding: 27px 20px;
+    }
 }
 
 #ultimate-challenge::before {
@@ -540,6 +555,7 @@
     border: 2px solid #D4AF37;
     box-shadow: 0 0 15px rgba(212, 175, 55, 0.6), inset 0 0 20px rgba(212, 175, 55, 0.2);
     transform: scale(1.02);
+    transform-origin: center center;
 }
 
 #ultimate-challenge.active::before {
@@ -801,7 +817,7 @@ Leaderboard
 }
 
 .leaderboard-summary:last-child {
-  margin-bottom: 220px;  /* More space for the last post only */
+  margin-bottom: 120px;  /* More space for the last post only */
 }
 
 .next-users {
@@ -850,6 +866,7 @@ Leaderboard
   overflow-y: auto; /* Enables scrolling */
   -webkit-overflow-scrolling: touch; /* Smooth scrolling on mobile */
   scroll-behavior: smooth; /* Ensure smooth scrolling for search */
+  padding-bottom: 80px; /* Add space at bottom so last entry is fully visible */
 }
 
 /* Content inside the tab */
@@ -866,11 +883,13 @@ Leaderboard
 	overflow-y: auto; /* Enables scrolling */
 	-webkit-overflow-scrolling: touch; /* Smooth scrolling on mobile */
 	scroll-behavior: smooth; /* Ensure smooth scrolling for search */
+	padding-bottom: 80px; /* Add space at bottom so last entry is fully visible */
 }
 
 .leaderboard-side-tab .ultimate-content{
 	max-height: calc(100% - 50px);
 	overflow-y: auto; /* Enables scrolling */
+	padding-bottom: 80px; /* Add space at bottom so last entry is fully visible */
 }
 
 /* Webkit scrollbar styling for Ultimate Adventure - Always visible */
@@ -1903,10 +1922,10 @@ body:has(.leaderboard-side-tab.open) {
     
     /* Ensure back tab works on small mobile screens */
     .tabs #back-tab {
-        min-width: 90px;
-        padding: 20px 6px;
+        min-width: 80px;
+        padding: 22px 0px;
         margin-top: 0px;
-        font-size: 10px;
+        font-size: 11px;
         flex-shrink: 0;
     }
 
@@ -2055,7 +2074,7 @@ body:has(.leaderboard-side-tab.open) {
     font-size: 0.9em;
 }
 
-.graz-leaderboard-content .leaderboard-header-2 {
+.graz-leaderboard-content .leaderboard-header-3 {
     background: linear-gradient(90deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 26, 0, 0.8) 50%, rgba(0, 0, 0, 0.9) 100%);
     border: 1px solid rgba(0, 255, 65, 0.3);
     border-radius: 6px;
@@ -2225,34 +2244,24 @@ body:has(.leaderboard-side-tab.open) {
         inset 0 0 20px rgba(212, 175, 55, 0.1);
 }
 
-/* Fix alignment for ultimate adventure components - Make all components same total width */
+/* Simplified alignment for ultimate adventure components */
 .ultimate-leaderboard-content .leaderboard-input-div {
-    width: calc(100% - 16px);
-    margin: 0 8px;
-    box-sizing: border-box;
-    padding: 0 8px; /* Reduced padding */
-    display: flex; /* Make it a flex container */
-    align-items: center; /* Center items vertically */
-    gap: 0; /* No gap between input and button */
+    display: flex;
+    align-items: center;
+    gap: 0;
 }
 
 .ultimate-leaderboard-content .leaderboard-header-2 {
-    width: calc(100% - 16px);
-    margin: 0 8px;
-    box-sizing: border-box;
-    padding: 8px 8px;
+    padding: 8px;
 }
 
 .ultimate-leaderboard-content .content {
-    width: calc(100% - 16px);
-    margin: 0 8px;
-    box-sizing: border-box;
+    padding-bottom: 80px;
 }
 
 .ultimate-leaderboard-content .leaderboard-summary {
-    margin: 6px 0;
-    padding: 6px 8px;
-    box-sizing: border-box;
+    margin: 8px 0;
+    padding: 8px;
 }
 
 
@@ -2272,8 +2281,8 @@ body:has(.leaderboard-side-tab.open) {
 .ultimate-leaderboard-content::after {
     content: '🧭';
     position: absolute;
-    top: 10px;
-    right: 15px;
+    top: -15px;
+    right: -10px;
     font-size: 2em;
     opacity: 0.1;
     animation: compassSpinActive 20s linear infinite;
@@ -2314,6 +2323,7 @@ body:has(.leaderboard-side-tab.open) {
 }
 
 .ultimate-leaderboard-content .username-header-2 {
+    /* position: relative; */
     flex: 1;
     text-align: left !important;
     margin-left: 8px;
@@ -2365,10 +2375,17 @@ body:has(.leaderboard-side-tab.open) {
 }
 
 .ultimate-leaderboard-content .leaderboard-summary h4 {
-    /* flex: 0 0 120px; */
+    flex: 0 0 120px;
     text-align: center;
     margin: 0;
     margin-right: 0px;
+    color: #D4AF37;
+    font-family: serif;
+    font-weight: bold;
+    font-size: 1.1em;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+    position: relative;
+    z-index: 2;
 }
 
 .ultimate-leaderboard-content .leaderboard-summary::before {
@@ -2399,8 +2416,7 @@ body:has(.leaderboard-side-tab.open) {
     );
     border-color: rgba(212, 175, 55, 0.6);
     box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
-    transform: translateX(8px) scale(1.02);
-    animation: parchmentFlutter 2s ease-in-out infinite;
+    transform: translateX(2px);
 }
 
 .ultimate-leaderboard-content .leaderboard-username-link {
@@ -2408,7 +2424,7 @@ body:has(.leaderboard-side-tab.open) {
     font-family: serif;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
     font-weight: 700;
-    font-size: 1.0em;  /* Reduced from 1.1em to 0.9em */
+    font-size: 1.0em;
     position: relative;
     z-index: 2;
 }
@@ -2513,6 +2529,14 @@ body:has(.leaderboard-side-tab.open) {
     }
 }
 
+/* Mobile adjustment for Ultimate Adventure h4 elements */
+@media screen and (max-width: 1100px) {
+    .ultimate-leaderboard-content .leaderboard-summary h4 {
+        margin-right: -40px; /* Shift slightly to the left on mobile */
+        text-align: center;
+    }
+}
+
 /* Accessibility and Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
     .ultimate-leaderboard-content::before,
@@ -2540,6 +2564,216 @@ body:has(.leaderboard-side-tab.open) {
     
     .ultimate-leaderboard-content .leaderboard-username-link {
         color: #FFFFFF !important;
+    }
+}
+
+/* Curated Leaderboard Header - Unique styles that don't affect other components */
+.curated-leaderboard-header {
+    margin-top: 4px;
+    width: 100%;
+    position: relative;
+    margin-left: auto;
+    margin-right: 6px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 2px;
+    right: 0;
+    overflow-x: hidden; /* Remove horizontal scroll */
+    overflow-y: visible;
+    padding: 0 4px;
+    box-sizing: border-box;
+}
+
+.curated-time-button-disabled {
+    position: relative;
+    min-width: 35px;
+    padding: 6px 3px; /* Reduced from 10px 5px */
+    margin-right: 2px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 9px; /* Reduced from 12px */
+    border-radius: 8px;
+    height: 24px; /* Fixed smaller height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    pointer-events: none;
+    opacity: 0.5;
+    white-space: nowrap;
+    box-sizing: border-box;
+}
+
+.curated-time-button-active {
+    position: relative;
+    min-width: 35px;
+    padding: 6px 3px; /* Reduced from 10px 5px */
+    margin-right: 2px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 9px; /* Reduced from 12px */
+    border-radius: 8px;
+    height: 24px; /* Fixed smaller height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    white-space: nowrap;
+    box-sizing: border-box;
+}
+
+.curated-time-button-active:hover {
+    background-color: #e1e1e1;
+}
+
+.curated-leaderboard-input {
+    width: auto;
+    flex: 1;
+    min-width: 80px;
+    margin-left: auto;
+    padding: 6px 8px; /* Reduced from 10px 10px */
+    font-size: 10px; /* Reduced from 12px */
+    border: 1px solid #ccc;
+    border-radius: 0px;
+    box-shadow: inset 0 1px 3px #ddd;
+    outline: none;
+    border-radius: 6px 0 0 6px; /* Reduced border radius */
+    height: 24px; /* Fixed smaller height */
+    box-sizing: border-box;
+}
+
+.curated-leaderboard-search-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 8px; /* Reduced from 10px 10px */
+    background: linear-gradient(to right, #a7f5ff -100%, #2370ff 100%);
+    color: rgb(0, 0, 0);
+    text-align: center;
+    font-size: 10px; /* Reduced from 12px */
+    cursor: pointer;
+    border-radius: 0 6px 6px 0; /* Reduced border radius */
+    height: 24px; /* Fixed smaller height */
+    flex-shrink: 0;
+    white-space: nowrap;
+    box-sizing: border-box;
+    border: none;
+}
+
+.curated-leaderboard-search-btn:hover {
+    background: linear-gradient(to right, #0f7481 -100%, #1e5dd3 100%);
+}
+
+/* Curated Leaderboard Headers - Unique styles that don't affect other components */
+.curated-placement-header {
+    margin-left: 5px;
+    text-align: center;
+    font-size: 12px;
+    flex: 1;
+}
+
+.curated-username-header {
+    margin-left: -10px;
+    margin-right: 55px;
+    text-align: center;
+    color: #202020;
+    font-size: 12px;
+    flex: 2;
+}
+
+.curated-posts-header {
+    margin-left: 15px;
+    text-align: center;
+    color: #202020;
+    font-size: 12px;
+    flex: 2;
+}
+
+/* Show/hide text based on screen size */
+.mobile-text {
+    display: none;
+}
+
+.desktop-text {
+    display: inline;
+}
+
+/* Mobile responsive styles for curated headers */
+@media screen and (max-width: 1100px) {
+    .curated-placement-header {
+        margin-left: 12px;
+        text-align: left;
+        font-size: 9px; /* Smaller font for mobile */
+        font-weight: bold;
+        flex: 1;
+    }
+
+    .curated-username-header {
+        margin-left: 0px;
+        margin-right: 40px;
+        text-align: left;
+        color: #202020;
+        font-size: 9px; /* Smaller font for mobile */
+        font-weight: bold;
+        flex: 2;
+    }
+
+    .curated-posts-header {
+        margin-left: 10px;
+        margin-right: 12px;
+        text-align: center;
+        color: #202020;
+        font-size: 9px; /* Smaller font for mobile */
+        font-weight: bold;
+        flex: 2;
+    }
+
+    /* Switch text content on mobile */
+    .mobile-text {
+        display: inline;
+    }
+
+    .desktop-text {
+        display: none;
+    }
+}
+
+/* Desktop/PC sizes - restore original dimensions for larger screens */
+@media screen and (min-width: 1101px) {
+    .curated-time-button-disabled {
+        min-width: 48px;
+        padding: 10px 5px; /* Restored original padding */
+        font-size: 12px; /* Restored original font size */
+        height: auto; /* Restored original height */
+    }
+
+    .curated-time-button-active {
+        min-width: 48px;
+        padding: 10px 5px; /* Restored original padding */
+        font-size: 12px; /* Restored original font size */
+        height: auto; /* Restored original height */
+    }
+
+    .curated-leaderboard-input {
+        padding: 10px 10px; /* Restored original padding */
+        font-size: 12px; /* Restored original font size */
+        height: auto; /* Restored original height */
+        border-radius: 8px 0 0 8px; /* Restored original border radius */
+    }
+
+    .curated-leaderboard-search-btn {
+        padding: 10px 10px; /* Restored original padding */
+        font-size: 12px; /* Restored original font size */
+        height: auto; /* Restored original height */
+        border-radius: 0 8px 8px 0; /* Restored original border radius */
     }
 }
 .ultimate-leaderboard-content .leaderboard-header-2 {

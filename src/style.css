@@ -615,3 +615,252 @@ input:checked+.slider:before {
   background-color: #f44336; /* Red for very slow connections */
   border-color: #d32f2f;
 }
+
+/* Ultimate Adventure Notification */
+.ultimate-adventure-notification {
+  position: fixed;
+  left: 20px;
+  top: 10%;
+  transform: translateY(-50%) translateX(-400px);
+  z-index: 1000;
+  width: 320px;
+  background: linear-gradient(135deg, #8B5E3C 0%, #6B4423 25%, #A67C52 50%, #6B4423 75%, #8B5E3C 100%);
+  border: 2px solid #D4AF37;
+  border-radius: 12px;
+  box-shadow: 
+    0 8px 25px rgba(0, 0, 0, 0.3),
+    0 0 20px rgba(212, 175, 55, 0.4),
+    inset 0 0 20px rgba(212, 175, 55, 0.1);
+  cursor: pointer;
+  overflow: hidden;
+  opacity: 0;
+  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  animation: wiggle 2s ease-in-out infinite;
+}
+
+.ultimate-adventure-notification.show {
+  transform: translateY(-50%) translateX(0);
+  opacity: 1;
+}
+
+.ultimate-adventure-notification.slide-out {
+  transform: translateY(-50%) translateX(-400px);
+  opacity: 0;
+  transition: all 1.2s cubic-bezier(0.55, 0.085, 0.68, 0.53);
+}
+
+.notification-content {
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  z-index: 2;
+}
+
+.notification-icon {
+  font-size: 2.5em;
+  animation: compassSpinNotification 3s ease-in-out infinite alternate;
+}
+
+.notification-text {
+  flex: 1;
+  color: #F4E4BC;
+  font-family: serif;
+}
+
+.notification-text h3 {
+  margin: 0 0 4px 0;
+  font-size: 1.1em;
+  font-weight: bold;
+  color: #D4AF37;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+.notification-text p {
+  margin: 0 0 8px 0;
+  font-size: 0.9em;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+.notification-links {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.notification-link {
+  font-size: 0.8em;
+  color: #FFE4B5;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.notification-peakd-link {
+  font-size: 0.85em;
+  color: #D4AF37;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid #D4AF37;
+  padding: 4px 10px;
+  border-radius: 4px;
+  background: rgba(212, 175, 55, 0.1);
+  transition: all 0.3s ease;
+  display: inline-block;
+  width: fit-content;
+  font-family: serif;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+.notification-peakd-link:hover {
+  background: rgba(212, 175, 55, 0.3);
+  border-color: #FFE4B5;
+  color: #FFE4B5;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.notification-sparkles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.notification-sparkles span {
+  position: absolute;
+  animation: sparkleNotification 2s ease-in-out infinite;
+  font-size: 1em;
+  opacity: 0.7;
+}
+
+.notification-sparkles span:nth-child(1) {
+  top: 10px;
+  right: 15px;
+  animation-delay: 0s;
+}
+
+.notification-sparkles span:nth-child(2) {
+  bottom: 15px;
+  left: 20px;
+  animation-delay: 0.7s;
+}
+
+.notification-sparkles span:nth-child(3) {
+  top: 50%;
+  right: 10px;
+  animation-delay: 1.4s;
+}
+
+@keyframes wiggle {
+  0%, 100% {
+    transform: translateY(-50%) translateX(0) rotate(-1deg);
+  }
+  25% {
+    transform: translateY(-50%) translateX(0) rotate(1deg);
+  }
+  50% {
+    transform: translateY(-50%) translateX(0) rotate(-0.5deg);
+  }
+  75% {
+    transform: translateY(-50%) translateX(0) rotate(0.5deg);
+  }
+}
+
+@keyframes sparkleNotification {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes compassSpinNotification {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(15deg);
+  }
+}
+
+.ultimate-adventure-notification:hover {
+  transform: translateY(-50%) translateX(0) scale(1.05);
+  box-shadow: 
+    0 12px 35px rgba(0, 0, 0, 0.4),
+    0 0 25px rgba(212, 175, 55, 0.6),
+    inset 0 0 25px rgba(212, 175, 55, 0.2);
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Mobile responsive */
+@media screen and (max-width: 768px) {
+  .ultimate-adventure-notification {
+    width: 280px;
+    left: 10px;
+    top: 120px;
+    transform: translateX(-320px);
+  }
+  
+  .ultimate-adventure-notification.show {
+    transform: translateX(0);
+  }
+  
+  .ultimate-adventure-notification.slide-out {
+    transform: translateX(-320px);
+  }
+  
+  .ultimate-adventure-notification:hover {
+    transform: translateX(0) scale(1.03);
+  }
+  
+  @keyframes wiggle {
+    0%, 100% {
+      transform: translateX(0) rotate(-0.5deg);
+    }
+    25% {
+      transform: translateX(0) rotate(0.5deg);
+    }
+    50% {
+      transform: translateX(0) rotate(-0.25deg);
+    }
+    75% {
+      transform: translateX(0) rotate(0.25deg);
+    }
+  }
+  
+  .notification-content {
+    padding: 12px;
+  }
+  
+  .notification-icon {
+    font-size: 2em;
+  }
+  
+  .notification-text h3 {
+    font-size: 1em;
+  }
+  
+  .notification-text p {
+    font-size: 0.8em;
+  }
+  
+  .notification-links {
+    gap: 3px;
+  }
+  
+  .notification-link {
+    font-size: 0.75em;
+  }
+  
+  .notification-peakd-link {
+    font-size: 0.8em;
+    padding: 3px 8px;
+  }
+}

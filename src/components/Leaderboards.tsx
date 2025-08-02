@@ -404,65 +404,87 @@ const Leaderboards = ({
         onlyLoad100UsersOnce = true;
         async function loadRankingData() {
             
-            if(timeframe === 'alltime'){ //sortedTDsAndHonerable_afterFirstLoad.length === 0
-                sortedTDsAndHonerable_afterFirstLoad = [];
-                try {
-                    const response = await axios.get('https://worldmappin.com/api/ranking');
-                    // console.log(response.data)
-                    const formattedData = response.data.map(item => [item.rank, item.author, item.tds]);
-                    setSortedTDsAndHonerable(formattedData);
-                    sortedTDsAndHonerable_afterFirstLoad = formattedData;
-                    fetchUsername(sortedTDsAndHonerable_afterFirstLoad.slice(0, 20));
-                } catch (err) {
-                    console.error('Error fetching ranking data:', err);
+            if(timeframe === 'alltime'){ 
+                // Check if we already have cached data for alltime
+                if(sortedTDsAndHonerable_afterFirstLoad.length === 0) {
+                    try {
+                        const response = await axios.get('https://worldmappin.com/api/ranking');
+                        // console.log(response.data)
+                        const formattedData = response.data.map(item => [item.rank, item.author, item.tds]);
+                        setSortedTDsAndHonerable(formattedData);
+                        sortedTDsAndHonerable_afterFirstLoad = formattedData;
+                        fetchUsername(sortedTDsAndHonerable_afterFirstLoad.slice(0, 17));
+                    } catch (err) {
+                        console.error('Error fetching ranking data:', err);
+                    }
+                } else {
+                    // Use cached data
+                    setSortedTDsAndHonerable(sortedTDsAndHonerable_afterFirstLoad);
+                    fetchUsername(sortedTDsAndHonerable_afterFirstLoad.slice(0, 17));
                 }
             }
 
-            if(timeframe === 'weekly'){ //sortedTDsAndHonerable_afterFirstLoad.length === 0
-                sortedTDsAndHonerable_afterFirstLoad = [];
-                try {
-                    const response = await axios.get('https://worldmappin.com/api/ranking');
-                    // console.log(response.data)
-                    const formattedData = response.data.map(item => [item.rank, item.author, item.tds]);
-                    setSortedTDsAndHonerable(formattedData);
-                    sortedTDsAndHonerable_afterFirstLoad = formattedData;
-                    fetchUsername(sortedTDsAndHonerable_afterFirstLoad.slice(20, 200));
-                } catch (err) {
-                    console.error('Error fetching ranking data:', err);
+            if(timeframe === 'weekly'){ 
+                // Check if we already have cached data for weekly
+                if(sortedTDsAndHonerable_weekly_afterFirstLoad.length === 0) {
+                    try {
+                        const response = await axios.get('https://worldmappin.com/api/ranking');
+                        // console.log(response.data)
+                        const formattedData = response.data.map(item => [item.rank, item.author, item.tds]);
+                        setSortedTDsAndHonerable(formattedData);
+                        sortedTDsAndHonerable_weekly_afterFirstLoad = formattedData;
+                        fetchUsername(sortedTDsAndHonerable_weekly_afterFirstLoad.slice(20, 200));
+                    } catch (err) {
+                        console.error('Error fetching ranking data:', err);
+                    }
+                } else {
+                    // Use cached data
+                    setSortedTDsAndHonerable(sortedTDsAndHonerable_weekly_afterFirstLoad);
+                    fetchUsername(sortedTDsAndHonerable_weekly_afterFirstLoad.slice(20, 200));
                 }
             }
 
-            if(timeframe === 'monthly'){ //sortedTDsAndHonerable_afterFirstLoad.length === 0
-                sortedTDsAndHonerable_afterFirstLoad = [];
-                try {
-                    const response = await axios.get('https://worldmappin.com/api/ranking');
-                    // console.log(response.data)
-                    const formattedData = response.data.map(item => [item.rank, item.author, item.tds]);
-                    setSortedTDsAndHonerable(formattedData);
-                    sortedTDsAndHonerable_afterFirstLoad = formattedData;
-                    fetchUsername(sortedTDsAndHonerable_afterFirstLoad.slice(50, 200));
-                } catch (err) {
-                    console.error('Error fetching ranking data:', err);
+            if(timeframe === 'monthly'){ 
+                // Check if we already have cached data for monthly
+                if(sortedTDsAndHonerable_monthly_afterFirstLoad.length === 0) {
+                    try {
+                        const response = await axios.get('https://worldmappin.com/api/ranking');
+                        // console.log(response.data)
+                        const formattedData = response.data.map(item => [item.rank, item.author, item.tds]);
+                        setSortedTDsAndHonerable(formattedData);
+                        sortedTDsAndHonerable_monthly_afterFirstLoad = formattedData;
+                        fetchUsername(sortedTDsAndHonerable_monthly_afterFirstLoad.slice(50, 200));
+                    } catch (err) {
+                        console.error('Error fetching ranking data:', err);
+                    }
+                } else {
+                    // Use cached data
+                    setSortedTDsAndHonerable(sortedTDsAndHonerable_monthly_afterFirstLoad);
+                    fetchUsername(sortedTDsAndHonerable_monthly_afterFirstLoad.slice(50, 200));
                 }
             }
 
-            if(timeframe === 'yearly'){ //sortedTDsAndHonerable_afterFirstLoad.length === 0
-                sortedTDsAndHonerable_afterFirstLoad = [];
-                try {
-                    const response = await axios.get('https://worldmappin.com/api/ranking');
-                    // console.log(response.data)
-                    const formattedData = response.data.map(item => [item.rank, item.author, item.tds]);
-                    setSortedTDsAndHonerable(formattedData);
-                    sortedTDsAndHonerable_afterFirstLoad = formattedData;
-                    fetchUsername(sortedTDsAndHonerable_afterFirstLoad.slice(100, 200));
-                } catch (err) {
-                    console.error('Error fetching ranking data:', err);
+            if(timeframe === 'yearly'){ 
+                // Check if we already have cached data for yearly
+                if(sortedTDsAndHonerable_yearly_afterFirstLoad.length === 0) {
+                    try {
+                        const response = await axios.get('https://worldmappin.com/api/ranking');
+                        // console.log(response.data)
+                        const formattedData = response.data.map(item => [item.rank, item.author, item.tds]);
+                        setSortedTDsAndHonerable(formattedData);
+                        sortedTDsAndHonerable_yearly_afterFirstLoad = formattedData;
+                        fetchUsername(sortedTDsAndHonerable_yearly_afterFirstLoad.slice(100, 200));
+                    } catch (err) {
+                        console.error('Error fetching ranking data:', err);
+                    }
+                } else {
+                    // Use cached data
+                    setSortedTDsAndHonerable(sortedTDsAndHonerable_yearly_afterFirstLoad);
+                    fetchUsername(sortedTDsAndHonerable_yearly_afterFirstLoad.slice(100, 200));
                 }
             }
         }
 
-        // fetchUsername(sortedTDsAndHonerable_afterFirstLoad.slice(0, 20));
-        // setSlice(20);
         loadRankingData();
 
     }, [timeframe]);
@@ -470,7 +492,19 @@ const Leaderboards = ({
     const handleSlice = () => {
         setSlice(100);    
         if(onlyLoad100UsersOnce){
-            fetchUsername(sortedTDsAndHonerable_afterFirstLoad.slice(0, 100));
+            // Use the appropriate cached data based on current timeframe
+            let currentData = [];
+            if (timeframe === 'alltime') {
+                currentData = sortedTDsAndHonerable_afterFirstLoad;
+            } else if (timeframe === 'weekly') {
+                currentData = sortedTDsAndHonerable_weekly_afterFirstLoad;
+            } else if (timeframe === 'monthly') {
+                currentData = sortedTDsAndHonerable_monthly_afterFirstLoad;
+            } else if (timeframe === 'yearly') {
+                currentData = sortedTDsAndHonerable_yearly_afterFirstLoad;
+            }
+            
+            fetchUsername(currentData.slice(0, 100));
             onlyLoad100UsersOnce = false;
         }
     }
@@ -545,14 +579,14 @@ const Leaderboards = ({
     async function loadUltimateAdventureData() {
         if (sortedUltimateAdventure_afterFirstLoad.length === 0) {
             try {
-                const response = await axios.get('https://worldmappin.com/api/ranking202508'); //https://worldmappin.com/api/ranking202508
-                console.log('Ultimate Adventure data:', response.data);
+                const response = await axios.get('https://worldmappin.com/api/ranking202508');
+                console.log(response.data);
                 
                 const formattedData = response.data.map((item, index) => {
                     return {
                         rank: index + 1,
                         username: item.author,
-                        score: item.tickets
+                        tickets: item.tickets || item.Points
                     };
                 });   
 
@@ -640,6 +674,33 @@ const Leaderboards = ({
     //     }
     //   }, []);
 
+    // Effect to restore cached data when leaderboard reopens
+    useEffect(() => {
+        // Always restore cached data if it exists
+        if (sortedWinterChallenge_afterFirstLoad.length > 0) {
+            setSortedWinterChallenge(sortedWinterChallenge_afterFirstLoad);
+        }
+        
+        if (sortedUltimateAdventure_afterFirstLoad.length > 0) {
+            setSortedUltimateAdventure(sortedUltimateAdventure_afterFirstLoad);
+        }
+        
+        // Restore data based on current timeframe
+        if (timeframe === 'alltime' && sortedTDsAndHonerable_afterFirstLoad.length > 0) {
+            setSortedTDsAndHonerable(sortedTDsAndHonerable_afterFirstLoad);
+        } else if (timeframe === 'weekly' && sortedTDsAndHonerable_weekly_afterFirstLoad.length > 0) {
+            setSortedTDsAndHonerable(sortedTDsAndHonerable_weekly_afterFirstLoad);
+        } else if (timeframe === 'monthly' && sortedTDsAndHonerable_monthly_afterFirstLoad.length > 0) {
+            setSortedTDsAndHonerable(sortedTDsAndHonerable_monthly_afterFirstLoad);
+        } else if (timeframe === 'yearly' && sortedTDsAndHonerable_yearly_afterFirstLoad.length > 0) {
+            setSortedTDsAndHonerable(sortedTDsAndHonerable_yearly_afterFirstLoad);
+        }
+        
+        if (userProfiles_afterfirstload.length > 0) {
+            setUserProfiles(userProfiles_afterfirstload);
+        }
+    }, []); // Run once when component mounts
+    
     useEffect(() => {   
         // loadRankingData();
         if(onlyLoadDataOnce){
@@ -806,23 +867,28 @@ const Leaderboards = ({
         const interval = setInterval(() => {
             const userElement = document.getElementById(`user-${username}`);
             if (userElement) {
-                // Account for fixed elements at top - responsive offset
+                // Account for fixed elements at top and center the user in the viewport
                 const isMobile = window.innerWidth <= 1100;
-                const offset = isMobile ? 120 : 150; // Smaller offset for mobile due to compact design
                 const elementPosition = userElement.offsetTop;
                 // Find the scrollable container
                 const container = userElement.closest('.content, .ultimate-content, .winter-content') || 
                                  userElement.closest('.leaderboard-side-tab');
                 
                 if (container) {
-                    // Scroll to position accounting for fixed elements
+                    // Calculate offset to center the user in the visible area
+                    const containerHeight = container.clientHeight;
+                    const centerOffset = containerHeight / 2;
+                    const fixedElementsOffset = isMobile ? 120 : 150; // Account for headers/fixed elements
+                    const totalOffset = centerOffset + fixedElementsOffset;
+                    
+                    // Scroll to position centering the user in the visible area
                     container.scrollTo({
-                        top: Math.max(0, elementPosition - offset), // Ensure we don't scroll negative
+                        top: Math.max(0, elementPosition - totalOffset), // Ensure we don't scroll negative
                         behavior: 'smooth'
                     });
                 } else {
-                    // Fallback to regular scrollIntoView but with 'start' to minimize shift
-                    userElement.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+                    // Fallback to regular scrollIntoView centered
+                    userElement.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
                 }
                 
                 clearInterval(interval); // Clear the interval once the element is found and scrolled to
@@ -845,7 +911,32 @@ const Leaderboards = ({
     function handleCloseButton_reset_Leaderboard() {
         setSlice(20);
         onlyLoad100UsersOnce = true;
-        fetchUsername(sortedTDsAndHonerable_afterFirstLoad.slice(0, 20));
+        
+        // Use the appropriate cached data based on current timeframe (before resetting to alltime)
+        let currentData = [];
+        if (timeframe === 'alltime') {
+            currentData = sortedTDsAndHonerable_afterFirstLoad;
+        } else if (timeframe === 'weekly') {
+            currentData = sortedTDsAndHonerable_weekly_afterFirstLoad;
+        } else if (timeframe === 'monthly') {
+            currentData = sortedTDsAndHonerable_monthly_afterFirstLoad;
+        } else if (timeframe === 'yearly') {
+            currentData = sortedTDsAndHonerable_yearly_afterFirstLoad;
+        }
+        
+        if (currentData.length > 0) {
+            fetchUsername(currentData.slice(0, 20));
+        }
+        
+        // Reset all challenge-related states
+        setShowPastChallenges(false);
+        setShowGrazAndSeek(false);
+        setShowUltimateAdventure(false);
+        setWinterChallenge(false);
+        setActiveTab('most-active-users');
+        
+        // Reset to default timeframe
+        setTimeframe('alltime');
     }
 
     function showMessage() {
@@ -956,7 +1047,7 @@ const Leaderboards = ({
       <a className="leaderboard-input-btn" onClick={logInput}>Search</a> 
     </div>
     
-    <div className="leaderboard-header-2">
+    <div className="leaderboard-header-3">
       <div className="placement-header">Rank</div>
       <div className="username-header-2">Username</div>
       <div className="date-solved-header">Date Solved</div>
@@ -997,7 +1088,7 @@ const Leaderboards = ({
       
       <div className="leaderboard-header-2">
         <div className="placement-header">Rank</div>
-        <div className="username-header-2">Explorer</div>
+        <div className="username-header-3">Explorer</div>
         <div className="time-solved-header">Number of Tickets</div>
       </div>
       
@@ -1015,7 +1106,7 @@ const Leaderboards = ({
                 <a href={`https://peakd.com/@${profile.username}`} target="_blank" rel="noopener noreferrer" className="leaderboard-username-link">@{profile.username}</a>
               </div>
               
-              <h4>{profile.score}</h4>
+              <h4>{profile.tickets}</h4>
             </li>                    
           </div>
         ))}
@@ -1026,13 +1117,13 @@ const Leaderboards = ({
 
             {/* <div className="message" id="message"></div> */}
             {!showGrazAndSeek && !winterChallenge && !showUltimateAdventure && (    
-                <div className="leaderboard-input-div">
-                    <a className="time-button-disabled" onClick={() => setTimeframe('weekly')}>Weekly</a>
-                    <a className="time-button-disabled" onClick={() => setTimeframe('monthly')}>Monthly</a>
-                    <a className="time-button-disabled" onClick={() => setTimeframe('yearly')}>Yearly</a>
-                    <a className="time-button" onClick={() => setTimeframe('alltime')}>All Time</a>
-                    <input type="text" id="inputField" placeholder="Enter username" className="leaderboard-input"></input>
-                    <a className="leaderboard-input-btn" onClick={logInput}>Search</a>                     
+                <div className="curated-leaderboard-header">
+                    <a className="curated-time-button-disabled" onClick={() => setTimeframe('weekly')}>Weekly</a>
+                    <a className="curated-time-button-disabled" onClick={() => setTimeframe('monthly')}>Monthly</a>
+                    <a className="curated-time-button-disabled" onClick={() => setTimeframe('yearly')}>Yearly</a>
+                    <a className="curated-time-button-active" onClick={() => setTimeframe('alltime')}>All Time</a>
+                    <input type="text" id="inputField" placeholder="Enter username" className="curated-leaderboard-input"></input>
+                    <a className="curated-leaderboard-search-btn" onClick={logInput}>Search</a>                     
                 </div>
             )}
             {!showGrazAndSeek && winterChallenge && (    
@@ -1044,9 +1135,9 @@ const Leaderboards = ({
             
             {!showGrazAndSeek && !winterChallenge && !showUltimateAdventure && (  
                 <div className="leaderboard-header">
-                    <div className="placement-header">Placement</div>
-                    <div className="username-header">Username</div>
-                    <div className="Number-of-Curated-Posts-header">Number of Curated Posts</div>
+                    <div className="curated-placement-header">Placement</div>
+                    <div className="curated-username-header">Username</div>
+                    <div className="curated-posts-header"><span className="desktop-text">Number of Curated Posts</span><span className="mobile-text">Number of Curated Posts</span></div>
                     {/* Doesn't work yet
                         {loading && ( 
                         <div className='loadingbar'>
