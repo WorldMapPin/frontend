@@ -532,7 +532,7 @@ const App = () => {
     
     try {
       // Adjust data limit based on network speed and device performance
-      let dataLimit = 150000; // Default high limit
+      let dataLimit = 200000; // Default high limit
       
       if (isExtremelySlowConnection() && !showAllPosts) {
         // For extremely slow connections (<2 Kbps), use strict limit of 5000
@@ -859,7 +859,7 @@ const App = () => {
         }
         
         // Using a high data limit since we're filtering by date instead
-        const dataLimit = 150000;
+        const dataLimit = 200000;
         // console.log(`Fetching up to ${dataLimit} pins from ${params.start_date}`);
         
         // Make the API call directly

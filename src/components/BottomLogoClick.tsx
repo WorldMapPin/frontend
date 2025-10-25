@@ -107,7 +107,7 @@ const BottomLogoClick = ({ onClose, onfetch, fetchdone}) => {
   async function loadpinsdata() {
     try {
       onfetch();
-      const response = await axios.post('https://worldmappin.com/api/marker/0/150000/', searchParams);
+      const response = await axios.post('https://worldmappin.com/api/marker/0/200000/', searchParams);
       console.log(response.data)
 
       const sortedPins = sortPinsByContinent(response.data);
@@ -152,7 +152,7 @@ const BottomLogoClick = ({ onClose, onfetch, fetchdone}) => {
 
   const fetchData = async (filterParams) => {
     try {
-      const response = await axios.post('https://worldmappin.com/api/marker/0/150000/', filterParams);
+      const response = await axios.post('https://worldmappin.com/api/marker/0/200000/', filterParams);
       // console.log(filterParams)
       // console.log(response.data)
       return response.data.length;  // Return data received from the API
